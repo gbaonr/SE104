@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import HomePage from "./pages/HomePage/HomePage";
 import Layout from "./pages/Layout";
 import LoginPage from './pages/Login/Login';
+import './assets/css/index.css'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
