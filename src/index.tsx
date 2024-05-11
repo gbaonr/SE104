@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import HomePage from "./pages/HomePage/HomePage";
 import Layout from "./pages/Layout";
 import LoginPage from './pages/Login/Login';
+import ResultsPage from "./pages/Results/Results";
 import './assets/css/index.css'
 
 const router = createBrowserRouter(
@@ -10,6 +11,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<Layout />}>
       <Route index element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/results" element={<ResultsPage />} />
     </Route>
   )
 );

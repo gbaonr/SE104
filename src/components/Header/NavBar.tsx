@@ -1,9 +1,29 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const leftFeatures = ['Matches', 'Results', 'Stats'];
-const rightFeatures = ['Sign In'];
+const leftFeatures = [{
+    name: 'Matches',
+    link: '/matches',
+}, {
+    name: 'Results',
+    link: '/results',
+}, {
+    name: 'Stats',
+    link: '/stats',
+}];
+
+const rightFeatures = [
+    {
+        name: 'Sign In',
+        link: '/sign-in',
+    },
+    {
+        name: 'Sign Up',
+        link: '/sign-up',
+    },
+]
 
 function NavBar() {
     const [isOpenMenu, setIsOpenMenu] = useState<null | HTMLElement>(null);
@@ -20,22 +40,12 @@ function NavBar() {
         <AppBar position="static" sx={{ backgroundColor: '#37003c', }}>
             <Container maxWidth="xl">
                 <Toolbar sx={{ minHeight: '48px !important' }}>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        LOGO
-                    </Typography>
+                    <Box sx={{
+                        display: { xs: 'none', md: 'flex' },
+                        mx: 2,
+                    }}>
+                        <img src='assets/images/main/pl-main-logo.png' alt='logo' style={{ width: '50px', height: '50px' }} />
+                    </Box>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
@@ -68,44 +78,40 @@ function NavBar() {
                             }}
                         >
                             {leftFeatures.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                                    <Link to={`${page.link}`} style={{ textDecoration: 'none' }}>
+                                        {page.name}
+                                    </Link>
                                 </MenuItem>
                             ))}
+
                             {rightFeatures.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                                    <Link to={`${page.link}`} style={{ textDecoration: 'none' }}>
+                                        {page.name}
+                                    </Link>
                                 </MenuItem>
                             ))}
                         </Menu>
                     </Box>
 
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'flex', md: 'none' },
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        LOGO
-                    </Typography>
+                    <Box sx={{
+                        display: { xs: 'flex', md: 'none' },
+                        flexGrow: 1,
+                    }}>
+                        <img src='assets/images/main/pl-main-logo.png' alt='logo' style={{ width: '50px', height: '50px' }} />
+                    </Box>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {leftFeatures.map((page) => (
                             <Button
-                                key={page}
+                                key={page.name}
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 0, mx: 1, color: 'white', display: 'block', fontWeight: 700 }}
                             >
-                                {page}
+                                <Link to={`${page.link}`} style={{ textDecoration: 'none', color: 'white' }}>
+                                    {page.name}
+                                </Link>
                             </Button>
                         ))}
                     </Box>
@@ -113,11 +119,13 @@ function NavBar() {
                     <Box sx={{ flexGrow: 0 }}>
                         {rightFeatures.map((page) => (
                             <Button
-                                key={page}
+                                key={page.name}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 0, mx: 1, color: 'white', display: 'block', fontWeight: 700 }}
+                                sx={{ my: 0, mx: 1, color: 'black', display: 'block', fontWeight: 700, backgroundColor: 'white' }}
                             >
-                                {page}
+                                <Link to={`${page.link}`} style={{ textDecoration: 'none', color: 'white' }}>
+                                    {page.name}
+                                </Link>
                             </Button>
                         ))}
                     </Box>
