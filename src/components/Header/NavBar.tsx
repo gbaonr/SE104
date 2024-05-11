@@ -1,70 +1,130 @@
-import { Drawer, Menu } from 'antd';
-import { useEffect, useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { useState } from 'react';
 
-
-const LeftMenu = ({ mode }) => {
-    return (
-        <Menu mode={mode} className='inline-block' >
-            <Menu.Item key="home">
-                Home
-            </Menu.Item>
-            <Menu.Item key="matches">
-                Matches
-            </Menu.Item>
-            <Menu.Item key="results">
-                Results
-            </Menu.Item>
-            <Menu.Item key="stats">
-                Stats
-            </Menu.Item>
-        </Menu>
-    );
-};
-
-const RightMenu = ({ mode }) => {
-    return (
-        // <Menu mode={mode} className='inline-block float-right invisible md:visible'>
-        <Menu mode={mode} className='inline-block float-right'>
-            <Menu.Item key="sign-in">Sign In</Menu.Item>
-        </Menu>
-    );
-};
+const leftFeatures = ['Matches', 'Results', 'Stats'];
+const rightFeatures = ['Sign In'];
 
 function NavBar() {
-    const [visible, setVisible] = useState(false);
-    const showDrawer = () => {
-        setVisible(!visible);
+    const [isOpenMenu, setIsOpenMenu] = useState<null | HTMLElement>(null);
+
+    const handleOpenMenuIcon = (event: React.MouseEvent<HTMLElement>) => {
+        setIsOpenMenu(event.currentTarget);
     };
 
-    useEffect(() => {
-        setVisible(false);
-    }, []);
+    const handleCloseNavMenu = () => {
+        setIsOpenMenu(null);
+    };
 
     return (
-        <nav className="navbar">
-            <div className="navbar-menu">
-                <LeftMenu mode={"horizontal"} />
+        <AppBar position="static" sx={{ backgroundColor: '#37003c', }}>
+            <Container maxWidth="xl">
+                <Toolbar sx={{ minHeight: '48px !important' }}>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="a"
+                        sx={{
+                            mr: 2,
+                            display: { xs: 'none', md: 'flex' },
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        LOGO
+                    </Typography>
 
-                {/* <Button className="inline-block md:hidden" type="text" onClick={showDrawer}>
-                    <span>Show</span>
-                </Button> */}
+                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                        <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleOpenMenuIcon}
+                            color="inherit"
+                        >
+                            <MenuIcon />
+                        </IconButton>
 
-                <RightMenu mode={"horizontal"} />
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={isOpenMenu}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
+                            open={Boolean(isOpenMenu)}
+                            onClose={handleCloseNavMenu}
+                            sx={{
+                                display: { xs: 'block', md: 'none' },
+                            }}
+                        >
+                            {leftFeatures.map((page) => (
+                                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">{page}</Typography>
+                                </MenuItem>
+                            ))}
+                            {rightFeatures.map((page) => (
+                                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">{page}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                    </Box>
 
-                <Drawer
-                    title={"Brand Here"}
-                    placement="right"
-                    closable={true}
-                    onClose={showDrawer}
-                    open={visible}
-                    style={{ zIndex: 99999 }}
-                >
-                    <LeftMenu mode={"inline"} />
-                    <RightMenu mode={"inline"} />
-                </Drawer>
-            </div>
-        </nav >
-    );
+                    <Typography
+                        variant="h5"
+                        noWrap
+                        component="a"
+                        sx={{
+                            mr: 2,
+                            display: { xs: 'flex', md: 'none' },
+                            flexGrow: 1,
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        LOGO
+                    </Typography>
+
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                        {leftFeatures.map((page) => (
+                            <Button
+                                key={page}
+                                onClick={handleCloseNavMenu}
+                                sx={{ my: 0, mx: 1, color: 'white', display: 'block', fontWeight: 700 }}
+                            >
+                                {page}
+                            </Button>
+                        ))}
+                    </Box>
+
+                    <Box sx={{ flexGrow: 0 }}>
+                        {rightFeatures.map((page) => (
+                            <Button
+                                key={page}
+                                onClick={handleCloseNavMenu}
+                                sx={{ my: 0, mx: 1, color: 'white', display: 'block', fontWeight: 700 }}
+                            >
+                                {page}
+                            </Button>
+                        ))}
+                    </Box>
+                </Toolbar>
+            </Container>
+        </AppBar>
+    )
 }
 
 export default NavBar;
