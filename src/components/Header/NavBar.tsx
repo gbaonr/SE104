@@ -1,5 +1,5 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,6 +9,10 @@ const leftFeatures = [{
 }, {
     name: 'Results',
     link: '/results',
+}, {
+    name: 'Fixtures',
+    link: '/fixtures',
+}, {
 }, {
     name: 'Stats',
     link: '/stats',

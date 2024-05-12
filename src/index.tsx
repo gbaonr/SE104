@@ -1,16 +1,17 @@
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { createRoot } from "react-dom/client";
+import "./assets/css/index.css";
 import HomePage from "./pages/HomePage/HomePage";
 import Layout from "./pages/Layout";
 import LoginPage from "./pages/Login/Login";
-import ResultsPage from "./pages/Results/Results";
-import "./assets/css/index.css";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import ResultsPage from "./pages/MatchResults/Results";
+import FixturesPage from "./pages/MatchResults/Fixtures";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route index element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/results" element={<ResultsPage />} />
+      <Route path="/fixtures" element={<FixturesPage />} />
     </Route>
   )
 );
@@ -33,7 +35,7 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
