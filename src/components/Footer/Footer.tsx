@@ -44,10 +44,9 @@ function Footer() {
             />
           </svg>
         </Grid>
-
       </Grid>
     </Container>
-  );
+  )
 }
 
 export default Footer;

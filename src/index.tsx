@@ -10,6 +10,7 @@ import Layout from "./pages/Layout";
 import LoginPage from "./pages/Login/Login";
 import ResultsPage from "./pages/Results/Results";
 import "./assets/css/index.css";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,9 +22,21 @@ const router = createBrowserRouter(
   )
 );
 
-const App = () => {
-  return <RouterProvider router={router} />;
-};
+const theme = createTheme({
+  typography: {
+    allVariants: {
+      fontFamily: "Roboto",
+    },
+  },
+});
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />;
+    </ThemeProvider>
+  );
+}
 
 const root = createRoot(document.getElementById("root"));
 root.render(<App />);

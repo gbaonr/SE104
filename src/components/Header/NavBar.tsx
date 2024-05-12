@@ -19,10 +19,6 @@ const rightFeatures = [
         name: 'Sign In',
         link: '/sign-in',
     },
-    {
-        name: 'Sign Up',
-        link: '/sign-up',
-    },
 ]
 
 function NavBar() {
@@ -123,7 +119,7 @@ function NavBar() {
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 0, mx: 1, color: 'black', display: 'block', fontWeight: 700, backgroundColor: 'white' }}
                             >
-                                <Link to={`${page.link}`} style={{ textDecoration: 'none', color: 'white' }}>
+                                <Link to={`${page.link}`} style={{ textDecoration: 'none', color: 'black' }}>
                                     {page.name}
                                 </Link>
                             </Button>
