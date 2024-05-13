@@ -12,6 +12,7 @@ import Layout from "./pages/Layout";
 import LoginPage from "./pages/Login/Login";
 import ResultsPage from "./pages/MatchResults/Results";
 import FixturesPage from "./pages/MatchResults/Fixtures";
+import TeamReg from "./pages/TeamReg/TeamRegister";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/results" element={<ResultsPage />} />
       <Route path="/fixtures" element={<FixturesPage />} />
+      <Route path="/TeamReg" element={<TeamReg />} />
     </Route>
   )
 );
