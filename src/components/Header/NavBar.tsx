@@ -25,7 +25,6 @@ const leftFeatures = [
     name: "Fixtures",
     link: "/fixtures",
   },
-  {},
   {
     name: "Stats",
     link: "/stats",

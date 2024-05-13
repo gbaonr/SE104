@@ -116,6 +116,17 @@ export default function LeftSideBar() {
         }}
       >
         <Box>
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: "0.8rem",
+              margin: "0.5rem",
+              textAlign: "center",
+            }}
+          >
+            All times shown are your local time
+          </Typography>
+
           <TableMatches
             mini={true}
             finished={true}

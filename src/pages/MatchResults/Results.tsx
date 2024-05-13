@@ -37,7 +37,7 @@ export default function ResultsPage() {
 
           {tournaments.map((tournament, index) => (
             <TabPanel key={index} value={tournament}>
-              <TableMatches mini={false} data={dataTouraments[tournament]} />
+              <TableMatches mini={false} finished={true} data={dataTouraments[tournament]} />
             </TabPanel>
           ))}
         </TabContext>

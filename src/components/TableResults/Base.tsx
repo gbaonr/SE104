@@ -6,17 +6,6 @@ import { TeamItem } from "./constants";
 export default function TableMatches(props: TableResultsProps) {
   return (
     <>
-      <Typography
-        variant="body1"
-        sx={{
-          fontSize: "0.8rem",
-          margin: "0.5rem",
-          textAlign: "center",
-        }}
-      >
-        All times shown are your local time
-      </Typography>
-
       {Object.keys(props.data).map((date: string) => (
         <Box
           sx={{
@@ -56,7 +45,7 @@ export default function TableMatches(props: TableResultsProps) {
               spacing={0}
               sx={{
                 my: 0.2,
-                py: 0,
+                py: (props.mini && 0) || 1,
                 "&:hover": {
                   background:
                     "linear-gradient(98.5deg, #05f0ff -46.16%, #7367ff 42.64%, #963cff 70.3%);",
