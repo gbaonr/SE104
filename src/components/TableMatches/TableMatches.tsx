@@ -1,9 +1,9 @@
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { Box, Grid, Typography } from "@mui/material";
-import type { Match, MatchesByDate, TableResultsProps } from "./constants";
-import { TeamItem } from "./constants";
+import { Match, TableResultsProps } from "types";
+import { TeamItem } from "types";
 
-export default function TableMatches(props: TableResultsProps) {
+export const TableMatches = (props: TableResultsProps) => {
   return (
     <>
       {Object.keys(props.data).map((date: string) => (
@@ -105,6 +105,4 @@ export default function TableMatches(props: TableResultsProps) {
       ))}
     </>
   );
-}
-
-export type { MatchesByDate };
+};

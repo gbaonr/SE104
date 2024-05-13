@@ -1,6 +1,6 @@
-import { MatchesByDate } from "./constants";
+import { MatchesByDate } from "types";
 
-const dataTouraments: { [tournament: string]: MatchesByDate } = {
+export const dataMatches: { [tournament: string]: MatchesByDate } = {
   "First Team": {
     "Saturday 11 May 2024": [
       {
@@ -98,5 +98,3 @@ const dataTouraments: { [tournament: string]: MatchesByDate } = {
     ],
   },
 };
-
-export default dataTouraments;

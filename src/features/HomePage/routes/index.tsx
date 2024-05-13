@@ -1,8 +1,8 @@
 import { Container, Grid } from "@mui/material";
-import LeftSideBar from "./LeftSideBar";
-import RightSideBar from "./RightSidebar";
+import LeftSideBar from "../components/LeftSideBar";
+import RightSideBar from "../components/RightSidebar";
 
-export default function HomePage() {
+export const HomePage = () => {
   return (
     <Container maxWidth="xl">
       <Grid container spacing={0}>
@@ -16,4 +16,4 @@ export default function HomePage() {
       </Grid>
     </Container>
   );
-}
+};

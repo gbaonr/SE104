@@ -2,27 +2,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { Link } from "react-router-dom";
-
-export interface SourceArticle {
-  name: string;
-  link: string;
-}
-
-export interface ArticleProps {
-  title: string;
-  content: string;
-  thumbnail: string;
-  source: SourceArticle[];
-  moreInfo?: string;
-}
-
-export interface ReadingArticleProps {
-  data: ArticleProps;
-  showSource?: boolean | true;
-  showHorizontal?: boolean | false;
-  showMoreInfo?: boolean | false;
-  headLine?: boolean | false;
-}
+import { ReadingArticleProps } from "../types";
 
 export function ReadingArticle(props: ReadingArticleProps) {
   return (
@@ -41,7 +21,7 @@ export function ReadingArticle(props: ReadingArticleProps) {
                 width: "100%",
                 transition: "all 0.3s",
                 "&:hover": {
-                  transform: "scale(1.25)",
+                  transform: "scale(1.2)",
                   borderRadius: "5px",
                 },
               }}
@@ -131,5 +111,3 @@ export function ReadingArticle(props: ReadingArticleProps) {
     </Paper>
   );
 }
-
-export function VideoList(props: ArticleProps) {}

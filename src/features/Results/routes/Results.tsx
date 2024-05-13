@@ -4,13 +4,12 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Box, Container } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
-import HeaderPage from "../../components/Header/PageHeader";
-import TableMatches from "../../components/TableResults/Base";
-import dataTouraments from "../../components/TableResults/data";
+import HeaderPage from "../../../components/Header/PageHeader";
+import { dataMatches } from "../../../constants/MatchResults";
+import { TableMatches } from "../../../components/TableMatches/TableMatches";
 
-export default function FixturesPage() {
+export const ResultsPage = () => {
   const [selectedTournament, setSelectedTournament] = useState<string>("First Team");
-
   const tournaments = ["First Team", "PL2", "U18"];
 
   const handleChangeTournament = (event: React.SyntheticEvent, newValue: string) => {
@@ -33,11 +32,11 @@ export default function FixturesPage() {
 
           {tournaments.map((tournament, index) => (
             <TabPanel key={index} value={tournament}>
-              <TableMatches mini={false} data={dataTouraments[tournament]} />
+              <TableMatches mini={false} finished={true} data={dataMatches[tournament]} />
             </TabPanel>
           ))}
         </TabContext>
       </Container>
     </>
   );
-}
+};

@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const leftFeatures = [
-  {
-    name: "Matches",
-    link: "/matches",
-  },
+  // {
+  //   name: "Matches",
+  //   link: "/matches",
+  // },
   {
     name: "Results",
     link: "/results",
