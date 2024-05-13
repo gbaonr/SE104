@@ -7,7 +7,7 @@ import HeaderPage from "../../../components/Header/PageHeader";
 import { Box, Container } from "@mui/material";
 import { useState } from "react";
 import { TableMatches } from "../../../components/TableMatches/TableMatches";
-import { dataMatches } from "../../../constants/MatchResults";
+import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 
 export const FixturesPage = () => {
   const [selectedTournament, setSelectedTournament] = useState<string>("First Team");
@@ -34,7 +34,7 @@ export const FixturesPage = () => {
 
           {tournaments.map((tournament, index) => (
             <TabPanel key={index} value={tournament}>
-              <TableMatches mini={false} data={dataMatches[tournament]} />
+              <TableMatches mini={false} data={dataUpcomingMatches[tournament]} />
             </TabPanel>
           ))}
         </TabContext>

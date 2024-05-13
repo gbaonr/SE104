@@ -4,9 +4,9 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Box, Container } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
-import HeaderPage from "../../../components/Header/PageHeader";
-import { dataMatches } from "../../../constants/MatchResults";
-import { TableMatches } from "../../../components/TableMatches/TableMatches";
+import HeaderPage from "components/Header/PageHeader";
+import { dataDoneMatches } from "constants/DoneMatchResults";
+import { TableMatches } from "components/TableMatches/TableMatches";
 
 export const ResultsPage = () => {
   const [selectedTournament, setSelectedTournament] = useState<string>("First Team");
@@ -32,7 +32,7 @@ export const ResultsPage = () => {
 
           {tournaments.map((tournament, index) => (
             <TabPanel key={index} value={tournament}>
-              <TableMatches mini={false} finished={true} data={dataMatches[tournament]} />
+              <TableMatches mini={false} data={dataDoneMatches[tournament]} />
             </TabPanel>
           ))}
         </TabContext>

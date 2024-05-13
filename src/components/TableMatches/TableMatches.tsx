@@ -1,7 +1,42 @@
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { Box, Grid, Typography } from "@mui/material";
-import { Match, TableResultsProps } from "types";
-import { TeamItem } from "types";
+import { Match, TableResultsProps, Team } from "types";
+
+export type TeamItemProps = {
+  team: Team;
+  leftLogo?: boolean | false;
+};
+
+export const TeamItem = (props: TeamItemProps) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {props.leftLogo && (
+        <img src={props.team.logo} alt={props.team.name} style={{ height: "30px" }} />
+      )}
+
+      <Typography
+        sx={{
+          textAlign: "center",
+          fontWeight: 500,
+          mx: 1,
+          color: "#37003c",
+        }}
+      >
+        {props.team.name}
+      </Typography>
+
+      {!props.leftLogo && (
+        <img src={props.team.logo} alt={props.team.name} style={{ height: "30px" }} />
+      )}
+    </Box>
+  );
+};
 
 export const TableMatches = (props: TableResultsProps) => {
   return (
@@ -54,28 +89,28 @@ export const TableMatches = (props: TableResultsProps) => {
               className="flex items-center"
             >
               <Grid item xs={props.mini ? 5 : 2}>
-                <TeamItem>{match.team}</TeamItem>
+                <TeamItem team={match.team} />
               </Grid>
 
               <Grid item xs={props.mini ? 2 : 1}>
                 <Typography
                   sx={{
                     textAlign: "center",
-                    backgroundColor: (props.finished && "#37003c") || "white",
+                    backgroundColor: (match.finished && "#37003c") || "white",
                     borderWidth: "1px",
-                    fontWeight: (props.finished && 700) || 400,
-                    color: (props.finished && "white") || "#37003c",
+                    fontWeight: (match.finished && 700) || 400,
+                    color: (match.finished && "white") || "#37003c",
                     borderRadius: "5px",
                     fontSize: "0.9rem",
                     py: 0.5,
                   }}
                 >
-                  {props.finished ? match.score : match.time}
+                  {match.finished ? match.score : match.time}
                 </Typography>
               </Grid>
 
               <Grid item xs={props.mini ? 5 : 2}>
-                <TeamItem>{match.opponent}</TeamItem>
+                <TeamItem leftLogo={true} team={match.opponent} />
               </Grid>
 
               {!props.mini && (

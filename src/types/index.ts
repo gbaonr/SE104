@@ -1,12 +1,11 @@
-import { styled, Typography } from "@mui/material";
-
 export type Match = {
-  team: string;
-  opponent: string;
-  result: string;
+  team: Team;
+  opponent: Team;
+  result: string; // W, D, L
   score: string;
   location: string;
   time: string;
+  finished?: boolean;
 };
 
 export type MatchesByDate = {
@@ -15,12 +14,10 @@ export type MatchesByDate = {
 
 export type TableResultsProps = {
   mini?: boolean;
-  finished?: boolean;
   data: MatchesByDate;
 };
 
-export const TeamItem = styled(Typography)(({ theme }) => ({
-  textAlign: "center",
-  fontWeight: 500,
-  color: "#37003c",
-}));
+export type Team = {
+  name: string;
+  logo: string;
+};
