@@ -5,117 +5,8 @@ import { Box, Container } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
 import HeaderPage from "../../components/Header/PageHeader";
-import TableMatches from "./Base";
-import { MatchesByDate } from "./Base";
-
-const dataTouraments: { [tournament: string]: MatchesByDate } = {
-  "First Team": {
-    "Saturday 11 May 2024": [
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-    ],
-    "Tuesday 7 May 2024": [
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-    ],
-  },
-  PL2: {
-    "Sunday 5 May 2024": [
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-    ],
-  },
-  U18: {
-    "Friday 3 May 2024": [
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-    ],
-    "Sunday 28 April 2024": [
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-      {
-        team: "Arsenal",
-        opponent: "Chelsea",
-        result: "W",
-        score: "2-0",
-        location: "Emirates Stadium",
-        time: "22:10",
-        finsihed: true,
-      },
-    ],
-  },
-};
+import TableMatches from "../../components/TableResults/Base";
+import dataTouraments from "../../components/TableResults/data";
 
 export default function ResultsPage() {
   const [selectedTournament, setSelectedTournament] =
@@ -146,7 +37,7 @@ export default function ResultsPage() {
 
           {tournaments.map((tournament, index) => (
             <TabPanel key={index} value={tournament}>
-              <TableMatches {...dataTouraments[tournament]} />
+              <TableMatches mini={false} data={dataTouraments[tournament]} />
             </TabPanel>
           ))}
         </TabContext>
