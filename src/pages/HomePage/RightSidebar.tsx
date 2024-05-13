@@ -258,11 +258,7 @@ export default function RightSideBar() {
           <Grid item xs={6}>
             {latestVideos.map((article, index) => (
               <Grid item xs={12} key={index}>
-                <ReadingArticle
-                  data={article}
-                  showSource={false}
-                  showHorizontal={true}
-                />
+                <ReadingArticle data={article} showSource={false} showHorizontal={true} />
               </Grid>
             ))}
           </Grid>

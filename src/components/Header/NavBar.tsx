@@ -1,14 +1,5 @@
 import MenuIcon from "@mui/icons-material/Menu";
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -25,9 +16,13 @@ const leftFeatures = [
     name: "Fixtures",
     link: "/fixtures",
   },
+  // {
+  //   name: "Stats",
+  //   link: "/stats",
+  // },
   {
-    name: "Stats",
-    link: "/stats",
+    name: "Tables",
+    link: "/tables",
   },
   {
     name: "Team Registration",
@@ -146,10 +141,7 @@ function NavBar() {
                   fontWeight: 700,
                 }}
               >
-                <Link
-                  to={`${page.link}`}
-                  style={{ textDecoration: "none", color: "white" }}
-                >
+                <Link to={`${page.link}`} style={{ textDecoration: "none", color: "white" }}>
                   {page.name}
                 </Link>
               </Button>
@@ -170,10 +162,7 @@ function NavBar() {
                   backgroundColor: "white",
                 }}
               >
-                <Link
-                  to={`${page.link}`}
-                  style={{ textDecoration: "none", color: "black" }}
-                >
+                <Link to={`${page.link}`} style={{ textDecoration: "none", color: "black" }}>
                   {page.name}
                 </Link>
               </Button>

@@ -1,4 +1,17 @@
-import { Box, Button, Container, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import HeaderPage from "../../components/Header/PageHeader";
 
@@ -136,7 +149,7 @@ export default function RegistrationPage() {
                     <TableCell>Nationality</TableCell>
                     <TableCell>Jersey Number</TableCell>
                     <TableCell>Position</TableCell>
-                    <TableCell></TableCell> 
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -148,7 +161,9 @@ export default function RegistrationPage() {
                       <TableCell>{player.jerseyNumber}</TableCell>
                       <TableCell>{player.position}</TableCell>
                       <TableCell>
-                        <Button variant="contained" onClick={() => handleDelete(index)}>Delete</Button> 
+                        <Button variant="contained" onClick={() => handleDelete(index)}>
+                          Delete
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

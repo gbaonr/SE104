@@ -9,15 +9,11 @@ import TableMatches from "../../components/TableResults/Base";
 import dataTouraments from "../../components/TableResults/data";
 
 export default function ResultsPage() {
-  const [selectedTournament, setSelectedTournament] =
-    useState<string>("First Team");
+  const [selectedTournament, setSelectedTournament] = useState<string>("First Team");
 
   const tournaments = ["First Team", "PL2", "U18"];
 
-  const handleChangeTournament = (
-    event: React.SyntheticEvent,
-    newValue: string
-  ) => {
+  const handleChangeTournament = (event: React.SyntheticEvent, newValue: string) => {
     setSelectedTournament(newValue);
   };
 

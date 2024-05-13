@@ -15,22 +15,9 @@ export default function LeftSideBar() {
             fill="none"
             style={{ width: "100%" }}
           >
-            <path
-              fill="url(#a)"
-              d="M0 8a8 8 0 0 1 8-8h341a8 8 0 0 1 8 8v44H0V8Z"
-            />
-            <mask
-              id="c"
-              width="357"
-              height="52"
-              x="0"
-              y="0"
-              maskUnits="userSpaceOnUse"
-            >
-              <path
-                fill="url(#b)"
-                d="M0 7a7 7 0 0 1 7-7h343a7 7 0 0 1 7 7v45H0V7Z"
-              />
+            <path fill="url(#a)" d="M0 8a8 8 0 0 1 8-8h341a8 8 0 0 1 8 8v44H0V8Z" />
+            <mask id="c" width="357" height="52" x="0" y="0" maskUnits="userSpaceOnUse">
+              <path fill="url(#b)" d="M0 7a7 7 0 0 1 7-7h343a7 7 0 0 1 7 7v45H0V7Z" />
             </mask>
             <g mask="url(#c)">
               <path
@@ -127,17 +114,9 @@ export default function LeftSideBar() {
             All times shown are your local time
           </Typography>
 
-          <TableMatches
-            mini={true}
-            finished={true}
-            data={dataTouraments["First Team"]}
-          />
+          <TableMatches mini={true} finished={true} data={dataTouraments["First Team"]} />
 
-          <TableMatches
-            mini={true}
-            finished={false}
-            data={dataTouraments["First Team"]}
-          />
+          <TableMatches mini={true} finished={false} data={dataTouraments["First Team"]} />
         </Box>
 
         <Box>
