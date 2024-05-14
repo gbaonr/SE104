@@ -14,6 +14,7 @@ import { HomePage } from "./features/HomePage/routes";
 import { FixturesPage } from "./features/Results/routes/Fixtures";
 import { LeaderBoard } from "./features/Results/routes/LeaderBoard";
 import { ResultsPage } from "./features/Results/routes/Results";
+import { grey } from "@mui/material/colors";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,9 @@ const theme = createTheme({
     allVariants: {
       fontFamily: "Roboto",
     },
+  },
+  palette: {
+    grey: grey,
   },
 });
 

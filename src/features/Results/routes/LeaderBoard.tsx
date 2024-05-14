@@ -5,26 +5,28 @@ import HeaderPage from "../../../components/Header/PageHeader";
 import { dataLeaderboardTeams } from "../constants/LeaderboardTeams";
 import { TeamItem } from "components/TableMatches/TableMatches";
 import { Team } from "types";
+import { RecentMatches } from "../components/RecentMatches";
+import { NextMatch } from "../components/NextMatch";
 
 export type ColumnProps = {
   width?: number;
   header: string;
-  centering?: boolean | true;
   field: string;
+  leftAlign?: boolean;
 };
 
 const columns: ColumnProps[] = [
   { width: 1, header: "#", field: "currentPosition" },
-  { width: 5, header: "Team", field: "team" },
-  { width: 1, header: "MP", field: "matchesPlayed" },
-  { width: 1, header: "W", field: "wins" },
-  { width: 1, header: "D", field: "draws" },
-  { width: 1, header: "L", field: "losses" },
+  { width: 5, header: "Club", field: "team", leftAlign: true },
+  { width: 1, header: "Played", field: "matchesPlayed" },
+  { width: 1, header: "Won", field: "wins" },
+  { width: 1, header: "Drawn", field: "draws" },
+  { width: 1, header: "Lost", field: "losses" },
   { width: 1, header: "GF", field: "goalsFor" },
   { width: 1, header: "GA", field: "goalsAgainst" },
   { width: 1, header: "GD", field: "goalDifference" },
-  { width: 1, header: "PTS", field: "points" },
-  { width: 5, header: "Form", field: "recentMatches" },
+  { width: 1, header: "Points", field: "points" },
+  { width: 4, header: "Form", field: "recentMatches" },
   { width: 1, header: "Next", field: "nextMatch" },
 ];
 
@@ -59,21 +61,64 @@ export const LeaderBoard = () => {
                 spacing={2}
               >
                 {columns.map((column, index) => (
-                  <Grid item key={index} xs={column.width}>
-                    {column.header}
+                  <Grid
+                    item
+                    key={index}
+                    xs={column.width}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: (column.leftAlign && "flex-start") || "center",
+                      backgroundColor: "#f0f0f0",
+                      py: "0.5rem !important",
+                      px: "0 !important",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        textAlign: "center",
+                        fontWeight: 700,
+                        fontSize: "0.8rem",
+                        color: "#37003c",
+                      }}
+                    >
+                      {column.header}
+                    </Typography>
                   </Grid>
                 ))}
 
                 {dataLeaderboardTeams[tournament].map((team, index) =>
                   columns.map((column, index) => {
                     return (
-                      <Grid item key={index} xs={column.width}>
+                      <Grid
+                        item
+                        key={index}
+                        xs={column.width}
+                        sx={{
+                          textAlign: column.field === "team" ? "left" : "center",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: (column.leftAlign && "flex-start") || "center",
+                          borderBottom: "2px solid #f0f0f0",
+                          py: "1rem !important",
+                          px: "0 !important",
+                        }}
+                      >
                         {column.field === "team" ? (
                           <TeamItem leftLogo={true} team={team[column.field] as Team} />
                         ) : column.field === "recentMatches" ? (
-                          <Typography>aff</Typography>
+                          <RecentMatches matches={team[column.field]} />
                         ) : column.field === "nextMatch" ? (
-                          <Typography>Next</Typography>
+                          <NextMatch match={team[column.field]} />
+                        ) : column.field === "points" ? (
+                          <Typography
+                            sx={{
+                              fontWeight: 900,
+                              color: "#37003c",
+                            }}
+                          >
+                            {team.points.toString()}
+                          </Typography>
                         ) : (
                           <Typography>
                             {typeof team[column.field] === "number"

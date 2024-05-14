@@ -12,6 +12,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
       {
         team: Teams.Arsenal,
@@ -21,6 +22,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
     ],
     "Tuesday 7 May 2024": [
@@ -32,6 +34,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
       {
         team: Teams.Arsenal,
@@ -41,6 +44,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
     ],
   },
@@ -54,6 +58,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
       {
         team: Teams.Arsenal,
@@ -63,6 +68,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
     ],
   },
@@ -76,6 +82,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
       {
         team: Teams.Arsenal,
@@ -85,6 +92,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
     ],
     "Sunday 28 April 2024": [
@@ -96,6 +104,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
       {
         team: Teams.Arsenal,
@@ -105,6 +114,7 @@ export const dataUpcomingMatches: { [tournament: string]: MatchesByDate } = {
         location: "Emirates Stadium",
         time: "22:10",
         finished: false,
+        date: "2021-10-10",
       },
     ],
   },

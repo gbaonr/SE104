@@ -115,8 +115,8 @@ export default function LeftSideBar() {
             All times shown are your local time
           </Typography>
 
-          <TableMatches mini={true} data={dataDoneMatches["First Team"]} />
-          <TableMatches mini={true} data={dataUpcomingMatches["First Team"]} />
+          <TableMatches useShortName={true} mini={true} data={dataDoneMatches["First Team"]} />
+          <TableMatches useShortName={true} mini={true} data={dataUpcomingMatches["First Team"]} />
         </Box>
 
         <Box>

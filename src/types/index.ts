@@ -5,6 +5,7 @@ export type Match = {
   score: string;
   location: string;
   time: string;
+  date: string;
   finished?: boolean;
 };
 
@@ -15,9 +16,11 @@ export type MatchesByDate = {
 export type TableResultsProps = {
   mini?: boolean;
   data: MatchesByDate;
+  useShortName?: boolean;
 };
 
 export type Team = {
   name: string;
   logo: string;
+  shortName: string;
 };
