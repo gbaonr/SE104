@@ -14,7 +14,10 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
+    "@umpirsky/country-list": "^0.0.1-security",
     "react": "^18.3.1",
+    "react-country-flag": "^3.1.0",
+    "react-country-region-selector": "^3.6.1",
     "react-dom": "^18.3.1",
     "web-vitals": "^2.1.4"
   },

@@ -1,40 +1,54 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import { Box, Button, Container, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, TextField, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { CountryDropdown } from "react-country-region-selector";
 import HeaderPage from "../../components/Header/PageHeader";
 
+const positions = [
+  "Defender",
+  "WingBack",
+  "Central Midfielder",
+  "Defensive Midfielder",
+  "Attacking Midfielder",
+  "Winger",
+  "CentreForward"
+];
+
+interface Player {
+  fullName: string;
+  age: number | string;
+  nationality: string;
+  jerseyNumber: number | string;
+  position: string;
+}
+
 export default function RegistrationPage() {
-  const [activeSection, setActiveSection] = useState("form");
-  const [player, setPlayer] = useState({
+  const [activeSection, setActiveSection] = useState<string>("form");
+  const [player, setPlayer] = useState<Player>({
     fullName: "",
     age: "",
     nationality: "",
     jerseyNumber: "",
     position: "",
   });
-  const [playersList, setPlayersList] = useState([]);
+  const [playersList, setPlayersList] = useState<Player[]>([]);
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = event.target;
     setPlayer((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name as string]: value,
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setPlayer((prevState) => ({
+      ...prevState,
+      [name as string]: value,
+    }));
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setPlayersList([...playersList, player]);
     setPlayer({
@@ -46,11 +60,11 @@ export default function RegistrationPage() {
     });
   };
 
-  const handleSectionChange = (section) => {
+  const handleSectionChange = (section: string) => {
     setActiveSection(section);
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
     const updatedPlayersList = [...playersList];
     updatedPlayersList.splice(index, 1);
     setPlayersList(updatedPlayersList);
@@ -59,20 +73,17 @@ export default function RegistrationPage() {
   return (
     <>
       <HeaderPage headerName="Player Registration" />
-
       <Container>
         <Box sx={{ my: 4 }}>
           <Button
-            variant="contained"
+            variant={activeSection === "form" ? "contained" : "outlined"}
             onClick={() => handleSectionChange("form")}
-            disabled={activeSection === "form"}
           >
             Register Player
           </Button>
           <Button
-            variant="contained"
+            variant={activeSection === "players" ? "contained" : "outlined"}
             onClick={() => handleSectionChange("players")}
-            disabled={activeSection === "players"}
           >
             View Registered Players
           </Button>
@@ -82,49 +93,94 @@ export default function RegistrationPage() {
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Full Name"
-                    name="fullName"
-                    value={player.fullName}
-                    onChange={handleChange}
-                  />
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={3}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Full Name:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <TextField
+                        fullWidth
+                        name="fullName"
+                        value={player.fullName}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Age"
-                    name="age"
-                    value={player.age}
-                    onChange={handleChange}
-                  />
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={3}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Age:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <TextField
+                        fullWidth
+                        name="age"
+                        type="number"
+                        value={player.age}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Nationality"
-                    name="nationality"
-                    value={player.nationality}
-                    onChange={handleChange}
-                  />
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={3}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Nationality:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <CountryDropdown
+                        value={player.nationality}
+                        onChange={(value) => setPlayer((prevState) => ({ ...prevState, nationality: value }))}
+                        classes="custom-dropdown"
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Jersey Number"
-                    name="jerseyNumber"
-                    value={player.jerseyNumber}
-                    onChange={handleChange}
-                  />
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={3}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Jersey Number:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <TextField
+                        fullWidth
+                        name="jerseyNumber"
+                        type="number"
+                        value={player.jerseyNumber}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Position"
-                    name="position"
-                    value={player.position}
-                    onChange={handleChange}
-                  />
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={3}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        Position:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Select
+                        fullWidth
+                        name="position"
+                        value={player.position}
+                        onChange={handleSelectChange}
+                      >
+                        {positions.map((position, index) => (
+                          <MenuItem key={index} value={position}>{position}</MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={12}>
                   <Button variant="contained" type="submit">
