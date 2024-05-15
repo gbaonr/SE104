@@ -4,10 +4,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const leftFeatures = [
-  // {
-  //   name: "Matches",
-  //   link: "/matches",
-  // },
   {
     name: "Results",
     link: "/results",
@@ -16,10 +12,6 @@ const leftFeatures = [
     name: "Fixtures",
     link: "/fixtures",
   },
-  // {
-  //   name: "Stats",
-  //   link: "/stats",
-  // },
   {
     name: "Tables",
     link: "/tables",
@@ -160,6 +152,10 @@ function NavBar() {
                   display: "block",
                   fontWeight: 700,
                   backgroundColor: "white",
+                  "&:hover": {
+                    backgroundColor: "white",
+                    color: "black",
+                  },
                 }}
               >
                 <Link to={`${page.link}`} style={{ textDecoration: "none", color: "black" }}>

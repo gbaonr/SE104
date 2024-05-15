@@ -1,7 +1,7 @@
-import { styled, Typography } from "@mui/material";
-import { Team, Match } from "types";
+import { Match } from "types/Match";
+import { Team } from "types/Team";
 
-export type TeamPerformance = {
+export type ITeamPerformance = {
   team: Team;
   currentPosition: number;
   prevPosition: number;
@@ -16,9 +16,3 @@ export type TeamPerformance = {
   recentMatches: Match[];
   nextMatch: Match;
 };
-
-export const TeamItem = styled(Typography)(({ theme }) => ({
-  textAlign: "center",
-  fontWeight: 500,
-  color: "#37003c",
-}));

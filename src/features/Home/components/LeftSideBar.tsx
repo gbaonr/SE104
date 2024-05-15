@@ -1,5 +1,5 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import { TableMatches } from "components/TableMatches/TableMatches";
+import { TableMatches } from "components/TableResults/TableMatches";
 import { dataDoneMatches } from "constants/DoneMatchResults";
 import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 
@@ -115,8 +115,8 @@ export default function LeftSideBar() {
             All times shown are your local time
           </Typography>
 
-          <TableMatches useShortName={true} mini={true} data={dataDoneMatches["First Team"]} />
-          <TableMatches useShortName={true} mini={true} data={dataUpcomingMatches["First Team"]} />
+          <TableMatches useShortName={true} mini={true} data={dataDoneMatches} />
+          <TableMatches useShortName={true} mini={true} data={dataUpcomingMatches} />
         </Box>
 
         <Box>

@@ -1,8 +1,9 @@
 import { Box, styled, Typography } from "@mui/material";
 import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
-import { ScoreItem, TeamItem } from "components/TableMatches/TableMatches";
+import { TeamItem } from "components/TableResults/ClubItem";
+import { ScoreItem } from "components/TableResults/ScoreItem";
 import React from "react";
-import { Match } from "types";
+import { Match } from "types/Match";
 
 export type NextMatchProps = {
   match: Match;

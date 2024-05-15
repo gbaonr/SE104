@@ -1,3 +1,5 @@
+import { Team } from "./Team";
+
 export type Match = {
   team: Team;
   opponent: Team;
@@ -11,16 +13,4 @@ export type Match = {
 
 export type MatchesByDate = {
   [date: string]: Match[];
-};
-
-export type TableResultsProps = {
-  mini?: boolean;
-  data: MatchesByDate;
-  useShortName?: boolean;
-};
-
-export type Team = {
-  name: string;
-  logo: string;
-  shortName: string;
 };

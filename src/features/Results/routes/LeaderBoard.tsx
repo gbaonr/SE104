@@ -1,12 +1,10 @@
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Container, Grid, Tab, Typography } from "@mui/material";
-import { useState } from "react";
-import HeaderPage from "../../../components/Header/PageHeader";
-import { dataLeaderboardTeams } from "../constants/LeaderboardTeams";
-import { TeamItem } from "components/TableMatches/TableMatches";
-import { Team } from "types";
-import { RecentMatches } from "../components/RecentMatches";
+import { Container, Grid, Typography } from "@mui/material";
+import { TeamItem } from "components/TableResults/ClubItem";
+import { Team } from "types/Team";
+import HeaderPage from "../../../components/Layouts/PageHeader";
 import { NextMatch } from "../components/NextMatch";
+import { RecentMatches } from "../components/RecentMatches";
+import { dataLeaderboardTeams } from "../constants/LeaderboardTeams";
 
 export type ColumnProps = {
   width?: number;
@@ -31,109 +29,85 @@ const columns: ColumnProps[] = [
 ];
 
 export const LeaderBoard = () => {
-  const [selectedTournament, setSelectedTournament] = useState<string>("First Team");
-  const tournaments = ["First Team", "PL2", "U18"];
-
-  const handleChangeTournament = (event: React.SyntheticEvent, newValue: string) => {
-    setSelectedTournament(newValue);
-  };
-
   return (
     <>
-      <HeaderPage headerName="Results" />
+      <HeaderPage headerName="Leaderboard" />
 
       <Container>
-        <TabContext value={selectedTournament}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleChangeTournament}>
-              {tournaments.map((tournament, index) => (
-                <Tab key={index} label={tournament} value={tournament} />
-              ))}
-            </TabList>
-          </Box>
-
-          {Object.keys(dataLeaderboardTeams).map((tournament, index) => (
-            <TabPanel key={index} value={tournament}>
-              <Grid
-                columns={{ lg: columns.reduce((acc, column) => acc + column.width, 0) }}
-                container
-                key={index}
-                spacing={2}
+        <Grid
+          columns={{ lg: columns.reduce((acc, column) => acc + column.width, 0) }}
+          container
+          spacing={2}
+        >
+          {columns.map((column, index) => (
+            <Grid
+              item
+              key={index}
+              xs={column.width}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: (column.leftAlign && "flex-start") || "center",
+                backgroundColor: "#f0f0f0",
+                py: "0.5rem !important",
+                px: "0 !important",
+              }}
+            >
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  fontWeight: 700,
+                  fontSize: "0.8rem",
+                  color: "#37003c",
+                }}
               >
-                {columns.map((column, index) => (
-                  <Grid
-                    item
-                    key={index}
-                    xs={column.width}
+                {column.header}
+              </Typography>
+            </Grid>
+          ))}
+
+          {dataLeaderboardTeams.map((team, index) =>
+            columns.map((column, index) => (
+              <Grid
+                item
+                key={index}
+                xs={column.width}
+                sx={{
+                  textAlign: column.field === "team" ? "left" : "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: (column.leftAlign && "flex-start") || "center",
+                  borderBottom: "2px solid #f0f0f0",
+                  py: "1rem !important",
+                  px: "0 !important",
+                }}
+              >
+                {column.field === "team" ? (
+                  <TeamItem leftLogo={true} team={team[column.field] as Team} />
+                ) : column.field === "recentMatches" ? (
+                  <RecentMatches matches={team[column.field]} />
+                ) : column.field === "nextMatch" ? (
+                  <NextMatch match={team[column.field]} />
+                ) : column.field === "points" ? (
+                  <Typography
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: (column.leftAlign && "flex-start") || "center",
-                      backgroundColor: "#f0f0f0",
-                      py: "0.5rem !important",
-                      px: "0 !important",
+                      fontWeight: 900,
+                      color: "#37003c",
                     }}
                   >
-                    <Typography
-                      sx={{
-                        textAlign: "center",
-                        fontWeight: 700,
-                        fontSize: "0.8rem",
-                        color: "#37003c",
-                      }}
-                    >
-                      {column.header}
-                    </Typography>
-                  </Grid>
-                ))}
-
-                {dataLeaderboardTeams[tournament].map((team, index) =>
-                  columns.map((column, index) => {
-                    return (
-                      <Grid
-                        item
-                        key={index}
-                        xs={column.width}
-                        sx={{
-                          textAlign: column.field === "team" ? "left" : "center",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: (column.leftAlign && "flex-start") || "center",
-                          borderBottom: "2px solid #f0f0f0",
-                          py: "1rem !important",
-                          px: "0 !important",
-                        }}
-                      >
-                        {column.field === "team" ? (
-                          <TeamItem leftLogo={true} team={team[column.field] as Team} />
-                        ) : column.field === "recentMatches" ? (
-                          <RecentMatches matches={team[column.field]} />
-                        ) : column.field === "nextMatch" ? (
-                          <NextMatch match={team[column.field]} />
-                        ) : column.field === "points" ? (
-                          <Typography
-                            sx={{
-                              fontWeight: 900,
-                              color: "#37003c",
-                            }}
-                          >
-                            {team.points.toString()}
-                          </Typography>
-                        ) : (
-                          <Typography>
-                            {typeof team[column.field] === "number"
-                              ? team[column.field].toString()
-                              : "Unsupported type"}
-                          </Typography>
-                        )}
-                      </Grid>
-                    );
-                  }),
+                    {team.points.toString()}
+                  </Typography>
+                ) : (
+                  <Typography>
+                    {typeof team[column.field] === "number"
+                      ? team[column.field].toString()
+                      : "Unsupported type"}
+                  </Typography>
                 )}
               </Grid>
-            </TabPanel>
-          ))}
-        </TabContext>
+            )),
+          )}
+        </Grid>
       </Container>
     </>
   );

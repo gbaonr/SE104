@@ -12,8 +12,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import HeaderPage from "components/Layouts/PageHeader";
 import { useState } from "react";
-import HeaderPage from "../../components/Header/PageHeader";
 
 export default function RegistrationPage() {
   const [activeSection, setActiveSection] = useState("form");

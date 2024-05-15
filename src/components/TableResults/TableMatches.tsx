@@ -1,76 +1,31 @@
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { Box, Grid, Typography } from "@mui/material";
-import { Match, TableResultsProps, Team } from "types";
+import { Match } from "types/Match";
+import { TeamItem } from "./ClubItem";
+import { ScoreItem } from "./ScoreItem";
 
-export type TeamItemProps = {
-  team: Team;
-  leftLogo?: boolean | false;
-  align?: "center" | "left" | "right";
+export type TableResultsProps = {
+  mini?: boolean;
   useShortName?: boolean;
-  hideName?: boolean;
-};
-
-export type ScoreItemProps = {
-  match: Match;
-};
-
-export const TeamItem = (props: TeamItemProps) => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {props.leftLogo && (
-        <img src={props.team.logo} alt={props.team.name} style={{ height: "30px" }} />
-      )}
-
-      {!props.hideName && (
-        <Typography
-          sx={{
-            textAlign: "center",
-            fontWeight: 500,
-            mx: 1,
-            color: "#37003c",
-          }}
-        >
-          {(props.useShortName && props.team.shortName) || props.team.name}
-        </Typography>
-      )}
-
-      {!props.leftLogo && (
-        <img src={props.team.logo} alt={props.team.name} style={{ height: "30px" }} />
-      )}
-    </Box>
-  );
-};
-
-export const ScoreItem = (props: ScoreItemProps) => {
-  return (
-    <Typography
-      sx={{
-        textAlign: "center",
-        backgroundColor: (props.match.finished && "#37003c") || "white",
-        borderWidth: "1px",
-        fontWeight: (props.match.finished && 700) || 400,
-        color: (props.match.finished && "white") || "#37003c",
-        borderRadius: "5px",
-        fontSize: "0.9rem",
-        py: 0.5,
-        px: 0.5,
-      }}
-    >
-      {props.match.finished ? props.match.score : props.match.time}
-    </Typography>
-  );
+  data: Match[];
 };
 
 export const TableMatches = (props: TableResultsProps) => {
+  console.log(props)
+
+  const uniqueDates = Array.from(new Set(props.data.map((match) => match.date)));
+  const matchesByDate = uniqueDates.map((date) => ({
+    date,
+    matches: props.data.filter((match) => match.date === date),
+  }));
+
+  matchesByDate.sort((a, b) => {
+    return new Date(a.date) > new Date(b.date) ? 1 : -1;
+  });
+
   return (
     <>
-      {Object.keys(props.data).map((date: string) => (
+      {matchesByDate.map((matchByDate) => (
         <Box
           sx={{
             my: 4,
@@ -91,7 +46,7 @@ export const TableMatches = (props: TableResultsProps) => {
                 margin: "0.3rem",
               }}
             >
-              {date}
+              {matchByDate.date}
             </Typography>
 
             {!props.mini && (
@@ -103,7 +58,7 @@ export const TableMatches = (props: TableResultsProps) => {
             )}
           </Box>
 
-          {props.data[date].map((match: Match, index: number) => (
+          {matchByDate.matches.map((match, index) => (
             <Grid
               container
               spacing={0}
