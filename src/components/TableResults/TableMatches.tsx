@@ -11,7 +11,7 @@ export type TableResultsProps = {
 };
 
 export const TableMatches = (props: TableResultsProps) => {
-  console.log(props)
+  console.log(props);
 
   const uniqueDates = Array.from(new Set(props.data.map((match) => match.date)));
   const matchesByDate = uniqueDates.map((date) => ({
