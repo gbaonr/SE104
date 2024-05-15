@@ -52,7 +52,7 @@ const rows = [
     createData('Erik Santos', 'Duelist', 'Brazil'),
 ];
 
-export default function CustomizedTables() {
+export default function PlayersPage() {
     return (
         <>
             <HeaderPage headerName="Players"/>

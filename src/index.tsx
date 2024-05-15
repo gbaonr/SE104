@@ -10,6 +10,7 @@ import "./assets/css/index.css";
 import TeamReg from "./features/TeamReg/TeamRegister";
 import Layout from "components/Layout/Layout";
 import Login from "features/sign-in/Login";
+import Players from "features/Players/Players";
 
 import { HomePage } from "./features/HomePage/routes";
 import { FixturesPage } from "./features/Results/routes/Fixtures";
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="/tables" element={<LeaderBoard />} />
       <Route path="/TeamReg" element={<TeamReg />} />
       <Route path="/sign-in" element={<Login />} />
+      <Route path="/players" element={<Players />} />
     </Route>,
   ),
 );
