@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
-import NavBar from "../components/Header/NavBar";
-import Footer from "../components/Footer/Footer";
+import NavBar from "components/Header/NavBar";
+import Footer from "components/Footer/Footer";
+
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";

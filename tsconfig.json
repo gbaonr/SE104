@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "allowJs": true
-  }
+    "allowJs": true,
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": ["src"]
 }

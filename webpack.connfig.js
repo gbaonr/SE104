@@ -1,5 +1,5 @@
 module.exports = {
-    resolve: {
-        enforceExtension: false
-    }
+  resolve: {
+    enforceExtension: false,
+  },
 };

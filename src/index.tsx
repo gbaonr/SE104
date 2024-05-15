@@ -7,21 +7,27 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./assets/css/index.css";
-import HomePage from "./pages/HomePage/HomePage";
-import Layout from "./pages/Layout";
-import LoginPage from "./pages/Login/Login";
-import ResultsPage from "./pages/MatchResults/Results";
-import FixturesPage from "./pages/MatchResults/Fixtures";
+import TeamReg from "./features/TeamReg/TeamRegister";
+import Layout from "components/Layout/Layout";
+import Login from "features/sign-in/Login";
+
+import { HomePage } from "./features/HomePage/routes";
+import { FixturesPage } from "./features/Results/routes/Fixtures";
+import { LeaderBoard } from "./features/Results/routes/LeaderBoard";
+import { ResultsPage } from "./features/Results/routes/Results";
+import { grey } from "@mui/material/colors";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
       <Route path="/results" element={<ResultsPage />} />
       <Route path="/fixtures" element={<FixturesPage />} />
-    </Route>
-  )
+      <Route path="/tables" element={<LeaderBoard />} />
+      <Route path="/TeamReg" element={<TeamReg />} />
+      <Route path="/sign-in" element={<Login />} />
+    </Route>,
+  ),
 );
 
 const theme = createTheme({
@@ -29,6 +35,9 @@ const theme = createTheme({
     allVariants: {
       fontFamily: "Roboto",
     },
+  },
+  palette: {
+    grey: grey,
   },
 });
 

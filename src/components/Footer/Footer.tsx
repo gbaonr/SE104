@@ -3,7 +3,7 @@ import { Container, Grid, Typography } from "@mui/material";
 function Footer() {
   return (
     <Container
-      maxWidth="xl"
+      maxWidth={false}
       sx={{
         backgroundColor: "#37003c",
         color: "white",
@@ -46,7 +46,7 @@ function Footer() {
         </Grid>
       </Grid>
     </Container>
-  )
+  );
 }
 
 export default Footer;
