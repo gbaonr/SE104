@@ -1,8 +1,8 @@
-import HeaderPage from "../../../components/Layouts/PageHeader";
+import HeaderPage from "../components/Layouts/PageHeader";
 
 import { Container } from "@mui/material";
 import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
-import { TableMatches } from "../../../components/TableResults/TableMatches";
+import { TableMatches } from "../components/TableResults/TableMatches";
 
 export const FixturesPage = () => {
   return (

@@ -1,52 +1,42 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Login from "features/Auth/Login";
 import { createRoot } from "react-dom/client";
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./assets/css/index.css";
 
 import { grey } from "@mui/material/colors";
-import { HomePage } from "./features/Home/routes";
-import { FixturesPage } from "./features/Results/routes/Fixtures";
-import { LeaderBoard } from "./features/Results/routes/LeaderBoard";
-import { ResultsPage } from "./features/Results/routes/Results";
-
-import Footer from "components/Layouts/Footer";
-import NavBar from "components/Layouts/NavBar";
-import { Outlet } from "react-router-dom";
+import { HomePage } from "./features/User/routes/HomePage";
+import { FixturesPage } from "./features/User/routes/Fixtures";
+import { LeaderBoard } from "./features/User/routes/LeaderBoard";
+import { ResultsPage } from "./features/User/routes/Results";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "@fontsource/roboto/900.css";
+import { LayoutUser } from "features/User/components/Layouts/Layout";
+import { LayoutAdmin } from "features/Admin/components/Layouts/Layout";
+import { HomePageRoute } from "features/Admin/routes/HomePage";
 
-export const Layout = () => {
-  return (
-    <>
-      <NavBar />
-      <Outlet />
-      <Footer />
-    </>
-  );
-};
-
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
-      <Route index element={<HomePage />} />
-      <Route path="/results" element={<ResultsPage />} />
-      <Route path="/fixtures" element={<FixturesPage />} />
-      <Route path="/tables" element={<LeaderBoard />} />
-      {/* <Route path="/TeamReg" element={<TeamReg />} /> */}
-      <Route path="/sign-in" element={<Login />} />
-    </Route>,
-  ),
-);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LayoutUser />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "/results", element: <ResultsPage /> },
+      { path: "/fixtures", element: <FixturesPage /> },
+      { path: "/tables", element: <LeaderBoard /> },
+      { path: "/sign-in", element: <Login /> },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <LayoutAdmin />,
+    children: [{ index: true, element: <HomePageRoute /> }],
+  },
+]);
 
 const theme = createTheme({
   typography: {

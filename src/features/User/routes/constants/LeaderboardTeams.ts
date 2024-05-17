@@ -1,5 +1,5 @@
-import { ITeamPerformance } from "../types";
 import { teamsInfo } from "constants/Teams";
+import { ITeamPerformance } from "features/User/types/TeamPerformanceTypes";
 
 export const dataLeaderboardTeams: ITeamPerformance[] = [
   {

@@ -2,7 +2,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { Link } from "react-router-dom";
-import { ReadingArticleProps } from "../types";
+import { ReadingArticleProps } from "../../types/ArticleTypes";
 
 export function ReadingArticle(props: ReadingArticleProps) {
   return (

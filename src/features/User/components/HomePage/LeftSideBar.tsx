@@ -1,7 +1,7 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import { TableMatches } from "components/TableResults/TableMatches";
 import { dataDoneMatches } from "constants/DoneMatchResults";
 import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
+import { TableMatches } from "../TableResults/TableMatches";
 
 export default function LeftSideBar() {
   return (

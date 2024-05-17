@@ -1,10 +1,10 @@
 import { Container, Grid, Typography } from "@mui/material";
-import { TeamItem } from "components/TableResults/ClubItem";
+import { TeamItem } from "components/Items/ClubItem";
 import { Team } from "types/Team";
-import HeaderPage from "../../../components/Layouts/PageHeader";
-import { NextMatch } from "../components/NextMatch";
-import { RecentMatches } from "../components/RecentMatches";
-import { dataLeaderboardTeams } from "../constants/LeaderboardTeams";
+import HeaderPage from "../components/Layouts/PageHeader";
+import { NextMatch } from "../components/LeaderBoard/NextMatch";
+import { RecentMatches } from "../components/LeaderBoard/RecentMatches";
+import { dataLeaderboardTeams } from "features/User/constants/LeaderboardTeams";
 
 export type ColumnProps = {
   width?: number;

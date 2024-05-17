@@ -1,8 +1,8 @@
 import StadiumIcon from "@mui/icons-material/Stadium";
 import { Box, Grid, Typography } from "@mui/material";
+import { TeamItem } from "components/Items/ClubItem";
+import { ScoreItem } from "components/Items/ScoreItem";
 import { Match } from "types/Match";
-import { TeamItem } from "./ClubItem";
-import { ScoreItem } from "./ScoreItem";
 
 export type TableResultsProps = {
   mini?: boolean;

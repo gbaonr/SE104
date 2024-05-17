@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from "@mui/material";
 import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
-import { TeamItem } from "components/TableResults/ClubItem";
-import { ScoreItem } from "components/TableResults/ScoreItem";
+import { TeamItem } from "components/Items/ClubItem";
+import { ScoreItem } from "components/Items/ScoreItem";
 import React from "react";
 import { Match } from "types/Match";
 

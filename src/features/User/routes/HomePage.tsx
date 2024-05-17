@@ -1,6 +1,6 @@
 import { Container, Grid } from "@mui/material";
-import LeftSideBar from "../components/LeftSideBar";
-import RightSideBar from "../components/RightSidebar";
+import LeftSideBar from "../components/HomePage/LeftSideBar";
+import RightSideBar from "../components/HomePage/RightSidebar";
 
 export const HomePage = () => {
   return (

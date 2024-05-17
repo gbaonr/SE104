@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-import HeaderPage from "../../components/Layouts/PageHeader";
+import HeaderPage from "../User/components/Layouts/PageHeader";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);

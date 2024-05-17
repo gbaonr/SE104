@@ -1,4 +1,4 @@
-import { ArticleProps } from "../types";
+import { ArticleProps } from "../types/ArticleTypes";
 
 export const latestVideos: ArticleProps[] = [
   {
