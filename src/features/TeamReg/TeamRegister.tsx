@@ -19,7 +19,7 @@ import {
 import { CountryDropdown, CountryRegionData } from "react-country-region-selector";
 import ReactCountryFlag from "react-country-flag";
 import HeaderPage from "../../components/Header/PageHeader";
-import FilterListIcon from '@mui/icons-material/FilterList'; // Import the funnel icon
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const positions = [
   "Defender",
@@ -58,6 +58,7 @@ export default function RegistrationPage() {
     jerseyNumber: "",
     position: "",
   });
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = event.target;
@@ -77,14 +78,16 @@ export default function RegistrationPage() {
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
         setPlayer((prevState) => ({
           ...prevState,
           image: e.target?.result as string,
         }));
+        setImagePreviewUrl(e.target?.result as string);
       };
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(file);
     }
   };
 
@@ -99,6 +102,7 @@ export default function RegistrationPage() {
       position: "",
       image: "",
     });
+    setImagePreviewUrl("");
   };
 
   const handleSectionChange = (section: string) => {
@@ -235,8 +239,7 @@ export default function RegistrationPage() {
                       <Select
                         fullWidth
                         name="position"
-                        value={player.position
-                        }
+                        value={player.position}
                         onChange={handleSelectChange}
                       >
                         {positions.map((position, index) => (
@@ -261,6 +264,19 @@ export default function RegistrationPage() {
                         accept="image/*"
                         onChange={handleImageChange}
                       />
+                      {imagePreviewUrl && (
+                        <img
+                          src={imagePreviewUrl}
+                          alt="Player Preview"
+                          style={{
+                            display: 'block',
+                            marginTop: '10px',
+                            width: '100px',
+                            height: '100px',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -277,7 +293,7 @@ export default function RegistrationPage() {
           <Box sx={{ my: 4 }}>
             <Box sx={{ mb: 2 }}>
               <Typography variant="h6" gutterBottom>
-                <FilterListIcon sx={{ mr: 1 }} /> {/* Filter icon here */}
+                <FilterListIcon sx={{ mr: 1 }} />
                 Filtering
               </Typography>
               <Grid container alignItems="center" spacing={2}>
@@ -287,6 +303,7 @@ export default function RegistrationPage() {
                       fullWidth
                       label={key.charAt(0).toUpperCase() + key.slice(1)}
                       name={key}
+                      type={key === 'age' || key === 'jerseyNumber' ? 'number' : 'text'}
                       value={filterValues[key as keyof Player]}
                       onChange={handleFilterChange}
                     />
