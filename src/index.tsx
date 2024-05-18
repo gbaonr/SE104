@@ -18,6 +18,7 @@ import "@fontsource/roboto/900.css";
 import { LayoutUser } from "features/User/components/Layouts/Layout";
 import { LayoutAdmin } from "features/Admin/components/Layouts/Layout";
 import { HomePageRoute } from "features/Admin/routes/HomePage";
+import { ClubManagerRoute } from "features/Admin/routes/ClubManager";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <LayoutAdmin />,
-    children: [{ index: true, element: <HomePageRoute /> }],
+    children: [
+      { index: true, element: <HomePageRoute /> },
+      { path: "/admin/teams", element: <ClubManagerRoute /> },
+    ],
   },
 ]);
 

@@ -6,7 +6,6 @@ import { TableMatches } from "../TableResults/TableMatches";
 export default function LeftSideBar() {
   return (
     <Container maxWidth="lg" sx={{ mt: 3 }}>
-      {/* header */}
       <Box sx={{ position: "relative" }}>
         <Box sx={{ width: "100%" }}>
           <svg
