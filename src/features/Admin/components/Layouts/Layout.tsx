@@ -13,21 +13,23 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import { ADMIN_ROUTES } from "constants/Paths";
 import * as React from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
-const drawerWidth = 200;
+const drawerWidth = 210;
 // const features = ["Dashboard"];
 
 const features = [
   {
     name: "Dashboard",
     icon: <Dashboard />,
+    path: ADMIN_ROUTES.DASHBOARD,
   },
   {
     name: "Team",
     icon: <GroupsIcon />,
+    path: ADMIN_ROUTES.CLUB,
   },
 ];
 
@@ -64,12 +66,23 @@ export const LayoutAdmin = (props: Props) => {
       <Divider />
       <List>
         {features.map((feature) => (
-          <ListItem key={feature.name}>
-            <ListItemButton>
-              <ListItemIcon>{feature.icon}</ListItemIcon>
-              <ListItemText primary={feature.name} />
-            </ListItemButton>
-          </ListItem>
+          <Link
+            to={feature.path}
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ListItem key={feature.name}>
+              <ListItemButton>
+                <ListItemIcon>{feature.icon}</ListItemIcon>
+                <ListItemText primary={feature.name} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
     </div>

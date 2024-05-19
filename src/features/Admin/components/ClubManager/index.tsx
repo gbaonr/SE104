@@ -2,7 +2,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import { alpha, Box, Container, Grid, InputBase, styled, Typography } from "@mui/material";
 import Fuse from "fuse.js";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { Team } from "types/Team";
+import { ADMIN_ROUTES } from "constants/Paths";
 
 export type ClubManagerProps = {
   data: {
@@ -14,7 +16,7 @@ const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  boxShadow: "0px 0px 5px 0px #000000",
+  boxShadow: "0px 0px 2px 0px #7b7b7b",
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
@@ -93,56 +95,63 @@ export const ClubManager = (props: ClubManagerProps) => {
       >
         {filteredTeams.map((team, index) => (
           <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                width: "100%",
-                borderRadius: "10px",
-                boxShadow: "0px 0px 5px 0px #000000",
-                p: 1.5,
-                "&:hover": {
-                  color: "#fff",
-                  transform: "scale(1.05)",
-                  cursor: "pointer",
-                  background:
-                    "linear-gradient(98.5deg, #05f0ff -46.16%, #7367ff 42.64%, #963cff 70.3%);",
-                },
-              }}
+            <Link
+              to={ADMIN_ROUTES.CLUB + "/" + team.shortName}
+              style={{ textDecoration: "none", color: "inherit", width: "100%" }}
             >
-              <img src={team.logo_high} alt="" width="30%" />
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  width: "100%",
+                  borderRadius: "10px",
+                  boxShadow: "0px 0px 3px 0px #7b7b7b",
+                  p: 1.5,
+                  "&:hover": {
+                    color: "#fff",
+                    transform: "scale(1.05)",
+                    cursor: "pointer",
+                    background:
+                      "linear-gradient(98.5deg, #05f0ff -46.16%, #7367ff 42.64%, #963cff 70.3%);",
+                  },
+                }}
+              >
+                <img src={team.logo_high} alt="" width="30%" />
 
-              <Box sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
-                <Typography
+                <Box
                   sx={{
-                    color: "#37003c",
-                    fontSize: "1.2rem",
-                    fontWeight: 700,
-                    mt: 1.5,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  {team.name}
-                </Typography>
+                  <Typography
+                    sx={{
+                      color: "#37003c",
+                      fontSize: "1.2rem",
+                      fontWeight: 700,
+                      mt: 1.5,
+                    }}
+                  >
+                    {team.name}
+                  </Typography>
 
-                <Typography
-                  sx={{
-                    color: "#37003c",
-                    fontSize: "1rem",
-                    fontWeight: 400,
-                    mt: 0.5,
-                  }}
-                >
-                  {team.shortName}
-                </Typography>
+                  <Typography
+                    sx={{
+                      color: "#37003c",
+                      fontSize: "1rem",
+                      fontWeight: 400,
+                      mt: 0.5,
+                    }}
+                  >
+                    {team.shortName}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
+            </Link>
           </Grid>
         ))}
       </Grid>

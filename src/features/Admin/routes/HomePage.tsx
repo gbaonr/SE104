@@ -1,5 +1,5 @@
 import { HomePage } from "../components/HomePage";
 
-export const HomePageRoute = () => {
+export const HomePageAdminRoute = () => {
   return <HomePage />;
 };
