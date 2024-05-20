@@ -14,6 +14,7 @@ export const Articles = ({ team }: ArticlesProps) => {
       sx={{
         backgroundColor: "white",
         p: 2,
+        my: 2,
         boxShadow: "0 0 10px 0 rgba(100, 100, 100, 0.1)",
         borderRadius: 2,
       }}
@@ -30,8 +31,7 @@ export const Articles = ({ team }: ArticlesProps) => {
           gutterBottom
           sx={{
             color: "#37003c",
-            fontWeight: 700,
-            mb: 4,
+            fontWeight: 900,
           }}
         >
           Articles
@@ -39,6 +39,7 @@ export const Articles = ({ team }: ArticlesProps) => {
 
         <Button
           variant="outlined"
+          disabled
           sx={{
             color: "white",
             backgroundColor: "#4caf50",

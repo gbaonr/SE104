@@ -3,306 +3,357 @@
     "name": "Arsenal",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t3.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t3.png",
-    "shortName": "ARS"
+    "shortName": "ARS",
+    "stadium": "Emirates Stadium, London"
   },
   "Aston Villa": {
     "name": "Aston Villa",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t7.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t7.png",
-    "shortName": "AVL"
+    "shortName": "AVL",
+    "stadium": "Emirates Stadium, London"
   },
   "Barnsley": {
     "name": "Barnsley",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t37.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t37.png",
-    "shortName": "BAR"
+    "shortName": "BAR",
+    "stadium": "Emirates Stadium, London"
   },
   "Birmingham City": {
     "name": "Birmingham City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t41.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t41.png",
-    "shortName": "BIR"
+    "shortName": "BIR",
+    "stadium": "Emirates Stadium, London"
   },
   "Blackburn Rovers": {
     "name": "Blackburn Rovers",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t5.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t5.png",
-    "shortName": "BLA"
+    "shortName": "BLA",
+    "stadium": "Emirates Stadium, London"
   },
   "Blackpool": {
     "name": "Blackpool",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t92.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t92.png",
-    "shortName": "BLA"
+    "shortName": "BLA",
+    "stadium": "Emirates Stadium, London"
   },
   "Bolton Wanderers": {
     "name": "Bolton Wanderers",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t30.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t30.png",
-    "shortName": "BOL"
+    "shortName": "BOL",
+    "stadium": "Emirates Stadium, London"
   },
   "Bournemouth": {
     "name": "Bournemouth",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t91.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t91.png",
-    "shortName": "BOU"
+    "shortName": "BOU",
+    "stadium": "Emirates Stadium, London"
   },
   "Bradford City": {
     "name": "Bradford City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t55.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t55.png",
-    "shortName": "BRA"
+    "shortName": "BRA",
+    "stadium": "Emirates Stadium, London"
   },
   "Brentford": {
     "name": "Brentford",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t94.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t94.png",
-    "shortName": "BRE"
+    "shortName": "BRE",
+    "stadium": "Emirates Stadium, London"
   },
   "Brighton & Hove Albion": {
     "name": "Brighton & Hove Albion",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t36.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t36.png",
-    "shortName": "BHA"
+    "shortName": "BHA",
+    "stadium": "Emirates Stadium, London"
   },
   "Burnley": {
     "name": "Burnley",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t90.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t90.png",
-    "shortName": "BUR"
+    "shortName": "BUR",
+    "stadium": "Emirates Stadium, London"
   },
   "Cardiff City": {
     "name": "Cardiff City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t97.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t97.png",
-    "shortName": "CAR"
+    "shortName": "CAR",
+    "stadium": "Emirates Stadium, London"
   },
   "Charlton Athletic": {
     "name": "Charlton Athletic",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t33.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t33.png",
-    "shortName": "CHA"
+    "shortName": "CHA",
+    "stadium": "Emirates Stadium, London"
   },
   "Chelsea": {
     "name": "Chelsea",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t8.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t8.png",
-    "shortName": "CHE"
+    "shortName": "CHE",
+    "stadium": "Emirates Stadium, London"
   },
   "Coventry City": {
     "name": "Coventry City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t9.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t9.png",
-    "shortName": "COV"
+    "shortName": "COV",
+    "stadium": "Emirates Stadium, London"
   },
   "Crystal Palace": {
     "name": "Crystal Palace",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t31.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t31.png",
-    "shortName": "CRY"
+    "shortName": "CRY",
+    "stadium": "Emirates Stadium, London"
   },
   "Derby County": {
     "name": "Derby County",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t24.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t24.png",
-    "shortName": "DER"
+    "shortName": "DER",
+    "stadium": "Emirates Stadium, London"
   },
   "Everton": {
     "name": "Everton",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t11.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t11.png",
-    "shortName": "EVE"
+    "shortName": "EVE",
+    "stadium": "Emirates Stadium, London"
   },
   "Fulham": {
     "name": "Fulham",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t54.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t54.png",
-    "shortName": "FUL"
+    "shortName": "FUL",
+    "stadium": "Emirates Stadium, London"
   },
   "Huddersfield Town": {
     "name": "Huddersfield Town",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t38.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t38.png",
-    "shortName": "HUD"
+    "shortName": "HUD",
+    "stadium": "Emirates Stadium, London"
   },
   "Hull City": {
     "name": "Hull City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t88.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t88.png",
-    "shortName": "HUL"
+    "shortName": "HUL",
+    "stadium": "Emirates Stadium, London"
   },
   "Ipswich Town": {
     "name": "Ipswich Town",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t40.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t40.png",
-    "shortName": "IPS"
+    "shortName": "IPS",
+    "stadium": "Emirates Stadium, London"
   },
   "Leeds United": {
     "name": "Leeds United",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t2.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t2.png",
-    "shortName": "LEE"
+    "shortName": "LEE",
+    "stadium": "Emirates Stadium, London"
   },
   "Leicester City": {
     "name": "Leicester City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t13.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t13.png",
-    "shortName": "LEI"
+    "shortName": "LEI",
+    "stadium": "Emirates Stadium, London"
   },
   "Liverpool": {
     "name": "Liverpool",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t14.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t14.png",
-    "shortName": "LIV"
+    "shortName": "LIV",
+    "stadium": "Emirates Stadium, London"
   },
   "Luton Town": {
     "name": "Luton Town",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t102.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t102.png",
-    "shortName": "LUT"
+    "shortName": "LUT",
+    "stadium": "Emirates Stadium, London"
   },
   "Manchester City": {
     "name": "Manchester City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t43.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t43.png",
-    "shortName": "MCI"
+    "shortName": "MCI",
+    "stadium": "Emirates Stadium, London"
   },
   "Manchester United": {
     "name": "Manchester United",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t1.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t1.png",
-    "shortName": "MUN"
+    "shortName": "MUN",
+    "stadium": "Emirates Stadium, London"
   },
   "Middlesbrough": {
     "name": "Middlesbrough",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t25.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t25.png",
-    "shortName": "MID"
+    "shortName": "MID",
+    "stadium": "Emirates Stadium, London"
   },
   "Newcastle United": {
     "name": "Newcastle United",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t4.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t4.png",
-    "shortName": "NEW"
+    "shortName": "NEW",
+    "stadium": "Emirates Stadium, London"
   },
   "Norwich City": {
     "name": "Norwich City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t45.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t45.png",
-    "shortName": "NOR"
+    "shortName": "NOR",
+    "stadium": "Emirates Stadium, London"
   },
   "Nottingham Forest": {
     "name": "Nottingham Forest",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t17.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t17.png",
-    "shortName": "NOT"
+    "shortName": "NOT",
+    "stadium": "Emirates Stadium, London"
   },
   "Oldham Athletic": {
     "name": "Oldham Athletic",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t105.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t105.png",
-    "shortName": "OLD"
+    "shortName": "OLD",
+    "stadium": "Emirates Stadium, London"
   },
   "Portsmouth": {
     "name": "Portsmouth",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t47.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t47.png",
-    "shortName": "POR"
+    "shortName": "POR",
+    "stadium": "Emirates Stadium, London"
   },
   "Queens Park Rangers": {
     "name": "Queens Park Rangers",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t52.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t52.png",
-    "shortName": "QPR"
+    "shortName": "QPR",
+    "stadium": "Emirates Stadium, London"
   },
   "Reading": {
     "name": "Reading",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t108.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t108.png",
-    "shortName": "REA"
+    "shortName": "REA",
+    "stadium": "Emirates Stadium, London"
   },
   "Sheffield United": {
     "name": "Sheffield United",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t49.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t49.png",
-    "shortName": "SHU"
+    "shortName": "SHU",
+    "stadium": "Emirates Stadium, London"
   },
   "Sheffield Wednesday": {
     "name": "Sheffield Wednesday",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t19.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t19.png",
-    "shortName": "SHW"
+    "shortName": "SHW",
+    "stadium": "Emirates Stadium, London"
   },
   "Southampton": {
     "name": "Southampton",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t20.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t20.png",
-    "shortName": "SOU"
+    "shortName": "SOU",
+    "stadium": "Emirates Stadium, London"
   },
   "Stoke City": {
     "name": "Stoke City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t110.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t110.png",
-    "shortName": "STO"
+    "shortName": "STO",
+    "stadium": "Emirates Stadium, London"
   },
   "Sunderland": {
     "name": "Sunderland",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t56.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t56.png",
-    "shortName": "SUN"
+    "shortName": "SUN",
+    "stadium": "Emirates Stadium, London"
   },
   "Swansea City": {
     "name": "Swansea City",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t80.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t80.png",
-    "shortName": "SWA"
+    "shortName": "SWA",
+    "stadium": "Emirates Stadium, London"
   },
   "Swindon Town": {
     "name": "Swindon Town",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t46.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t46.png",
-    "shortName": "SWI"
+    "shortName": "SWI",
+    "stadium": "Emirates Stadium, London"
   },
   "Tottenham Hotspur": {
     "name": "Tottenham Hotspur",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t6.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t6.png",
-    "shortName": "TOT"
+    "shortName": "TOT",
+    "stadium": "Emirates Stadium, London"
   },
   "Watford": {
     "name": "Watford",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t57.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t57.png",
-    "shortName": "WAT"
+    "shortName": "WAT",
+    "stadium": "Emirates Stadium, London"
   },
   "West Bromwich Albion": {
     "name": "West Bromwich Albion",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t35.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t35.png",
-    "shortName": "WBA"
+    "shortName": "WBA",
+    "stadium": "Emirates Stadium, London"
   },
   "West Ham United": {
     "name": "West Ham United",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t21.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t21.png",
-    "shortName": "WHU"
+    "shortName": "WHU",
+    "stadium": "Emirates Stadium, London"
   },
   "Wigan Athletic": {
     "name": "Wigan Athletic",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t111.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t111.png",
-    "shortName": "WIG"
+    "shortName": "WIG",
+    "stadium": "Emirates Stadium, London"
   },
   "Wimbledon": {
     "name": "Wimbledon",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t1736.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t1736.png",
-    "shortName": "WIM"
+    "shortName": "WIM",
+    "stadium": "Emirates Stadium, London"
   },
   "Wolverhampton Wanderers": {
     "name": "Wolverhampton Wanderers",
     "logo": "https://resources.premierleague.com/premierleague/badges/50/t39.png",
     "logo_high": "https://resources.premierleague.com/premierleague/badges/100/t39.png",
-    "shortName": "WOL"
+    "shortName": "WOL",
+    "stadium": "Emirates Stadium, London"
   }
 }

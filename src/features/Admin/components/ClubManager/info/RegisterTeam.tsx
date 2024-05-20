@@ -1,24 +1,31 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { dataPlayers } from "constants/Players";
-import { Team } from "types/Team";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { dataPlayers } from "constants/Players";
+import { useState } from "react";
+import { Team } from "types/Team";
+import { AddPlayer } from "./AddPlayer";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 type ListPlayerTeamProps = {
   team: Team;
 };
 
 const columns = [
-  { id: "id", label: "ID", width: 1, center: true },
-  { id: "lastName", label: "Last Name", width: 2, center: true },
-  { id: "firstName", label: "First Name", width: 2, center: true },
+  { id: "id", label: "#", width: 1, center: true },
+  { id: "avatar", label: "", width: 1, center: true },
+  { id: "fullName", label: "Full Name", width: 2, center: true },
   { id: "age", label: "Age", width: 1, center: true },
   { id: "nationality", label: "Nationality", width: 2, center: true },
   { id: "jerseyNumber", label: "Jersey Number", width: 2, center: true },
   { id: "position", label: "Position", width: 2, center: true },
-  { id: "edit", label: "", width: 2, center: true },
+  { id: "edit", label: "", width: 1, center: true },
+  { id: "delete", label: "", width: 1, center: true },
 ];
 
 export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
+  const [showAddPlayerPopup, setShowAddPlayerPopup] = useState<boolean>(false);
+
   return (
     <Box
       sx={{
@@ -29,17 +36,44 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
         my: 2,
       }}
     >
-      <Typography
-        variant="h4"
-        gutterBottom
+      <Box
         sx={{
-          color: "#37003c",
-          fontWeight: 700,
-          mb: 4,
+          display: "flex",
+          alignContent: "space-between",
+          alignItems: "flex-start",
+          width: "100%",
+          justifyContent: "space-between",
         }}
       >
-        Players
-      </Typography>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            color: "#37003c",
+            fontWeight: 900,
+            mb: 5,
+          }}
+        >
+          Players
+        </Typography>
+
+        <Button
+          variant="outlined"
+          onClick={(e) => setShowAddPlayerPopup(true)}
+          sx={{
+            color: "white",
+            backgroundColor: "#4caf50",
+            p: 1,
+            m: 1,
+            "&:hover": {
+              color: "#4caf50",
+              backgroundColor: "white",
+            },
+          }}
+        >
+          <AddBoxIcon />
+        </Button>
+      </Box>
 
       <Grid
         container
@@ -80,22 +114,33 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
                 alignContent: "center",
                 alignItems: "center",
                 padding: "0.5rem !important",
-                // paddingTop: "0.5rem !important",
-                // paddingBottom: "0.5rem !important",
               }}
             >
-              {column.id === "edit" ? (
+              {column.id === "edit" || column.id === "delete" ? (
                 <Box>
                   <Button
                     variant="contained"
                     sx={{
-                      backgroundColor: "green",
+                      backgroundColor: column.id === "edit" ? "gray" : "red",
                       color: "white",
                     }}
                   >
-                    <EditIcon />
+                    {column.id === "edit" && <EditIcon />}
+                    {column.id === "delete" && <DeleteIcon />}
                   </Button>
                 </Box>
+              ) : column.id === "avatar" ? (
+                <img
+                  style={{
+                    textAlign: column.center ? "center" : "left",
+                    margin: "0 auto",
+                    cursor: "pointer",
+                  }}
+                  src={player[column.id]}
+                  alt=""
+                  height="36px"
+                  width="36px"
+                />
               ) : (
                 <Typography
                   gutterBottom
@@ -111,6 +156,11 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
           )),
         )}
       </Grid>
+
+      <AddPlayer
+        showAddPlayerPopup={showAddPlayerPopup}
+        setShowAddPlayerPopup={setShowAddPlayerPopup}
+      />
     </Box>
   );
 };
