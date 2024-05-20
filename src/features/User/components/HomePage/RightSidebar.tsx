@@ -1,6 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { ReadingArticle } from "./ArticleList";
-import { latestVideos, latestFPLNews, latestArticles } from "../../constants";
+import { latestVideos, latestFPLNews, latestArticles } from "../../constants/Articles";
 
 export default function RightSideBar() {
   return (

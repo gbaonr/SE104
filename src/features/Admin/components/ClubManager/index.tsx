@@ -108,10 +108,11 @@ export const ClubManager = (props: ClubManagerProps) => {
                   width: "100%",
                   borderRadius: "10px",
                   boxShadow: "0px 0px 3px 0px #7b7b7b",
+                  backgroundColor: "#fff",
                   p: 1.5,
                   "&:hover": {
                     color: "#fff",
-                    transform: "scale(1.05)",
+                    // transform: "scale(1.05)",
                     cursor: "pointer",
                     background:
                       "linear-gradient(98.5deg, #05f0ff -46.16%, #7367ff 42.64%, #963cff 70.3%);",

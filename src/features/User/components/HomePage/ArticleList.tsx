@@ -1,8 +1,16 @@
 import ArticleIcon from "@mui/icons-material/Article";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import { ArticleProps } from "features/User/types/ArticleTypes";
 import { Link } from "react-router-dom";
-import { ReadingArticleProps } from "../../types/ArticleTypes";
+
+type ReadingArticleProps = {
+  data: ArticleProps;
+  showSource?: boolean | true;
+  showHorizontal?: boolean | false;
+  showMoreInfo?: boolean | false;
+  headLine?: boolean | false;
+};
 
 export function ReadingArticle(props: ReadingArticleProps) {
   return (

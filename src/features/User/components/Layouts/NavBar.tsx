@@ -16,10 +16,10 @@ const leftFeatures = [
     name: "Tables",
     link: "/tables",
   },
-  {
-    name: "Team Registration",
-    link: "/TeamReg",
-  },
+  // {
+  //   name: "Team Registration",
+  //   link: "/TeamReg",
+  // },
 ];
 
 const rightFeatures = [
@@ -116,7 +116,7 @@ function NavBar() {
             <img
               src="assets/images/main/pl-main-logo.png"
               alt="logo"
-              style={{ width: "50px", height: "50px" }}
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
             />
           </Box>
 
