@@ -1,13 +1,15 @@
-import { Box, Grid, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { teamsInfo } from "constants/Teams";
-import { useEffect, useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
-import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 import { TeamItem } from "components/Items/ClubItem";
+import { ADMIN_ROUTES } from "constants/Paths";
+import { teamsInfo } from "constants/Teams";
+import dayjs, { Dayjs } from "dayjs";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Match } from "types/Match";
 
 const upCommingMatchesColumns = [
   { id: "id", header: "#", width: 1 },
@@ -16,24 +18,27 @@ const upCommingMatchesColumns = [
   { id: "team", header: "Team", width: 2 },
   { id: "opponent", header: "Opponent", width: 2 },
   { id: "location", header: "Location", width: 2 },
-  // { id: "minAge", header: "MiA", width: 1 },
-  // { id: "maxAge", header: "MaA", width: 1 },
-  // { id: "minPlayers", header: "MiP", width: 1 },
-  // { id: "maxPlayers", header: "MaP", width: 1 },
 ];
 
-export const LoadingMatches = () => {
+type LoadingMatchesProps = {
+  data: Match[];
+  header: string;
+};
+
+export const LoadingMatches = (
+  { data, header }: LoadingMatchesProps,
+) => {
   const [selectedTeamOne, setSelectedTeamOne] = useState<string>("All");
   const [selectedTeamTwo, setSelectedTeamTwo] = useState<string>("All");
 
   const [startDate, setStartDate] = useState<Dayjs>(dayjs("1970-01-01"));
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
 
-  const [filteredData, setFilteredData] = useState(dataUpcomingMatches);
+  const [filteredData, setFilteredData] = useState(data);
 
   useEffect(() => {
     setFilteredData(
-      dataUpcomingMatches.filter((match) => {
+      data.filter((match) => {
         const teamOne = selectedTeamOne === "All" || match.team.name === selectedTeamOne;
         const teamTwo = selectedTeamTwo === "All" || match.opponent.name === selectedTeamTwo;
         const isAfterStartDate = dayjs(match.date).isAfter(startDate);
@@ -54,6 +59,14 @@ export const LoadingMatches = () => {
         my: 2,
       }}
     >
+      <Typography sx={{
+        fontWeight: 700,
+        fontSize: "1.7rem",
+        mb: 4,
+      }}>
+        {header}
+      </Typography>
+
       {/* loading filter */}
       <Box
         sx={{
@@ -149,7 +162,7 @@ export const LoadingMatches = () => {
           ))}
 
           {/* load data */}
-          {filteredData.map((match, index) => (
+          {filteredData.map((match) => (
             <>
               {upCommingMatchesColumns.map((column) => {
                 if (column.id === "team" || column.id === "opponent") {
@@ -167,7 +180,19 @@ export const LoadingMatches = () => {
                         cursor: "pointer",
                       }}
                     >
-                      <TeamItem team={match[column.id]} leftLogo={true} />
+                      <Box
+                        component={Link}
+                        to={ADMIN_ROUTES.MATCH + "/" + match.id}
+                        style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                          width: "100%",
+                          height: "100%",
+                          display: "block",
+                        }}
+                      >
+                        <TeamItem team={match[column.id]} leftLogo={true} />
+                      </Box>
                     </Grid>
                   );
                 }
@@ -187,7 +212,19 @@ export const LoadingMatches = () => {
                       cursor: "pointer",
                     }}
                   >
-                    {column.id === "id" ? index + 1 : match[column.id]}
+                    <Box
+                      component={Link}
+                      to={ADMIN_ROUTES.MATCH + "/" + match.id}
+                      style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                      }}
+                    >
+                      {match[column.id]}
+                    </Box>
                   </Grid>
                 );
               })}

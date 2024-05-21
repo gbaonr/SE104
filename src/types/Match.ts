@@ -1,7 +1,8 @@
+import { EventMatch } from "./Event";
 import { Team } from "./Team";
 
 export type Match = {
-  id?: string;
+  id: number;
   team: Team;
   opponent: Team;
   result: string; // W, D, L
@@ -10,10 +11,7 @@ export type Match = {
   time: string;
   date: string;
   finished?: boolean;
-  minAge?: number;
-  maxAge?: number;
-  minPlayers?: number;
-  maxPlayers?: number;
+  events?: EventMatch[];
 };
 
 export type MatchesByDate = {

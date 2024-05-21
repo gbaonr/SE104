@@ -22,9 +22,12 @@ import { LayoutUser } from "features/User/components/Layouts/Layout";
 
 import { ADMIN_ROUTES, USER_ROUTES } from "constants/Paths";
 import { teamsInfo } from "constants/Teams";
-import { TeamDetailInfo } from "features/Admin/components/ClubManager/info";
+import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import NotFoundPage from "components/NotFound";
 import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
+import { dataDoneMatches } from "constants/DoneMatchResults";
+import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
+import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 
 const router = createBrowserRouter([
   {
@@ -50,9 +53,20 @@ const router = createBrowserRouter([
       { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },
       { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
 
+      // loading team info
       ...Object.keys(teamsInfo).map((team) => ({
         path: `${ADMIN_ROUTES.CLUB}/${teamsInfo[team].shortName}`,
         element: <TeamDetailInfo team={teamsInfo[team]} />,
+      })),
+
+      // loading match info
+      ...dataDoneMatches.map((match) => ({
+        path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
+        element: <MatchDetailInfo match={match} />,
+      })),
+      ...dataUpcomingMatches.map((match) => ({
+        path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
+        element: <MatchDetailInfo match={match} />,
       })),
     ],
   },

@@ -3,6 +3,7 @@ import { teamsInfo } from "./Teams";
 
 export const dataUpcomingMatches: Match[] = [
   {
+    id: 4,
     team: teamsInfo.Arsenal,
     opponent: teamsInfo.Chelsea,
     result: "W",
@@ -11,12 +12,9 @@ export const dataUpcomingMatches: Match[] = [
     time: "22:10",
     finished: false,
     date: "05/21/2024",
-    minAge: 18,
-    maxAge: 40,
-    minPlayers: 11,
-    maxPlayers: 18,
   },
   {
+    id: 5,
     team: teamsInfo.Arsenal,
     opponent: teamsInfo.Chelsea,
     result: "W",
@@ -25,12 +23,9 @@ export const dataUpcomingMatches: Match[] = [
     time: "22:10",
     finished: false,
     date: "05/21/2024",
-    minAge: 18,
-    maxAge: 40,
-    minPlayers: 11,
-    maxPlayers: 18,
   },
   {
+    id: 6,
     team: teamsInfo.Arsenal,
     opponent: teamsInfo.Chelsea,
     result: "W",
@@ -39,12 +34,9 @@ export const dataUpcomingMatches: Match[] = [
     time: "22:10",
     finished: false,
     date: "05/21/2024",
-    minAge: 18,
-    maxAge: 40,
-    minPlayers: 11,
-    maxPlayers: 18,
   },
   {
+    id: 7,
     team: teamsInfo.Arsenal,
     opponent: teamsInfo.Chelsea,
     result: "W",
@@ -53,9 +45,5 @@ export const dataUpcomingMatches: Match[] = [
     time: "22:10",
     finished: false,
     date: "05/21/2024",
-    minAge: 18,
-    maxAge: 40,
-    minPlayers: 11,
-    maxPlayers: 18,
   },
 ];

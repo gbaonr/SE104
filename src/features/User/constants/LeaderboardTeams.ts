@@ -16,6 +16,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
     points: 26,
     recentMatches: [
       {
+        id: 0,
         team: teamsInfo.Arsenal,
         opponent: teamsInfo.Chelsea,
         result: "W",
@@ -26,6 +27,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 1,
         team: teamsInfo.Arsenal,
         opponent: teamsInfo.Chelsea,
         result: "D",
@@ -36,6 +38,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 2,
         team: teamsInfo.Arsenal,
         opponent: teamsInfo.Chelsea,
         result: "L",
@@ -46,6 +49,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 3,
         team: teamsInfo.Arsenal,
         opponent: teamsInfo.Chelsea,
         result: "W",
@@ -56,6 +60,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 4,
         team: teamsInfo.Arsenal,
         opponent: teamsInfo.Chelsea,
         result: "W",
@@ -67,6 +72,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
       },
     ],
     nextMatch: {
+      id: 5,
       team: teamsInfo.Arsenal,
       opponent: teamsInfo.Chelsea,
       result: "W",
@@ -90,6 +96,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
     points: 23,
     recentMatches: [
       {
+        id: 0,
         team: teamsInfo.Chelsea,
         opponent: teamsInfo.Arsenal,
         result: "L",
@@ -100,6 +107,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 1,
         team: teamsInfo.Chelsea,
         opponent: teamsInfo.Arsenal,
         result: "D",
@@ -110,6 +118,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 2,
         team: teamsInfo.Chelsea,
         opponent: teamsInfo.Arsenal,
         result: "W",
@@ -120,6 +129,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 3,
         team: teamsInfo.Chelsea,
         opponent: teamsInfo.Arsenal,
         result: "L",
@@ -130,6 +140,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         date: "05/21/2024",
       },
       {
+        id: 4,
         team: teamsInfo.Chelsea,
         opponent: teamsInfo.Arsenal,
         result: "L",
@@ -141,6 +152,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
       },
     ],
     nextMatch: {
+      id: 5,
       team: teamsInfo.Chelsea,
       opponent: teamsInfo.Arsenal,
       result: "W",
