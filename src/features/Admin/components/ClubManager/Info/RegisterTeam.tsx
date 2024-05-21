@@ -27,6 +27,8 @@ const columns = [
 
 export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
   const [showAddPlayerPopup, setShowAddPlayerPopup] = useState<boolean>(false);
+  const [playerToEdit, setPlayerToEdit] = useState(null);
+  const [typeToEdit, setTypeToEdit] = useState("add");
 
   return (
     <Box
@@ -126,7 +128,13 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
                       backgroundColor: column.id === "edit" ? "gray" : "red",
                       color: "white",
                     }}
-                    onClick={(e) => {}}
+                    onClick={(e) => {
+                      if (column.id === "edit") {
+                        setTypeToEdit("edit");
+                        setPlayerToEdit(player);
+                        setShowAddPlayerPopup(true);
+                      }
+                    }}
                   >
                     {column.id === "edit" && <EditIcon />}
                     {column.id === "delete" && <DeleteIcon />}
@@ -163,6 +171,8 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
       <AddPlayer
         showAddPlayerPopup={showAddPlayerPopup}
         setShowAddPlayerPopup={setShowAddPlayerPopup}
+        typeToEdit={typeToEdit}
+        playerToEdit={playerToEdit}
       />
     </Box>
   );

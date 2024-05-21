@@ -112,7 +112,7 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                     xs={12}
                     sx={{
                       display: "flex",
-                      alignItems: "center",
+                      // alignItems: "center",
                     }}
                   >
                     <Grid item xs={3}>
@@ -153,16 +153,12 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            alignContent: "center",
           }}
         >
           <Grid
             container
             sx={{
               display: "flex",
-              alignItems: "center",
-              alignContent: "center",
             }}
             columns={{ xs: columns.reduce((acc, cur) => acc + cur.width, 0) }}
           >
@@ -232,6 +228,9 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                         border: "1px solid #f0f0f0",
                         p: "0.5rem !important",
                         textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
                       {value}
@@ -243,7 +242,6 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
           </Grid>
         </Box>
       </Box>
-      );
     </>
   );
 };

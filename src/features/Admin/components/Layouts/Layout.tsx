@@ -22,11 +22,11 @@ const drawerWidth = 210;
 // const features = ["Dashboard"];
 
 const features = [
-  {
-    name: "Dashboard",
-    icon: <Dashboard />,
-    path: ADMIN_ROUTES.DASHBOARD,
-  },
+  // {
+  //   name: "Dashboard",
+  //   icon: <Dashboard />,
+  //   path: ADMIN_ROUTES.DASHBOARD,
+  // },
   {
     name: "Club",
     icon: <GroupsIcon />,

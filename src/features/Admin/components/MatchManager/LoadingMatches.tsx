@@ -221,7 +221,9 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
                         color: "inherit",
                         width: "100%",
                         height: "100%",
-                        display: "block",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
                       {match[column.id]}

@@ -18,6 +18,8 @@ import { CountryDropdown } from "react-country-region-selector";
 type AddPlayerProps = {
   showAddPlayerPopup;
   setShowAddPlayerPopup;
+  playerToEdit;
+  typeToEdit;
 };
 
 const VisuallyHiddenInput = styled("input")({
@@ -33,13 +35,13 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const optionPositions = [
-  { id: "forward", name: "Forward" },
-  { id: "wingback", name: "WingBack" },
-  { id: "central_midfielder", name: "Central Midfielder" },
-  { id: "defensive_midfielder", name: "Defensive Midfielder" },
-  { id: "attacking_midfielder", name: "Attacking Midfielder" },
-  { id: "winger", name: "Winger" },
-  { id: "centre_forward", name: "CentreForward" },
+  { id: "Forward", name: "Forward" },
+  { id: "WingBack", name: "WingBack" },
+  { id: "Central Midfielder", name: "Central Midfielder" },
+  { id: "Defensive Midfielder", name: "Defensive Midfielder" },
+  { id: "Attacking Midfielder", name: "Attacking Midfielder" },
+  { id: "Winger", name: "Winger" },
+  { id: "CentreForward", name: "CentreForward" },
 ];
 
 const optionInput = [
@@ -47,11 +49,16 @@ const optionInput = [
   { id: "fullName", name: "Full Name" },
   { id: "age", name: "Age" },
   { id: "nationality", name: "Nationality" },
-  { id: "jersey_number", name: "Jersey Number" },
+  { id: "jerseyNumber", name: "Jersey Number" },
   { id: "position", name: "Position" },
 ];
 
-export const AddPlayer = ({ showAddPlayerPopup, setShowAddPlayerPopup }: AddPlayerProps) => {
+export const AddPlayer = ({
+  showAddPlayerPopup,
+  setShowAddPlayerPopup,
+  playerToEdit,
+  typeToEdit,
+}: AddPlayerProps) => {
   return (
     <>
       {showAddPlayerPopup && (
@@ -84,7 +91,7 @@ export const AddPlayer = ({ showAddPlayerPopup, setShowAddPlayerPopup }: AddPlay
                         label={column.name}
                         name={column.name}
                         id={column.id}
-                        value={optionPositions[0].id}
+                        value={playerToEdit?.position}
                       >
                         {optionPositions.map((position) => (
                           <MenuItem value={position.id}>{position.name}</MenuItem>
@@ -94,10 +101,15 @@ export const AddPlayer = ({ showAddPlayerPopup, setShowAddPlayerPopup }: AddPlay
                       <CountryDropdown
                         classes="px-2 py-3 bg-white w-full border-2"
                         onChange={(e) => {}}
-                        value={""}
+                        value={playerToEdit?.nationality}
                       />
                     ) : (
-                      <TextField fullWidth label={column.name} id={column.id} />
+                      <TextField
+                        fullWidth
+                        label={column.name}
+                        id={column.id}
+                        value={playerToEdit?.[column.id]}
+                      />
                     )}
                   </Grid>
                 </Grid>
@@ -136,7 +148,7 @@ export const AddPlayer = ({ showAddPlayerPopup, setShowAddPlayerPopup }: AddPlay
                 },
               }}
             >
-              Add
+              {typeToEdit === "edit" ? "Edit" : "Add"}
             </Button>
           </DialogActions>
         </Dialog>
