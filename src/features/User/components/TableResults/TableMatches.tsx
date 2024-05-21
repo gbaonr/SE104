@@ -67,7 +67,7 @@ export const TableMatches = (props: TableResultsProps) => {
                 py: (props.mini && 0) || 1,
                 "&:hover": {
                   background:
-                  "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);"
+                    "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
                 },
               }}
               className="flex items-center"

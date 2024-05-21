@@ -4,4 +4,6 @@ export type Team = {
   logo_high?: string;
   shortName: string;
   stadium?: string;
+
+  // TODO: players belong to this team
 };

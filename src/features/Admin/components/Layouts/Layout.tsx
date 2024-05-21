@@ -16,7 +16,7 @@ import Toolbar from "@mui/material/Toolbar";
 import { ADMIN_ROUTES } from "constants/Paths";
 import * as React from "react";
 import { Link, Outlet } from "react-router-dom";
-import JoinInnerIcon from '@mui/icons-material/JoinInner';
+import JoinInnerIcon from "@mui/icons-material/JoinInner";
 
 const drawerWidth = 210;
 // const features = ["Dashboard"];

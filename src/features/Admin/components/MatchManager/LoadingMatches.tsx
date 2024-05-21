@@ -25,9 +25,7 @@ type LoadingMatchesProps = {
   header: string;
 };
 
-export const LoadingMatches = (
-  { data, header }: LoadingMatchesProps,
-) => {
+export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
   const [selectedTeamOne, setSelectedTeamOne] = useState<string>("All");
   const [selectedTeamTwo, setSelectedTeamTwo] = useState<string>("All");
 
@@ -59,11 +57,14 @@ export const LoadingMatches = (
         my: 2,
       }}
     >
-      <Typography sx={{
-        fontWeight: 700,
-        fontSize: "1.7rem",
-        mb: 4,
-      }}>
+      <Typography
+        sx={{
+          fontWeight: 700,
+          fontSize: "1.7rem",
+          color: "#37003c",
+          mb: 4,
+        }}
+      >
         {header}
       </Typography>
 

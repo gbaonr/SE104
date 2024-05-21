@@ -91,7 +91,11 @@ export const AddPlayer = ({ showAddPlayerPopup, setShowAddPlayerPopup }: AddPlay
                         ))}
                       </Select>
                     ) : column.id === "nationality" ? (
-                      <CountryDropdown classes="px-2 py-3 bg-white w-full border-2" onChange={(e) => {}} value={""} />
+                      <CountryDropdown
+                        classes="px-2 py-3 bg-white w-full border-2"
+                        onChange={(e) => {}}
+                        value={""}
+                      />
                     ) : (
                       <TextField fullWidth label={column.name} id={column.id} />
                     )}
