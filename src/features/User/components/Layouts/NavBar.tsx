@@ -20,6 +20,10 @@ const leftFeatures = [
     name: "Team Registration",
     link: "/TeamReg",
   },
+  {
+    name: "Match Registration",
+    link: "/MatchReg",
+  },
 ];
 
 const rightFeatures = [

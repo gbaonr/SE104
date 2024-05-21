@@ -14,9 +14,12 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
+    "fs": "^0.0.1-security",
     "fuse.js": "^7.0.0",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
+    "react-country-flag": "^3.1.0",
+    "react-country-region-selector": "^3.6.1",
     "react-dom": "^18.3.1",
     "web-vitals": "^2.1.4"
   },
@@ -46,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^20.12.12",
     "prettier": "^3.2.5",
     "react-router-dom": "^6.23.0",
     "react-scripts": "^5.0.1",

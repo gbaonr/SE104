@@ -9,6 +9,8 @@ import { HomePage } from "./features/User/routes/HomePage";
 import { FixturesPage } from "./features/User/routes/Fixtures";
 import { LeaderBoard } from "./features/User/routes/LeaderBoard";
 import { ResultsPage } from "./features/User/routes/Results";
+import RegistrationPage from "./features/Admin/TeamReg/TeamRegister";
+import MatchRegistrationPage from"./features/Admin/MatchReg/MatchReg";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -30,6 +32,8 @@ const router = createBrowserRouter([
       { path: "/fixtures", element: <FixturesPage /> },
       { path: "/tables", element: <LeaderBoard /> },
       { path: "/sign-in", element: <Login /> },
+      { path: "/teamreg", element: <RegistrationPage /> },
+      { path: "/MatchReg", element: <MatchRegistrationPage/>},
     ],
   },
   {
