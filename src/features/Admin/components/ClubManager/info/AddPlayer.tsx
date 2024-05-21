@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { CountryDropdown, CountryRegionData } from "react-country-region-selector";
+import { CountryDropdown } from "react-country-region-selector";
 
 type AddPlayerProps = {
   showAddPlayerPopup;

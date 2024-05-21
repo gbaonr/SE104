@@ -24,6 +24,7 @@ import { ADMIN_ROUTES, USER_ROUTES } from "constants/Paths";
 import { teamsInfo } from "constants/Teams";
 import { TeamDetailInfo } from "features/Admin/components/ClubManager/info";
 import NotFoundPage from "components/NotFound";
+import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
     element: <LayoutAdmin />,
     children: [
       { index: true, element: <HomePageAdminRoute /> },
+      { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },
       { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
 
       ...Object.keys(teamsInfo).map((team) => ({

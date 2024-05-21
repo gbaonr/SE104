@@ -23,7 +23,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Arsenal,
@@ -33,7 +33,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Arsenal,
@@ -43,7 +43,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Arsenal,
@@ -53,7 +53,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Arsenal,
@@ -63,7 +63,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
     ],
     nextMatch: {
@@ -73,7 +73,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
       score: "2-0",
       location: "Emirates Stadium",
       time: "22:10",
-      date: "2021-10-10",
+      date: "05/21/2024",
     },
   },
   {
@@ -97,7 +97,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Chelsea,
@@ -107,7 +107,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Chelsea,
@@ -117,7 +117,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Chelsea,
@@ -127,7 +127,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
       {
         team: teamsInfo.Chelsea,
@@ -137,7 +137,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
         location: "Emirates Stadium",
         time: "22:10",
         finished: true,
-        date: "2021-10-10",
+        date: "05/21/2024",
       },
     ],
     nextMatch: {
@@ -147,7 +147,7 @@ export const dataLeaderboardTeams: ITeamPerformance[] = [
       score: "2-0",
       location: "Emirates Stadium",
       time: "22:10",
-      date: "2021-10-10",
+      date: "05/21/2024",
     },
   },
 ];

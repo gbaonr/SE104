@@ -16,6 +16,7 @@ import Toolbar from "@mui/material/Toolbar";
 import { ADMIN_ROUTES } from "constants/Paths";
 import * as React from "react";
 import { Link, Outlet } from "react-router-dom";
+import JoinInnerIcon from '@mui/icons-material/JoinInner';
 
 const drawerWidth = 210;
 // const features = ["Dashboard"];
@@ -27,9 +28,14 @@ const features = [
     path: ADMIN_ROUTES.DASHBOARD,
   },
   {
-    name: "Team",
+    name: "Club",
     icon: <GroupsIcon />,
     path: ADMIN_ROUTES.CLUB,
+  },
+  {
+    name: "Match",
+    icon: <JoinInnerIcon />,
+    path: ADMIN_ROUTES.MATCH,
   },
 ];
 

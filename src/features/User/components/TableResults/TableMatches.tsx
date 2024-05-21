@@ -51,7 +51,7 @@ export const TableMatches = (props: TableResultsProps) => {
 
             {!props.mini && (
               <img
-                src="assets/images/main/competition_1.png"
+                src="/assets/images/main/competition_1.png"
                 alt="competition"
                 style={{ height: "30px" }}
               />
@@ -67,7 +67,7 @@ export const TableMatches = (props: TableResultsProps) => {
                 py: (props.mini && 0) || 1,
                 "&:hover": {
                   background:
-                    "linear-gradient(98.5deg, #05f0ff -46.16%, #7367ff 42.64%, #963cff 70.3%);",
+                  "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);"
                 },
               }}
               className="flex items-center"

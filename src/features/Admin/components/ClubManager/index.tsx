@@ -115,7 +115,7 @@ export const ClubManager = (props: ClubManagerProps) => {
                     // transform: "scale(1.05)",
                     cursor: "pointer",
                     background:
-                      "linear-gradient(98.5deg, #05f0ff -46.16%, #7367ff 42.64%, #963cff 70.3%);",
+                      "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
                   },
                 }}
               >

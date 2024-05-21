@@ -1,3 +1,5 @@
+// TODO: we can also use AddPlayer component for updating player info
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Typography } from "@mui/material";
@@ -109,7 +111,7 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
               xs={column.width}
               sx={{
                 border: "1px solid #f0f0f0",
-                display: (column.id === "edit" && "flex") || "block",
+                display: ((column.id === "edit" || column.id === "delete") && "flex") || "block",
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
@@ -124,6 +126,7 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
                       backgroundColor: column.id === "edit" ? "gray" : "red",
                       color: "white",
                     }}
+                    onClick={(e) => {}}
                   >
                     {column.id === "edit" && <EditIcon />}
                     {column.id === "delete" && <DeleteIcon />}
