@@ -16,10 +16,6 @@ const leftFeatures = [
     name: "Tables",
     link: "/tables",
   },
-  // {
-  //   name: "Team Registration",
-  //   link: "/TeamReg",
-  // },
 ];
 
 const rightFeatures = [
