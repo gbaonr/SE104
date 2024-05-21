@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
@@ -16,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { dataPlayers } from "constants/Players";
 import { useState } from "react";
 import { Match } from "types/Match";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 type LoadingGoalMatchProps = {
   match: Match;
@@ -41,12 +43,13 @@ const optionInput = [
 export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
   const [showEditGoal, setShowEditGoal] = useState<boolean>(false);
   const [eventToEdit, setEventToEdit] = useState(null);
+  const [typeToEdit, setTypeToEdit] = useState("add");
 
   return (
     <>
       {showEditGoal && (
         <Dialog open={showEditGoal} onClose={(e) => setShowEditGoal(false)}>
-          <DialogTitle>Edit Goal</DialogTitle>
+          <DialogTitle>{typeToEdit === "add" ? "Add" : "Edit"} Goal</DialogTitle>
           <DialogContent>
             <Grid container columns={12} spacing={2} sx={{ mt: 1 }}>
               {optionInput.map((column) => {
@@ -59,7 +62,7 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                       label={column.name}
                       name={column.name}
                       id={column.id}
-                      value={eventToEdit.team.name}
+                      value={eventToEdit?.team.name}
                     >
                       <MenuItem value={match.team.name}>{match.team.name}</MenuItem>
                       <MenuItem value={match.opponent.name}>{match.opponent.name}</MenuItem>
@@ -72,7 +75,7 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                       label={column.name}
                       name={column.name}
                       id={column.id}
-                      value={eventToEdit.player.fullName}
+                      value={eventToEdit?.player.fullName}
                     >
                       {dataPlayers
                         .filter((player) => player.team.name === match.team.name)
@@ -87,7 +90,7 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                       fullWidth
                       label={column.name}
                       id={column.id}
-                      defaultValue={eventToEdit.time}
+                      defaultValue={eventToEdit?.time}
                     />
                   );
                 } else if (column.id === "type") {
@@ -97,7 +100,7 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                       label={column.name}
                       name={column.name}
                       id={column.id}
-                      value={eventToEdit.type}
+                      value={eventToEdit?.type}
                     >
                       <MenuItem value="A">A</MenuItem>
                       <MenuItem value="B">B</MenuItem>
@@ -127,6 +130,44 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
               })}
             </Grid>
           </DialogContent>
+
+          <DialogActions>
+            <Button
+              variant="outlined"
+              onClick={(e) => setShowEditGoal(false)}
+              sx={{
+                color: "white",
+                backgroundColor: "#ff5c5c",
+                p: 1,
+                m: 1,
+                fontWeight: 700,
+                "&:hover": {
+                  color: "white",
+                  backgroundColor: "#ff5c5c",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="outlined"
+              sx={{
+                color: "white",
+                backgroundColor: "#4caf50",
+                p: 1,
+                m: 1,
+                fontWeight: 700,
+                "&:hover": {
+                  color: "white",
+                  backgroundColor: "#4caf50",
+                },
+              }}
+              onClick={(e) => setShowEditGoal(false)}
+            >
+              Save
+            </Button>
+          </DialogActions>
         </Dialog>
       )}
       <Box
@@ -138,16 +179,46 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
           my: 2,
         }}
       >
-        <Typography
+        <Box
           sx={{
-            fontWeight: 700,
-            fontSize: "1.7rem",
-            color: "#37003c",
-            mb: 4,
+            display: "flex",
+            alignContent: "space-between",
+            alignItems: "flex-start",
+            width: "100%",
+            justifyContent: "space-between",
           }}
         >
-          Goal
-        </Typography>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              fontSize: "1.7rem",
+              color: "#37003c",
+              mb: 4,
+            }}
+          >
+            Goal
+          </Typography>
+
+          <Button
+            variant="outlined"
+            onClick={(e) => {
+              setTypeToEdit("add");
+              setShowEditGoal(true);
+            }}
+            sx={{
+              color: "white",
+              backgroundColor: "#4caf50",
+              p: 1,
+              m: 1,
+              "&:hover": {
+                color: "#4caf50",
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <AddBoxIcon />
+          </Button>
+        </Box>
 
         <Box
           sx={{
