@@ -113,7 +113,14 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
                       // alignItems: "center",
                     }}
                   >
-                    <Grid item xs={3}>
+                    <Grid
+                      item
+                      xs={3}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
                       <Typography>{column.name}</Typography>
                     </Grid>
 

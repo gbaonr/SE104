@@ -1,7 +1,7 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import { Match } from "types/Match";
-import { LoadingInfoMatch } from "./LoadingInfo";
 import { LoadingGoalMatch } from "./LoadingGoal";
+import { LoadingInfoMatch } from "./LoadingInfo";
 
 type MatchDetailInfoProps = {
   match: Match;

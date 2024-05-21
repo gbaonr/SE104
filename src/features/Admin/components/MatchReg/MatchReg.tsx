@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import HeaderPage from "features/User/components/Layouts/PageHeader";
-import teamsInfoData from "../../../data/teams_info.json";
+import { teamsInfo } from "constants/Teams";
 
 interface Match {
   matchweek: string;
@@ -53,7 +53,7 @@ export default function MatchRegistrationPage() {
   const [teamsInfo, setTeamsInfo] = useState<TeamInfo[]>([]);
 
   useEffect(() => {
-    const teamsInfoArray = Object.values(teamsInfoData).map((team: any) => ({
+    const teamsInfoArray = Object.values(teamsInfo).map((team: any) => ({
       clubName: team.name,
       clubShortName: team.shortName,
       stadiumName: "Stadium",
@@ -62,29 +62,35 @@ export default function MatchRegistrationPage() {
     setTeamsInfo(teamsInfoArray);
   }, []);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>,
+  ) => {
     const { name, value } = event.target;
     setMatch((prevState) => ({
       ...prevState,
       [name as string]: value,
     }));
 
-    if (name === 'team1') {
-      const matchingTeam1 = teamsInfo.find((team: TeamInfo) => team.clubName.toLowerCase() === (value as string).toLowerCase());
+    if (name === "team1") {
+      const matchingTeam1 = teamsInfo.find(
+        (team: TeamInfo) => team.clubName.toLowerCase() === (value as string).toLowerCase(),
+      );
       if (matchingTeam1) {
-        setMatch(prevState => ({
+        setMatch((prevState) => ({
           ...prevState,
           team1LogoUrl: matchingTeam1.logoUrl,
           team1ShortName: matchingTeam1.clubShortName,
-          stadium: matchingTeam1.stadiumName
+          stadium: matchingTeam1.stadiumName,
         }));
       }
     }
 
-    if (name === 'team2') {
-      const matchingTeam2 = teamsInfo.find((team: TeamInfo) => team.clubName.toLowerCase() === (value as string).toLowerCase());
+    if (name === "team2") {
+      const matchingTeam2 = teamsInfo.find(
+        (team: TeamInfo) => team.clubName.toLowerCase() === (value as string).toLowerCase(),
+      );
       if (matchingTeam2) {
-        setMatch(prevState => ({
+        setMatch((prevState) => ({
           ...prevState,
           team2LogoUrl: matchingTeam2.logoUrl,
           team2ShortName: matchingTeam2.clubShortName,
@@ -108,7 +114,7 @@ export default function MatchRegistrationPage() {
       team1LogoUrl: undefined,
       team2LogoUrl: undefined,
       team1ShortName: undefined,
-      team2ShortName: undefined
+      team2ShortName: undefined,
     });
   };
 
@@ -139,7 +145,11 @@ export default function MatchRegistrationPage() {
                         type="number"
                         value={match.matchweek}
                         onChange={handleChange}
-                        inputProps={{ min: 1, max: 38, style: { textAlign: "center", width: "50px", borderBottom: "none" } }}
+                        inputProps={{
+                          min: 1,
+                          max: 38,
+                          style: { textAlign: "center", width: "50px", borderBottom: "none" },
+                        }}
                         sx={{ marginLeft: 1 }}
                       />
                     </Grid>
@@ -149,7 +159,7 @@ export default function MatchRegistrationPage() {
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={3}></Grid>
                     <Grid item xs={3}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
                         <TextField
                           fullWidth
                           name="team1"
@@ -159,17 +169,27 @@ export default function MatchRegistrationPage() {
                           sx={{ borderBottom: "none" }}
                         />
                         {match.team1LogoUrl && (
-                          <img src={match.team1LogoUrl} alt="Team 1 Logo" style={{ height: '50px', marginLeft: '10px' }} />
+                          <img
+                            src={match.team1LogoUrl}
+                            alt="Team 1 Logo"
+                            style={{ height: "50px", marginLeft: "10px" }}
+                          />
                         )}
                       </Box>
                     </Grid>
                     <Grid item xs={1} sx={{ textAlign: "center" }}>
-                        <Typography variant="subtitle1" sx={{ fontSize: '5rem' }}>-</Typography>
+                      <Typography variant="subtitle1" sx={{ fontSize: "5rem" }}>
+                        -
+                      </Typography>
                     </Grid>
                     <Grid item xs={3}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
                         {match.team2LogoUrl && (
-                          <img src={match.team2LogoUrl} alt="Team 2 Logo" style={{ height: '50px', marginRight: '10px' }} />
+                          <img
+                            src={match.team2LogoUrl}
+                            alt="Team 2 Logo"
+                            style={{ height: "50px", marginRight: "10px" }}
+                          />
                         )}
                         <TextField
                           fullWidth
@@ -183,8 +203,8 @@ export default function MatchRegistrationPage() {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Box sx={{ width: 'fit-content' }}>
+                <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                  <Box sx={{ width: "fit-content" }}>
                     <TextField
                       name="dateTime"
                       type="datetime-local"
@@ -195,78 +215,78 @@ export default function MatchRegistrationPage() {
                         shrink: true,
                       }}
                       sx={{
-                        width: 'fit-content',
-                        minWidth: '150px',
-                        marginBottom: 2
+                        width: "fit-content",
+                        minWidth: "150px",
+                        marginBottom: 2,
                       }}
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Box sx={{ width: 'fit-content' }}>
+                <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                  <Box sx={{ width: "fit-content" }}>
                     <TextField
                       name="stadium"
                       value={match.stadium}
                       onChange={handleChange}
                       placeholder="Stadium"
-                      sx={{ 
-                        width: 'fit-content',
-                        minWidth: '200px',
-                        marginBottom: 2 
+                      sx={{
+                        width: "fit-content",
+                        minWidth: "200px",
+                        marginBottom: 2,
                       }}
                     />
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Box sx={{ width: '50%' }}>
+                    <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                      <Box sx={{ width: "50%" }}>
                         <TextField
                           fullWidth
                           name="referee"
                           value={match.referee}
                           onChange={handleChange}
                           placeholder="Referee"
-                          multiline 
-                          rows={1} 
+                          multiline
+                          rows={1}
                           sx={{ marginBottom: 2 }}
                         />
                       </Box>
                     </Grid>
-                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Box sx={{ width: '50%' }}>
+                    <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                      <Box sx={{ width: "50%" }}>
                         <TextField
                           fullWidth
                           name="assistantReferee1"
                           value={match.assistantReferee1}
                           onChange={handleChange}
                           placeholder="Assistant Referee 1"
-                          multiline 
-                          rows={1} 
+                          multiline
+                          rows={1}
                           sx={{ marginBottom: 2 }}
                         />
                       </Box>
                     </Grid>
-                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Box sx={{ width: '50%' }}>
+                    <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                      <Box sx={{ width: "50%" }}>
                         <TextField
                           fullWidth
                           name="assistantReferee2"
                           value={match.assistantReferee2}
                           onChange={handleChange}
                           placeholder="Assistant Referee 2"
-                          multiline 
-                          rows={1} 
+                          multiline
+                          rows={1}
                           sx={{ marginBottom: 2 }}
                         />
                       </Box>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button variant="contained" type="submit">
+                <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                  <Button variant="contained" type="submit">
                     Register Match
-                    </Button>
+                  </Button>
                 </Grid>
               </Grid>
             </form>
@@ -276,32 +296,49 @@ export default function MatchRegistrationPage() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Matchweek
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Teams
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Date
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Time
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Stadium
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Referee
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Assistant Referee 1
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
                       Assistant Referee 2
                     </TableCell>
-                    <TableCell sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}>
-                    </TableCell>
+                    <TableCell
+                      sx={{ textAlign: "center", borderBottom: "1px solid rgba(224, 224, 224, 1)" }}
+                    ></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -311,36 +348,47 @@ export default function MatchRegistrationPage() {
                         {match.matchweek}
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                        >
                           {match.team1LogoUrl && (
-                            <img src={match.team1LogoUrl} alt="Team 1 Logo" style={{ height: '30px', marginRight: '5px' }} />
+                            <img
+                              src={match.team1LogoUrl}
+                              alt="Team 1 Logo"
+                              style={{ height: "30px", marginRight: "5px" }}
+                            />
                           )}
                           {match.team1ShortName}
-                          <Typography variant="subtitle1" sx={{ mx: 1 }}>-</Typography>
+                          <Typography variant="subtitle1" sx={{ mx: 1 }}>
+                            -
+                          </Typography>
                           {match.team2ShortName}
                           {match.team2LogoUrl && (
-                            <img src={match.team2LogoUrl} alt="Team 2 Logo" style={{ height: '30px', marginLeft: '5px' }} />
+                            <img
+                              src={match.team2LogoUrl}
+                              alt="Team 2 Logo"
+                              style={{ height: "30px", marginLeft: "5px" }}
+                            />
                           )}
                         </Box>
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {new Date(match.dateTime).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        {new Date(match.dateTime).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {new Date(match.dateTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(match.dateTime).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </TableCell>
-                      <TableCell sx={{ textAlign: "center" }}>
-                        {match.stadium}
-                      </TableCell>
-                      <TableCell sx={{ textAlign: "center" }}>
-                        {match.referee}
-                      </TableCell>
-                      <TableCell sx={{ textAlign: "center" }}>
-                        {match.assistantReferee1}
-                      </TableCell>
-                      <TableCell sx={{ textAlign: "center" }}>
-                        {match.assistantReferee2}
-                      </TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>{match.stadium}</TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>{match.referee}</TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>{match.assistantReferee1}</TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>{match.assistantReferee2}</TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
                         <Button onClick={() => handleDelete(index)}>Delete</Button>
                       </TableCell>
@@ -355,4 +403,3 @@ export default function MatchRegistrationPage() {
     </>
   );
 }
-

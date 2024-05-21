@@ -28,6 +28,7 @@ import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
 import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
+import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,8 @@ const router = createBrowserRouter([
         path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
         element: <MatchDetailInfo match={match} />,
       })),
+
+      { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
     ],
   },
 ]);

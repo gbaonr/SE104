@@ -45,7 +45,7 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
         return teamOne && teamTwo && isAfterStartDate && isBeforeEndDate;
       }),
     );
-  }, [selectedTeamOne, selectedTeamTwo, startDate, endDate]);
+  }, [selectedTeamOne, selectedTeamTwo, startDate, endDate, data]);
 
   return (
     <Box
