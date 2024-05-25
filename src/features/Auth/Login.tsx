@@ -1,27 +1,36 @@
-import { useState } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import Container from "@mui/material/Container";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import { useState } from "react";
+import { loginApi } from "apis/auth";
+import { ToastContainer, toast } from "react-toastify";
 
 import HeaderPage from "../User/components/Layouts/PageHeader";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const username = data.get("username");
+    const password = data.get("password");
+
+    if (typeof username === "string" && typeof password === "string") {
+      const response = await loginApi(username, password);
+
+      if (response.status === "error") {
+        toast.error(response.message);
+        return;
+      }
+    }
   };
 
   const handleShowPassword = () => {
@@ -40,18 +49,14 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ color: "#333" }}>
-            Sign in
-          </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
               autoFocus
             />
             <TextField
@@ -62,7 +67,6 @@ export default function SignIn() {
               label="Password"
               type={showPassword ? "text" : "password"}
               id="password"
-              autoComplete="current-password"
               InputProps={{
                 endAdornment: (
                   <VisibilityIcon onClick={handleShowPassword} sx={{ cursor: "pointer" }} />
@@ -95,6 +99,8 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
+
+        <ToastContainer />
       </Container>
     </>
   );
