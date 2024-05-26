@@ -29,6 +29,7 @@ import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
 import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
 import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
+import {PolicyAdj} from "features/Admin/components/HomePage/PolicyAdj/PolicyAdj";
 
 const router = createBrowserRouter([
   {
@@ -53,7 +54,6 @@ const router = createBrowserRouter([
       { index: true, element: <HomePageAdminRoute /> },
       { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },
       { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
-
       // loading team info
       ...Object.keys(teamsInfo).map((team) => ({
         path: `${ADMIN_ROUTES.CLUB}/${teamsInfo[team].shortName}`,
@@ -71,6 +71,7 @@ const router = createBrowserRouter([
       })),
 
       { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
+      { path: ADMIN_ROUTES.POLICY,element: <PolicyAdj />},
     ],
   },
 ]);
