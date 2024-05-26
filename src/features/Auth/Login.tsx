@@ -4,17 +4,19 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
 import { loginApi } from "apis/auth";
+import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
+import { USER_ROUTES } from "constants/Paths";
 
 import HeaderPage from "../User/components/Layouts/PageHeader";
+import { useAuth } from "./AuthProvider";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
+  const { token, setToken } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,12 +32,19 @@ export default function SignIn() {
         toast.error(response.message);
         return;
       }
+
+      const { access_token } = response.data;
+      setToken(access_token);
     }
   };
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  if (token) {
+    return <Navigate to={USER_ROUTES.HOME} />;
+  }
 
   return (
     <>
@@ -85,18 +94,6 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Don't have an account? Sign Up
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
 

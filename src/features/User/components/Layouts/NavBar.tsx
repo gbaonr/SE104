@@ -1,5 +1,6 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
+import { useAuth } from "features/Auth/AuthProvider";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -27,6 +28,7 @@ const rightFeatures = [
 
 function NavBar() {
   const [isOpenMenu, setIsOpenMenu] = useState<null | HTMLElement>(null);
+  const { token } = useAuth();
 
   const handleOpenMenuIcon = (event: React.MouseEvent<HTMLElement>) => {
     setIsOpenMenu(event.currentTarget);
@@ -39,7 +41,7 @@ function NavBar() {
   return (
     <AppBar position="static" sx={{ backgroundColor: "#37003c" }}>
       <Container maxWidth="xl">
-        <Toolbar sx={{ minHeight: "48px !important" }}>
+        <Toolbar sx={{ minHeight: "48px !important", padding: 1 }}>
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
@@ -93,13 +95,19 @@ function NavBar() {
                 </MenuItem>
               ))}
 
-              {rightFeatures.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <Link to={`${page.link}`} style={{ textDecoration: "none" }}>
-                    {page.name}
+              {token ? (
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Link to="/sign-out" style={{ textDecoration: "none" }}>
+                    Sign Out
                   </Link>
                 </MenuItem>
-              ))}
+              ) : (
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Link to="/sign-in" style={{ textDecoration: "none" }}>
+                    Sign In
+                  </Link>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
 
@@ -137,9 +145,33 @@ function NavBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            {rightFeatures.map((page) => (
+            {!token &&
+              rightFeatures.map((page) => (
+                <Button
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 0,
+                    mx: 1,
+                    color: "black",
+                    display: "block",
+                    fontWeight: 700,
+                    backgroundColor: "white",
+                    "&:hover": {
+                      backgroundColor: "white",
+                      color: "black",
+                    },
+                  }}
+                >
+                  <Link to={`${page.link}`} style={{ textDecoration: "none", color: "black" }}>
+                    {page.name}
+                  </Link>
+                </Button>
+              ))}
+
+            {token && (
               <Button
-                key={page.name}
+                key="Sign Out"
                 onClick={handleCloseNavMenu}
                 sx={{
                   my: 0,
@@ -154,11 +186,11 @@ function NavBar() {
                   },
                 }}
               >
-                <Link to={`${page.link}`} style={{ textDecoration: "none", color: "black" }}>
-                  {page.name}
+                <Link to="/sign-out" style={{ textDecoration: "none", color: "black" }}>
+                  Sign Out
                 </Link>
               </Button>
-            ))}
+            )}
           </Box>
         </Toolbar>
       </Container>

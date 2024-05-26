@@ -8,6 +8,7 @@ function Footer() {
         backgroundColor: "#37003c",
         color: "white",
         fontWeight: 700,
+        height: "80px",
       }}
     >
       <Grid

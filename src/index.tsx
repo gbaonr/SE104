@@ -27,8 +27,10 @@ import { teamsInfo } from "constants/Teams";
 import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
-import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
 import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
+import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
+import AuthProvider from "features/Auth/AuthProvider";
+import SignOut from "features/Auth/SignOut";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,7 @@ const router = createBrowserRouter([
       { path: USER_ROUTES.FIXTURES, element: <FixturesPage /> },
       { path: USER_ROUTES.TABLES, element: <LeaderBoard /> },
       { path: USER_ROUTES.SIGN_IN, element: <Login /> },
+      { path: USER_ROUTES.SIGN_OUT, element: <SignOut /> },
     ],
   },
   {
@@ -88,9 +91,11 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
