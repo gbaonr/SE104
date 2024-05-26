@@ -1,13 +1,27 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { getUserInfo } from "apis/users";
+
+// TODO: fix when JWT token is expired
 
 const AuthContext = createContext({
   token: null,
   setToken: (newToken) => {},
+  hasAdminAccess: false,
 });
 
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
+  const [hasAdminAccess, setHasAdminAccess] = useState(false);
+
+  const updateAdminAccess = async () => {
+    const response = await getUserInfo();
+    console.log(response);
+
+    if (response.status === "success") {
+      setHasAdminAccess(response.data.role === "admin");
+    }
+  };
 
   const setToken = (newToken) => {
     setToken_(newToken);
@@ -21,6 +35,8 @@ const AuthProvider = ({ children }) => {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("token");
     }
+
+    updateAdminAccess();
   }, [token]);
 
   // Memoized value of the authentication context
@@ -28,8 +44,9 @@ const AuthProvider = ({ children }) => {
     () => ({
       token,
       setToken,
+      hasAdminAccess,
     }),
-    [token],
+    [token, hasAdminAccess],
   );
 
   // Provide the authentication context to the children components

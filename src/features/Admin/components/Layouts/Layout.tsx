@@ -13,7 +13,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
+import { getUserInfo } from "apis/users";
+import PermissionDeniedPage from "components/ProhibitPage";
 import { ADMIN_ROUTES } from "constants/Paths";
+import { useAuth } from "features/Auth/AuthProvider";
 import * as React from "react";
 import { Link, Outlet } from "react-router-dom";
 
@@ -45,6 +48,11 @@ interface Props {
 export const LayoutAdmin = (props: Props) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const { hasAdminAccess } = useAuth();
+
+  if (!hasAdminAccess) {
+    return <PermissionDeniedPage />;
+  }
 
   const handleDrawerClose = () => {
     setIsClosing(true);

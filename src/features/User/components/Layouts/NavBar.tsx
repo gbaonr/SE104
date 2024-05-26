@@ -8,27 +8,42 @@ const leftFeatures = [
   {
     name: "Results",
     link: "/results",
+    needAdmin: false,
   },
   {
     name: "Fixtures",
     link: "/fixtures",
+    needAdmin: false,
   },
   {
     name: "Tables",
     link: "/tables",
+    needAdmin: false,
   },
 ];
 
 const rightFeatures = [
   {
+    name: "Admin",
+    link: "/admin",
+    needAdmin: true,
+    needLogin: true,
+  },
+  {
     name: "Sign In",
     link: "/sign-in",
+    hideLogin: true,
+  },
+  {
+    name: "Sign Out",
+    link: "/sign-out",
+    needLogin: true,
   },
 ];
 
 function NavBar() {
   const [isOpenMenu, setIsOpenMenu] = useState<null | HTMLElement>(null);
-  const { token } = useAuth();
+  const { token, hasAdminAccess } = useAuth();
 
   const handleOpenMenuIcon = (event: React.MouseEvent<HTMLElement>) => {
     setIsOpenMenu(event.currentTarget);
@@ -144,9 +159,21 @@ function NavBar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            {!token &&
-              rightFeatures.map((page) => (
+          <Box sx={{ flexGrow: 0, display: "flex" }}>
+            {rightFeatures.map((page) => {
+              if (page.needLogin && !token) {
+                return <></>;
+              }
+
+              if (page.needAdmin && !token && !hasAdminAccess) {
+                return <></>;
+              }
+
+              if (page.hideLogin && token) {
+                return <></>;
+              }
+
+              return (
                 <Button
                   key={page.name}
                   onClick={handleCloseNavMenu}
@@ -167,30 +194,8 @@ function NavBar() {
                     {page.name}
                   </Link>
                 </Button>
-              ))}
-
-            {token && (
-              <Button
-                key="Sign Out"
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 0,
-                  mx: 1,
-                  color: "black",
-                  display: "block",
-                  fontWeight: 700,
-                  backgroundColor: "white",
-                  "&:hover": {
-                    backgroundColor: "white",
-                    color: "black",
-                  },
-                }}
-              >
-                <Link to="/sign-out" style={{ textDecoration: "none", color: "black" }}>
-                  Sign Out
-                </Link>
-              </Button>
-            )}
+              );
+            })}
           </Box>
         </Toolbar>
       </Container>
