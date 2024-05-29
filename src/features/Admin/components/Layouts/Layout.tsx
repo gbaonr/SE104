@@ -1,6 +1,7 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import JoinInnerIcon from "@mui/icons-material/JoinInner";
 import MenuIcon from "@mui/icons-material/Menu";
+import PolicyIcon from "@mui/icons-material/Menu";
 import { ListItemIcon } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -38,6 +39,11 @@ const features = [
     name: "Match",
     icon: <JoinInnerIcon />,
     path: ADMIN_ROUTES.MATCH,
+  },
+  {
+    name: "Policy",
+    icon: <PolicyIcon />,
+    path: ADMIN_ROUTES.POLICY,
   },
 ];
 

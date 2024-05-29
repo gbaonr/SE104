@@ -3,6 +3,7 @@ export const ADMIN_ROUTES = {
   CLUB: "/admin/club",
   MATCH: "/admin/match",
   MATCH_REGISTRATION: "/admin/match-registration",
+  POLICY: "/admin/policy-manager",
 };
 
 export const USER_ROUTES = {
@@ -13,3 +14,4 @@ export const USER_ROUTES = {
   SIGN_IN: "/sign-in",
   SIGN_OUT: "/sign-out",
 };
+
