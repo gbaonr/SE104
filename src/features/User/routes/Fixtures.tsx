@@ -7,7 +7,7 @@ import { TableMatches } from "../components/TableResults/TableMatches";
 export const FixturesPage = () => {
   return (
     <>
-      <HeaderPage headerName="Results" />
+      <HeaderPage headerName="Fixtures" />
 
       <Container>
         <TableMatches mini={false} data={dataUpcomingMatches} />

@@ -12,5 +12,6 @@ export const USER_ROUTES = {
   FIXTURES: "/fixtures",
   TABLES: "/tables",
   SIGN_IN: "/sign-in",
+  SIGN_OUT: "/sign-out",
 };
 
