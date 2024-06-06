@@ -28,10 +28,10 @@ import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
 import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
-import {PolicyAdj} from "features/Admin/components/HomePage/PolicyAdj/PolicyAdj";
 import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
 import AuthProvider from "features/Auth/AuthProvider";
 import SignOut from "features/Auth/SignOut";
+import PolicyAdj from "features/Admin/components/PolicyAdj";
 
 const router = createBrowserRouter([
   {
@@ -74,7 +74,7 @@ const router = createBrowserRouter([
       })),
 
       { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
-      { path: ADMIN_ROUTES.POLICY,element: <PolicyAdj />},
+      { path: ADMIN_ROUTES.POLICY, element: <PolicyAdj /> },
     ],
   },
 ]);

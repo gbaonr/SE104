@@ -6,10 +6,10 @@ import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import { loginApi } from "apis/auth";
-import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Navigate } from "react-router-dom";
 import { USER_ROUTES } from "constants/Paths";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import HeaderPage from "../User/components/Layouts/PageHeader";
 import { useAuth } from "./AuthProvider";
@@ -96,8 +96,6 @@ export default function SignIn() {
             </Button>
           </Box>
         </Box>
-
-        <ToastContainer />
       </Container>
     </>
   );

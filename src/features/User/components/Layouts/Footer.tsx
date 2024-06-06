@@ -1,4 +1,5 @@
 import { Container, Grid, Typography } from "@mui/material";
+import { ToastContainer } from "react-toastify";
 
 function Footer() {
   return (
@@ -46,6 +47,8 @@ function Footer() {
           </svg>
         </Grid>
       </Grid>
+
+      <ToastContainer />
     </Container>
   );
 }

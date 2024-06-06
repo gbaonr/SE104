@@ -14,4 +14,3 @@ export const USER_ROUTES = {
   SIGN_IN: "/sign-in",
   SIGN_OUT: "/sign-out",
 };
-

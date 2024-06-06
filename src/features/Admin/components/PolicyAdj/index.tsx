@@ -1,10 +1,23 @@
-import React, { useState, DragEventHandler } from 'react';
-import { Box, Button, Typography, TextField, IconButton, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import React, { useState, DragEventHandler, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import axios from 'axios';
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import axios from "axios";
+import { getParamsApi } from "./apis/get-params";
+import { updateParamsApi, updateParamsQuery } from "./apis/update-params";
+import { toast } from "react-toastify";
 
 type PolicyAdjustmentProps = {
   initialAgeRange?: [number, number];
@@ -22,36 +35,80 @@ type PolicyAdjustmentProps = {
   initialForeignPlayers?: number;
 };
 
-const defaultPolicySettings = {
-  ageRange: [15, 60] as [number, number],
-  timeGoal: 90,
-  goalTypes: ["A", "B", "C"],
-  points: {
-    win: 3,
-    draw: 1,
-    lose: 0,
-  },
-  playerCount: {
-    min: 11,
-    max: 18,
-  },
-  foreignPlayers: 3,
+type Points = {
+  win: number;
+  draw: number;
+  lose: number;
 };
 
-export const PolicyAdj = ({
-  initialAgeRange = defaultPolicySettings.ageRange,
-  initialTimeGoal = defaultPolicySettings.timeGoal,
-  initialGoalTypes = defaultPolicySettings.goalTypes,
-  initialPoints = defaultPolicySettings.points,
-  initialPlayerCount = defaultPolicySettings.playerCount,
-  initialForeignPlayers = defaultPolicySettings.foreignPlayers,
-}: PolicyAdjustmentProps) => {
-  const [ageRange, setAgeRange] = useState<[number, number]>(initialAgeRange);
-  const [timeGoal, setTimeGoal] = useState<number>(initialTimeGoal);
-  const [goalTypes, setGoalTypes] = useState<string[]>(initialGoalTypes);
-  const [points, setPoints] = useState(initialPoints);
-  const [playerCount, setPlayerCount] = useState(initialPlayerCount);
-  const [foreignPlayers, setForeignPlayers] = useState(initialForeignPlayers);
+type initialPlayerCount = {
+  min: number;
+  max: number;
+};
+
+// const defaultPolicySettings = {
+//   ageRange: [15, 60] as [number, number],
+//   timeGoal: 90,
+//   goalTypes: ["A", "B", "C"],
+//   points: {
+//     win: 3,
+//     draw: 1,
+//     lose: 0,
+//   },
+//   playerCount: {
+//     min: 11,
+//     max: 18,
+//   },
+//   foreignPlayers: 3,
+// };
+
+export const PolicyAdj = () => {
+  const [ageRange, setAgeRange] = useState<[number, number]>([0, 0]);
+  const [timeGoal, setTimeGoal] = useState<number>(0);
+  const [goalTypes, setGoalTypes] = useState<string[]>([]);
+  const [points, setPoints] = useState<Points>({
+    win: 0,
+    draw: 0,
+    lose: 0,
+  });
+  const [playerCount, setPlayerCount] = useState<initialPlayerCount>({
+    min: 0,
+    max: 0,
+  });
+  const [foreignPlayers, setForeignPlayers] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchParams = async () => {
+      const response = await getParamsApi();
+
+      if (response.status === "success") {
+        const responseData = response.data;
+
+        setPlayerCount({
+          min: responseData.min_club_player,
+          max: responseData.max_club_player,
+        });
+
+        setForeignPlayers(responseData.max_foreign_player);
+        setAgeRange([responseData.min_player_age, responseData.max_player_age]);
+
+        // TODO: wait for response fix format --> update this
+        setTimeGoal(Number(responseData.max_goal_time));
+
+        // TODO: fix goal types
+        setGoalTypes(new Array(responseData.max_goal_types).fill(""));
+
+        setPoints({
+          win: responseData.points_win,
+          draw: responseData.points_draw,
+          lose: responseData.points_lose,
+        });
+
+        console.log("Params fetched successfully");
+      }
+    };
+    fetchParams();
+  }, []);
 
   const handleAddGoalType = () => {
     setGoalTypes([...goalTypes, ""]);
@@ -80,7 +137,9 @@ export const PolicyAdj = ({
   };
 
   const handlePlayerCountChange = (type: "min" | "max", value: number) => {
-    setPlayerCount(type === "min" ? { ...playerCount, min: value } : { ...playerCount, max: value });
+    setPlayerCount(
+      type === "min" ? { ...playerCount, min: value } : { ...playerCount, max: value },
+    );
   };
 
   const handleForeignPlayersChange = (value: number) => {
@@ -88,13 +147,13 @@ export const PolicyAdj = ({
   };
 
   const [criteriaList, setCriteriaList] = useState<string[]>([
-    'Points',
-    'Wins',
-    'Losses',
-    'Draws',
-    'Goal Difference',
-    'Goals Scored',
-    'Goals Conceded',
+    "Points",
+    "Wins",
+    "Losses",
+    "Draws",
+    "Goal Difference",
+    "Goals Scored",
+    "Goals Conceded",
   ]);
 
   const handleMoveUp = (index: number) => {
@@ -106,6 +165,20 @@ export const PolicyAdj = ({
       setCriteriaList(updatedList);
       sendCriteriaListToBackend(updatedList);
     }
+  };
+
+  // const handleOnSaveChanges =
+  // above function input a dictionary of the updated values and send it to the backend
+  // the backend will update the values in the database
+
+  const handleOnSaveChanges = (params: updateParamsQuery) => {
+    updateParamsApi(params).then((response) => {
+      if (response.status === "success") {
+        toast.success("Params updated successfully");
+      } else {
+        toast.error("An error occurred while trying to update params");
+      }
+    });
   };
 
   const handleMoveDown = (index: number) => {
@@ -121,7 +194,7 @@ export const PolicyAdj = ({
 
   const handleDragOver: DragEventHandler<HTMLLIElement> = (event) => {
     event.preventDefault();
-    const dragIndex = Number(event.dataTransfer.getData('text/plain'));
+    const dragIndex = Number(event.dataTransfer.getData("text/plain"));
     const index = Number(event.currentTarget.dataset.index);
     if (dragIndex !== index) {
       const updatedList = [...criteriaList];
@@ -134,10 +207,10 @@ export const PolicyAdj = ({
 
   const sendCriteriaListToBackend = async (updatedList: string[]) => {
     try {
-      await axios.post('/api/update-criteria', { criteriaList: updatedList });
-      console.log('Criteria list updated successfully');
+      await axios.post("/api/update-criteria", { criteriaList: updatedList });
+      console.log("Criteria list updated successfully");
     } catch (error) {
-      console.error('Error updating criteria list:', error);
+      console.error("Error updating criteria list:", error);
     }
   };
 
@@ -147,9 +220,9 @@ export const PolicyAdj = ({
         backgroundColor: "#f5f5f5",
         p: 2,
         minHeight: "100vh",
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Box
@@ -238,6 +311,23 @@ export const PolicyAdj = ({
               />
             </Box>
           </Box>
+          <Box sx={{ mb: 4 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                handleOnSaveChanges({
+                  min_player_age: ageRange[0],
+                  max_player_age: ageRange[1],
+                  min_club_player: playerCount.min,
+                  max_club_player: playerCount.max,
+                  max_foreign_player: foreignPlayers,
+                })
+              }
+            >
+              Save Changes
+            </Button>
+          </Box>
         </Box>
         <Box
           sx={{
@@ -289,11 +379,7 @@ export const PolicyAdj = ({
                 </IconButton>
               </Box>
             ))}
-            <Button
-              variant="outlined"
-              startIcon={<AddCircleIcon />}
-              onClick={handleAddGoalType}
-            >
+            <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddGoalType}>
               Add Goal Type
             </Button>
           </Box>
@@ -352,6 +438,7 @@ export const PolicyAdj = ({
               />
             </Box>
           </Box>
+
           <Box sx={{ mb: 4 }}>
             <Typography variant="h6" gutterBottom>
               Criteria Priority Adjustment
@@ -362,15 +449,31 @@ export const PolicyAdj = ({
                   <ListItemText primary={criteria} />
                   <ListItemIcon>
                     <IconButton onClick={() => handleMoveUp(index)}>
-                      <ArrowUpwardIcon style={{ color: 'green' }} />
+                      <ArrowUpwardIcon style={{ color: "green" }} />
                     </IconButton>
                     <IconButton onClick={() => handleMoveDown(index)}>
-                      <ArrowDownwardIcon style={{ color: 'red' }} />
+                      <ArrowDownwardIcon style={{ color: "red" }} />
                     </IconButton>
                   </ListItemIcon>
                 </ListItem>
               ))}
             </List>
+          </Box>
+
+          <Box sx={{ mb: 4 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                handleOnSaveChanges({
+                  points_win: points.win,
+                  points_draw: points.draw,
+                  points_lose: points.lose,
+                })
+              }
+            >
+              Save Changes
+            </Button>
           </Box>
         </Box>
       </Box>
@@ -379,4 +482,3 @@ export const PolicyAdj = ({
 };
 
 export default PolicyAdj;
-

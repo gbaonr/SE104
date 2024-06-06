@@ -1,7 +1,5 @@
 import axios from "axios";
-
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-console.log(BACKEND_URL);
 
 export const loginApi = async (username: string, password: string) => {
   const formData = new FormData();
@@ -17,8 +15,6 @@ export const loginApi = async (username: string, password: string) => {
     };
   } catch (error) {
     // get type of error.request.status
-    console.log(typeof error.request.status);
-
     if (error.request.status === 401) {
       return {
         status: "error",

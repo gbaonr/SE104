@@ -1,7 +1,6 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import JoinInnerIcon from "@mui/icons-material/JoinInner";
-import MenuIcon from "@mui/icons-material/Menu";
-import PolicyIcon from "@mui/icons-material/Menu";
+import { default as MenuIcon, default as PolicyIcon } from "@mui/icons-material/Menu";
 import { ListItemIcon } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -14,12 +13,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
-import { getUserInfo } from "apis/users";
 import PermissionDeniedPage from "components/ProhibitPage";
 import { ADMIN_ROUTES } from "constants/Paths";
 import { useAuth } from "features/Auth/AuthProvider";
 import * as React from "react";
 import { Link, Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 const drawerWidth = 210;
 // const features = ["Dashboard"];
@@ -166,6 +165,8 @@ export const LayoutAdmin = (props: Props) => {
         <Outlet />
         {/* <Footer /> */}
       </Box>
+
+      <ToastContainer />
     </Box>
   );
 };
