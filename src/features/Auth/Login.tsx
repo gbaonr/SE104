@@ -33,6 +33,7 @@ export default function SignIn() {
         return;
       }
 
+      console.log(response.data);
       const { access_token } = response.data;
       setToken(access_token);
     }

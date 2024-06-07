@@ -27,11 +27,12 @@ import { teamsInfo } from "constants/Teams";
 import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
-import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
+// import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
 import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
 import AuthProvider from "features/Auth/AuthProvider";
 import SignOut from "features/Auth/SignOut";
 import PolicyAdj from "features/Admin/components/PolicyAdj";
+import { UserManagement } from "features/Admin/components/Users";
 
 const router = createBrowserRouter([
   {
@@ -73,8 +74,11 @@ const router = createBrowserRouter([
         element: <MatchDetailInfo match={match} />,
       })),
 
-      { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
+      // { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
       { path: ADMIN_ROUTES.POLICY, element: <PolicyAdj /> },
+
+      // loading users manager
+      { path: ADMIN_ROUTES.USER_MANAGER, element: <UserManagement /> },
     ],
   },
 ]);

@@ -4,6 +4,7 @@ export const ADMIN_ROUTES = {
   MATCH: "/admin/match",
   MATCH_REGISTRATION: "/admin/match-registration",
   POLICY: "/admin/policy-manager",
+  USER_MANAGER: "/admin/user-manager",
 };
 
 export const USER_ROUTES = {

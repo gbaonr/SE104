@@ -44,6 +44,11 @@ const features = [
     icon: <PolicyIcon />,
     path: ADMIN_ROUTES.POLICY,
   },
+  {
+    name: "Users",
+    icon: <GroupsIcon />,
+    path: ADMIN_ROUTES.USER_MANAGER,
+  },
 ];
 
 interface Props {

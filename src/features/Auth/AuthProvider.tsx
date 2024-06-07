@@ -12,11 +12,12 @@ const AuthContext = createContext({
 
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
+  const [expiresIn, setExpiresIn] = useState(localStorage.getItem("expiresIn"));
+
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
 
   const updateAdminAccess = async () => {
     const response = await getUserInfo();
-    console.log(response);
 
     if (response.status === "success") {
       setHasAdminAccess(response.data.role === "admin");
