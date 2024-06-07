@@ -5,12 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Team } from "types/Team";
 import { ADMIN_ROUTES } from "constants/Paths";
+import { getClubsApi } from "./apis/get-clubs";
+import { Club } from "./apis/types";
 
-export type ClubManagerProps = {
-  data: {
-    [team: string]: Team;
-  };
-};
+// export type ClubManagerProps = {
+//   data: {
+//     [team: string]: Team;
+//   };
+// };
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -50,26 +52,41 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export const ClubManager = (props: ClubManagerProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
+export const ClubManager = () => {
   const searchRef = useRef<HTMLInputElement>(null);
-
-  const [filteredTeams, setFilteredTeams] = useState(Object.values(props.data));
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredClubs, setFilteredClubs] = useState<Club[]>([]);
+  const [clubs, setClubs] = useState<Club[]>([]);
 
   useEffect(() => {
-    const fuse = new Fuse(Object.values(props.data), {
-      keys: ["name", "shortName"],
-      includeScore: true,
-    });
+    (async () => {
+      const response = await getClubsApi();
 
-    if (searchTerm) {
-      const result = fuse.search(searchTerm);
-      const matches = result.map(({ item }) => item);
-      setFilteredTeams(matches);
-    } else {
-      setFilteredTeams(Object.values(props.data));
-    }
-  }, [searchTerm, props.data]);
+      if (response.status === "success") {
+        setClubs(response.data);
+        setFilteredClubs(response.data);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    setFilteredClubs(clubs);
+  }, [clubs]);
+
+  // useEffect(() => {
+  //   const fuse = new Fuse(Object.values(props.data), {
+  //     keys: ["name", "shortName"],
+  //     includeScore: true,
+  //   });
+
+  //   if (searchTerm) {
+  //     const result = fuse.search(searchTerm);
+  //     const matches = result.map(({ item }) => item);
+  //     setFilteredClubs(matches);
+  //   } else {
+  //     setFilteredClubs(Object.values(props.data));
+  //   }
+  // }, [searchTerm]);
 
   return (
     <Container maxWidth="lg">
@@ -80,7 +97,6 @@ export const ClubManager = (props: ClubManagerProps) => {
         <StyledInputBase
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
-          // onKeyUp={(e) => handleSearch(e)}
           onChange={(e) => setSearchTerm(e.target.value)}
           inputRef={searchRef}
         />
@@ -93,10 +109,10 @@ export const ClubManager = (props: ClubManagerProps) => {
           my: 2,
         }}
       >
-        {filteredTeams.map((team, index) => (
+        {filteredClubs.map((club, index) => (
           <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
             <Link
-              to={ADMIN_ROUTES.CLUB + "/" + team.shortName}
+              to={ADMIN_ROUTES.CLUB + "/" + club.club_shortname}
               style={{ textDecoration: "none", color: "inherit", width: "100%" }}
             >
               <Box
@@ -112,14 +128,13 @@ export const ClubManager = (props: ClubManagerProps) => {
                   p: 1.5,
                   "&:hover": {
                     color: "#fff",
-                    // transform: "scale(1.05)",
                     cursor: "pointer",
                     background:
                       "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
                   },
                 }}
               >
-                <img src={team.logo_high} alt="" width="30%" />
+                <img src={club.logo_high} alt="" width="30%" />
 
                 <Box
                   sx={{
@@ -137,7 +152,7 @@ export const ClubManager = (props: ClubManagerProps) => {
                       mt: 1.5,
                     }}
                   >
-                    {team.name}
+                    {club.club_name}
                   </Typography>
 
                   <Typography
@@ -148,7 +163,7 @@ export const ClubManager = (props: ClubManagerProps) => {
                       mt: 0.5,
                     }}
                   >
-                    {team.shortName}
+                    {club.club_shortname}
                   </Typography>
                 </Box>
               </Box>

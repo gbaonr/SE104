@@ -33,59 +33,8 @@ import SignOut from "features/Auth/SignOut";
 import PolicyAdj from "features/Admin/components/PolicyAdj";
 import { UserManagement } from "features/Admin/components/Users";
 import { AuthenticatedComponent, AuthProvider } from "features/Auth/AuthProvider";
-
-const router = createBrowserRouter([
-  {
-    path: "*",
-    element: <NotFoundPage />,
-  },
-  {
-    path: "/",
-    element: <LayoutUser />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: USER_ROUTES.RESULTS, element: <ResultsPage /> },
-      { path: USER_ROUTES.FIXTURES, element: <FixturesPage /> },
-      { path: USER_ROUTES.TABLES, element: <LeaderBoard /> },
-      { path: USER_ROUTES.SIGN_IN, element: <Login /> },
-      { path: USER_ROUTES.SIGN_OUT, element: <SignOut /> },
-    ],
-  },
-  {
-    path: ADMIN_ROUTES.DASHBOARD,
-    element: (
-      <AuthenticatedComponent>
-        <LayoutAdmin />
-      </AuthenticatedComponent>
-    ),
-    children: [
-      { index: true, element: <HomePageAdminRoute /> },
-      { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },
-      { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
-      // loading team info
-      ...Object.keys(teamsInfo).map((team) => ({
-        path: `${ADMIN_ROUTES.CLUB}/${teamsInfo[team].shortName}`,
-        element: <TeamDetailInfo team={teamsInfo[team]} />,
-      })),
-
-      // loading match info
-      ...dataDoneMatches.map((match) => ({
-        path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
-        element: <MatchDetailInfo match={match} />,
-      })),
-      ...dataUpcomingMatches.map((match) => ({
-        path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
-        element: <MatchDetailInfo match={match} />,
-      })),
-
-      // { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
-      { path: ADMIN_ROUTES.POLICY, element: <PolicyAdj /> },
-
-      // loading users manager
-      { path: ADMIN_ROUTES.USER_MANAGER, element: <UserManagement /> },
-    ],
-  },
-]);
+import { useEffect, useMemo, useState } from "react";
+import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
 
 const theme = createTheme({
   typography: {
@@ -98,7 +47,78 @@ const theme = createTheme({
   },
 });
 
-function App() {
+const App = () => {
+  const [clubs, setClubs] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getClubsApi();
+
+      if (response.status === "success") {
+        setClubs(response.data);
+      }
+    })();
+  }, []);
+
+  const memoizedValue = useMemo(() => ({ clubs }), [clubs]);
+
+  const router = createBrowserRouter([
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    },
+    {
+      path: "/",
+      element: <LayoutUser />,
+      children: [
+        { index: true, element: <HomePage /> },
+        { path: USER_ROUTES.RESULTS, element: <ResultsPage /> },
+        { path: USER_ROUTES.FIXTURES, element: <FixturesPage /> },
+        { path: USER_ROUTES.TABLES, element: <LeaderBoard /> },
+        { path: USER_ROUTES.SIGN_IN, element: <Login /> },
+        { path: USER_ROUTES.SIGN_OUT, element: <SignOut /> },
+      ],
+    },
+    {
+      path: ADMIN_ROUTES.DASHBOARD,
+      element: (
+        <AuthenticatedComponent>
+          <LayoutAdmin />
+        </AuthenticatedComponent>
+      ),
+      children: [
+        { index: true, element: <HomePageAdminRoute /> },
+        { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },
+        { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
+        // loading team info
+        // ...Object.keys(teamsInfo).map((team) => ({
+        //   path: `${ADMIN_ROUTES.CLUB}/${teamsInfo[team].shortName}`,
+        //   element: <TeamDetailInfo club={teamsInfo[team]} />,
+        // })),
+        ...memoizedValue.clubs.map((club) => ({
+          path: `${ADMIN_ROUTES.CLUB}/${club.club_shortname}`,
+          element: <TeamDetailInfo club={club} />,
+        })),
+
+        // loading match info
+        ...dataDoneMatches.map((match) => ({
+          path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
+          element: <MatchDetailInfo match={match} />,
+        })),
+        ...dataUpcomingMatches.map((match) => ({
+          path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
+          element: <MatchDetailInfo match={match} />,
+        })),
+
+        // { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
+        { path: ADMIN_ROUTES.POLICY, element: <PolicyAdj /> },
+
+        // loading users manager
+        { path: ADMIN_ROUTES.USER_MANAGER, element: <UserManagement /> },
+      ],
+    },
+  ]);
+
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
@@ -106,7 +126,7 @@ function App() {
       </ThemeProvider>
     </AuthProvider>
   );
-}
+};
 
 const root = createRoot(document.getElementById("root"));
 root.render(<App />);

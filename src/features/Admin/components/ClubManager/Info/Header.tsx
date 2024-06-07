@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
-import { Team } from "types/Team";
+import { Club } from "../apis/types";
 
 type HeaderClubInfoProps = {
-  team: Team;
+  club: Club;
 };
 
-export const HeaderClubInfo = ({ team }: HeaderClubInfoProps) => {
+export const HeaderClubInfo = ({ club }: HeaderClubInfoProps) => {
   return (
     <Box
       sx={{
@@ -22,7 +22,7 @@ export const HeaderClubInfo = ({ team }: HeaderClubInfoProps) => {
           alignItems: "center",
         }}
       >
-        <img src={team.logo_high} alt=""></img>
+        <img src={club.logo_high} alt=""></img>
         <Box
           sx={{
             mx: 2,
@@ -35,16 +35,17 @@ export const HeaderClubInfo = ({ team }: HeaderClubInfoProps) => {
               fontWeight: 900,
             }}
           >
-            {team.name}
+            {club.club_name}
           </Typography>
 
-          <Typography
+          {/* TODO: add stadium */}
+          {/* <Typography
             sx={{
               fontSize: "1.5rem",
             }}
           >
             {team.stadium}
-          </Typography>
+          </Typography> */}
         </Box>
       </Box>
     </Box>

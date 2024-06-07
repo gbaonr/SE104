@@ -1,14 +1,14 @@
 import { Container } from "@mui/material";
-import { Team } from "types/Team";
 import { Articles } from "./Articles";
-import { ListPlayerTeam } from "./RegisterTeam";
+import { ListPlayerTeam } from "./ListPlayers";
 import { HeaderClubInfo } from "./Header";
+import { Club } from "../apis/types";
 
 type TeamDetailInfoProps = {
-  team: Team;
+  club: Club;
 };
 
-export const TeamDetailInfo = ({ team }: TeamDetailInfoProps) => {
+export const TeamDetailInfo = ({ club }: TeamDetailInfoProps) => {
   return (
     <Container
       maxWidth={false}
@@ -17,13 +17,13 @@ export const TeamDetailInfo = ({ team }: TeamDetailInfoProps) => {
         flexDirection: "column",
       }}
     >
-      <HeaderClubInfo team={team} />
+      <HeaderClubInfo club={club} />
 
       {/* TODO: handle articles for each team */}
-      <Articles team={team} />
+      <Articles club={club} />
 
       {/* register teams */}
-      <ListPlayerTeam team={team} />
+      <ListPlayerTeam club={club} />
     </Container>
   );
 };

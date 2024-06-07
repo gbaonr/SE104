@@ -14,12 +14,15 @@ import {
 
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { CountryDropdown } from "react-country-region-selector";
+import { Player } from "../apis/types";
+import { useEffect } from "react";
 
 type AddPlayerProps = {
-  showAddPlayerPopup;
-  setShowAddPlayerPopup;
-  playerToEdit;
-  typeToEdit;
+  showAddPlayerPopup: boolean;
+  setShowAddPlayerPopup: (value: boolean) => void;
+  playerToEdit: Player;
+  setPlayerToEdit: (value: Player) => void;
+  typeToEdit: string;
 };
 
 const VisuallyHiddenInput = styled("input")({
@@ -35,30 +38,36 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const optionPositions = [
-  { id: "Forward", name: "Forward" },
-  { id: "WingBack", name: "WingBack" },
-  { id: "Central Midfielder", name: "Central Midfielder" },
-  { id: "Defensive Midfielder", name: "Defensive Midfielder" },
-  { id: "Attacking Midfielder", name: "Attacking Midfielder" },
-  { id: "Winger", name: "Winger" },
-  { id: "CentreForward", name: "CentreForward" },
+  { id: "Goalkeepers", name: "Goalkeepers" },
+  { id: "Defenders", name: "Defenders" },
+  { id: "Midfielders", name: "Midfielders" },
+  { id: "Forwards", name: "Forwards" },
 ];
 
 const optionInput = [
-  { id: "avatar", name: "Avatar" },
-  { id: "fullName", name: "Full Name" },
-  { id: "age", name: "Age" },
-  { id: "nationality", name: "Nationality" },
-  { id: "jerseyNumber", name: "Jersey Number" },
-  { id: "position", name: "Position" },
+  { id: "player_name", name: "Full Name" },
+  { id: "player_bday", name: "Age" },
+  // { id: "nationality", name: "Nationality" },
+  // { id: "jerseyNumber", name: "Jersey Number" },
+  // { id: "position", name: "Position" },
+  { id: "player_pos", name: "Position" },
+  { id: "player_nation", name: "Nation" },
+  { id: "js_number", name: "Jersey Number" },
 ];
 
 export const AddPlayer = ({
   showAddPlayerPopup,
   setShowAddPlayerPopup,
   playerToEdit,
+  setPlayerToEdit,
   typeToEdit,
 }: AddPlayerProps) => {
+  useEffect(() => {
+    if (!showAddPlayerPopup) {
+      setPlayerToEdit(null);
+    }
+  }, [showAddPlayerPopup, playerToEdit]);
+
   return (
     <>
       {showAddPlayerPopup && (
@@ -91,17 +100,17 @@ export const AddPlayer = ({
                         label={column.name}
                         name={column.name}
                         id={column.id}
-                        value={playerToEdit?.position}
+                        value={playerToEdit?.player_pos}
                       >
                         {optionPositions.map((position) => (
                           <MenuItem value={position.id}>{position.name}</MenuItem>
                         ))}
                       </Select>
-                    ) : column.id === "nationality" ? (
+                    ) : column.id === "player_nation" ? (
                       <CountryDropdown
                         classes="px-2 py-3 bg-white w-full border-2"
                         onChange={(e) => {}}
-                        value={playerToEdit?.nationality}
+                        value={playerToEdit?.player_nation}
                       />
                     ) : (
                       <TextField

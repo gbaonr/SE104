@@ -100,6 +100,7 @@ for club in clubs:
                 last_name = player.find("div", class_="stats-card__player-last").text
                 country = player.find("span", class_="stats-card__player-country").text
                 number = player.find("div", class_="stats-card__squad-number").text
+                url_player = player.find("a", class_="stats-card__wrapper")["href"]
             except Exception as e:
                 print(e)
                 continue
@@ -111,13 +112,31 @@ for club in clubs:
             first_name = first_name.replace("'", " ")
             last_name = last_name.replace("'", " ")
 
+            # access player page to get birthdate
+            try:
+                res = requests.get(f"https://www.premierleague.com{url_player}")
+                soup = BeautifulSoup(res.text, "html.parser")
+                birthdate = (
+                    soup.findAll("div", class_="player-info__info")[1]
+                    .text.strip()
+                    .split(" ")[0]
+                )
+
+                # convert birthdate to date
+                birthdate = time.strptime(birthdate, "%d/%m/%Y")
+                birthdate = time.mktime(birthdate)
+                birthdate = int(birthdate)
+            except Exception as e:
+                print(e)
+                continue
+
             max_id = storage_postgres.fetch("SELECT MAX(player_id) FROM players")[0][0]
 
             if not storage_postgres.fetch(
                 f"SELECT * FROM players WHERE player_name = '{first_name} {last_name}' AND player_club = {club_id} AND player_pos = '{position_name}' AND player_nation = '{country}' AND js_number = '{number}'"
             ):
                 storage_postgres.execute(
-                    "INSERT INTO players (player_name, player_club, player_pos, player_nation, js_number, player_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                    "INSERT INTO players (player_name, player_club, player_pos, player_nation, js_number, player_id, player_bday) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                     (
                         f"{first_name} {last_name}",
                         club_id,
@@ -125,6 +144,7 @@ for club in clubs:
                         country,
                         number,
                         max_id + 1,
+                        birthdate,
                     ),
                 )
 

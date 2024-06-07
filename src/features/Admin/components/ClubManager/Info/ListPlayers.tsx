@@ -1,34 +1,50 @@
 // TODO: we can also use AddPlayer component for updating player info
 
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Typography } from "@mui/material";
-import { dataPlayers } from "constants/Players";
-import { useState } from "react";
-import { Team } from "types/Team";
+import { useEffect, useState } from "react";
+import { getPlayersApi } from "../apis/get-players";
+import { Club, Player } from "../apis/types";
 import { AddPlayer } from "./AddPlayer";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import { toast } from "react-toastify";
+import { deletePlayerApi } from "../apis/delete-players";
 
 type ListPlayerTeamProps = {
-  team: Team;
+  club: Club;
 };
 
 const columns = [
-  { id: "id", label: "#", width: 1, center: true },
-  { id: "avatar", label: "", width: 1, center: true },
-  { id: "fullName", label: "Full Name", width: 2, center: true },
-  { id: "age", label: "Age", width: 1, center: true },
-  { id: "nationality", label: "Nationality", width: 2, center: true },
-  { id: "jerseyNumber", label: "Jersey Number", width: 2, center: true },
-  { id: "position", label: "Position", width: 2, center: true },
+  { id: "player_id", label: "#", width: 1, center: true },
+  { id: "player_name", label: "Full Name", width: 2, center: true },
+  { id: "player_nation", label: "Nationality", width: 2, center: true },
+  { id: "js_number", label: "Jersey Number", width: 2, center: true },
+  { id: "player_pos", label: "Position", width: 2, center: true },
   { id: "edit", label: "", width: 1, center: true },
   { id: "delete", label: "", width: 1, center: true },
 ];
 
-export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
+export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
   const [showAddPlayerPopup, setShowAddPlayerPopup] = useState<boolean>(false);
-  const [playerToEdit, setPlayerToEdit] = useState(null);
   const [typeToEdit, setTypeToEdit] = useState("add");
+
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [playerToEdit, setPlayerToEdit] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getPlayersApi({
+        club_name: club.club_name,
+      });
+
+      if (response.status === "success") {
+        setPlayers(response.data);
+      } else {
+        console.error(response.message);
+      }
+    })();
+  }, [club]);
 
   return (
     <Box
@@ -106,7 +122,7 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
           </Grid>
         ))}
 
-        {dataPlayers.map((player, index) =>
+        {players.map((player, index) =>
           columns.map((column) => (
             <Grid
               item
@@ -133,6 +149,17 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
                         setTypeToEdit("edit");
                         setPlayerToEdit(player);
                         setShowAddPlayerPopup(true);
+                      } else if (column.id === "delete") {
+                        (async () => {
+                          const response = await deletePlayerApi(player);
+
+                          if (response.status === "success") {
+                            setPlayers(players.filter((p) => p.player_id !== player.player_id));
+                            toast.success("Player deleted successfully");
+                          } else {
+                            toast.error("An error occurred while trying to delete player");
+                          }
+                        })();
                       }
                     }}
                   >
@@ -160,7 +187,7 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
                     margin: "0",
                   }}
                 >
-                  {column.id === "id" ? index + 1 : player[column.id]}
+                  {column.id === "player_id" ? index + 1 : player[column.id]}
                 </Typography>
               )}
             </Grid>
@@ -173,6 +200,7 @@ export const ListPlayerTeam = ({ team }: ListPlayerTeamProps) => {
         setShowAddPlayerPopup={setShowAddPlayerPopup}
         typeToEdit={typeToEdit}
         playerToEdit={playerToEdit}
+        setPlayerToEdit={setPlayerToEdit}
       />
     </Box>
   );

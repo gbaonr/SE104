@@ -2,13 +2,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { latestClubArticles } from "features/Admin/constants/Articles";
 import { ReadingArticle } from "features/User/components/HomePage/ArticleList";
-import { Team } from "types/Team";
+import { Club } from "../apis/types";
 
 type ArticlesProps = {
-  team: Team;
+  club: Club;
 };
 
-export const Articles = ({ team }: ArticlesProps) => {
+export const Articles = ({ club }: ArticlesProps) => {
   return (
     <Box
       sx={{
