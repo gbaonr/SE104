@@ -13,9 +13,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addUsersApi } from "./apis/add-users";
 import { toast } from "react-toastify";
+import { User } from "types/User";
 
 const optionInput = [
   { id: "full_name", name: "Full Name" },
@@ -31,13 +32,26 @@ const optionInput = [
 type AddUserProps = {
   showAddUser: boolean;
   setShowAddUser: (value: boolean) => void;
+  users: User[];
+  setUsers: (value: User[]) => void;
+  fetchUsers: () => Promise<User[]>;
+  currentEditUser: User | null;
+  setCurrentEditUser: (value: User | null) => void;
 };
 
 const validatePassword = (password: string, confirmPassword: string) => {
   return password === confirmPassword;
 };
 
-export const AddUserPopup = ({ showAddUser, setShowAddUser }: AddUserProps) => {
+export const AddUserPopup = ({
+  showAddUser,
+  setShowAddUser,
+  users,
+  setUsers,
+  fetchUsers,
+  currentEditUser,
+  setCurrentEditUser,
+}: AddUserProps) => {
   const [inputFullname, setInputFullname] = useState<string>("");
   const [inputRole, setInputRole] = useState<string>("");
   const [inputUsername, setInputUsername] = useState<string>("");
@@ -46,6 +60,32 @@ export const AddUserPopup = ({ showAddUser, setShowAddUser }: AddUserProps) => {
   const [inputBirthday, setInputBirthday] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputConfirmPassword, setInputConfirmPassword] = useState<string>("");
+
+  useEffect(() => {
+    if (currentEditUser) {
+      setInputFullname(currentEditUser.full_name);
+      setInputRole(currentEditUser.role);
+      setInputUsername(currentEditUser.user_name);
+      setInputEmail(currentEditUser.user_mail);
+      setInputNation(currentEditUser.user_nation);
+      setInputBirthday(currentEditUser.user_bday);
+    }
+  }, [currentEditUser]);
+
+  useEffect(() => {
+    if (!showAddUser) {
+      // TODO: uncomment below codes
+      // setInputFullname("");
+      // setInputRole("");
+      // setInputUsername("");
+      // setInputEmail("");
+      // setInputNation("");
+      // setInputBirthday("");
+      // setInputPassword("");
+      // setInputConfirmPassword("");
+      setCurrentEditUser(null);
+    }
+  }, [showAddUser, setCurrentEditUser]);
 
   // TODO: add validation for input
   const validateInput = () => {
@@ -230,6 +270,11 @@ export const AddUserPopup = ({ showAddUser, setShowAddUser }: AddUserProps) => {
 
                   if (res.status === "success") {
                     toast.success("User added successfully");
+
+                    (async () => {
+                      const users = await fetchUsers();
+                      setUsers(users);
+                    })();
                   } else {
                     toast.error("Failed to add user");
                   }

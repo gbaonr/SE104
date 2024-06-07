@@ -16,7 +16,7 @@ import { useAuth } from "./AuthProvider";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
-  const { token, setToken } = useAuth();
+  const { token, setToken, setExpiredDate } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,9 +33,10 @@ export default function SignIn() {
         return;
       }
 
-      console.log(response.data);
-      const { access_token } = response.data;
+      const { access_token, expired_ddate } = response.data;
+
       setToken(access_token);
+      setExpiredDate(expired_ddate);
     }
   };
 

@@ -8,6 +8,8 @@ export const loginApi = async (username: string, password: string) => {
 
   try {
     const response = await axios.post(`${BACKEND_URL}/api/v1/auth/token`, formData);
+    console.log(response.data);
+
     return {
       status: "success",
       data: response.data,

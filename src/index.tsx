@@ -29,10 +29,10 @@ import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
 // import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
 import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
-import AuthProvider from "features/Auth/AuthProvider";
 import SignOut from "features/Auth/SignOut";
 import PolicyAdj from "features/Admin/components/PolicyAdj";
 import { UserManagement } from "features/Admin/components/Users";
+import { AuthenticatedComponent, AuthProvider } from "features/Auth/AuthProvider";
 
 const router = createBrowserRouter([
   {
@@ -53,7 +53,11 @@ const router = createBrowserRouter([
   },
   {
     path: ADMIN_ROUTES.DASHBOARD,
-    element: <LayoutAdmin />,
+    element: (
+      <AuthenticatedComponent>
+        <LayoutAdmin />
+      </AuthenticatedComponent>
+    ),
     children: [
       { index: true, element: <HomePageAdminRoute /> },
       { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },

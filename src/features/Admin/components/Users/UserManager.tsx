@@ -5,6 +5,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { AddUserPopup } from "./AddUser";
+import { deleteUserApi } from "./apis/delete-users";
+import { toast } from "react-toastify";
 
 // TODO: add team for manager
 const usersColumns = [
@@ -17,20 +19,26 @@ const usersColumns = [
   { id: "delete", header: "Delete", width: 1, prop: "delete" },
 ];
 
+const fetchUsers = async () => {
+  const response = await getUsersApi({});
+
+  if (response.status === "success") {
+    return response.data;
+  }
+
+  return [];
+};
+
 export const LoadingUsers = () => {
   const [users, setUsers] = useState([]);
   const [showAddUser, setShowAddUser] = useState(false);
+  const [currentEditUser, setCurrentEditUser] = useState(null);
 
   useEffect(() => {
-    const fetchResp = async () => {
-      const response = await getUsersApi({});
-
-      if (response.status === "success") {
-        setUsers(response.data);
-      }
-    };
-
-    fetchResp();
+    (async () => {
+      const users = await fetchUsers();
+      setUsers(users);
+    })();
   }, []);
 
   return (
@@ -43,7 +51,15 @@ export const LoadingUsers = () => {
         my: 2,
       }}
     >
-      <AddUserPopup showAddUser={showAddUser} setShowAddUser={setShowAddUser} />
+      <AddUserPopup
+        users={users}
+        setUsers={setUsers}
+        showAddUser={showAddUser}
+        setShowAddUser={setShowAddUser}
+        fetchUsers={fetchUsers}
+        currentEditUser={currentEditUser}
+        setCurrentEditUser={setCurrentEditUser}
+      />
 
       <Box
         sx={{
@@ -198,7 +214,24 @@ export const LoadingUsers = () => {
                           backgroundColor: column.id === "edit" ? "gray" : "red",
                           color: "white",
                         }}
-                        onClick={(e) => {}}
+                        onClick={(e) => {
+                          (async () => {
+                            const userId = user.user_id;
+                            // const userId = 189414;
+
+                            if (column.id === "edit") {
+                              setCurrentEditUser(user);
+                              setShowAddUser(true);
+                            } else {
+                              const response = await deleteUserApi({ user_id: userId });
+
+                              if (response.status === "success") {
+                                toast.success("User deleted successfully");
+                                setUsers(users.filter((user) => user.user_id !== userId));
+                              }
+                            }
+                          })();
+                        }}
                       >
                         {column.id === "edit" && <EditIcon />}
                         {column.id === "delete" && <DeleteIcon />}
