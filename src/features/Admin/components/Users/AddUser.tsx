@@ -210,7 +210,11 @@ export const AddUserPopup = ({ showAddUser, setShowAddUser }: AddUserProps) => {
                     return;
                   }
 
-                  console.log(inputBirthday);
+                  if (!validateInput()) {
+                    toast.error("Please check your input");
+                    setShowAddUser(false);
+                    return;
+                  }
 
                   const data = {
                     full_name: inputFullname,
