@@ -40,9 +40,9 @@ export const NextMatch = ({ match }: NextMatchProps) => {
                 gap: "0.5rem",
               }}
             >
-              <TeamItem team={match.team} />
+              <TeamItem club={match.team} />
               <ScoreItem match={match} />
-              <TeamItem leftLogo={true} team={match.opponent} />
+              <TeamItem leftLogo={true} club={match.opponent} />
             </Box>
           </React.Fragment>
         }
@@ -52,7 +52,7 @@ export const NextMatch = ({ match }: NextMatchProps) => {
             cursor: "pointer",
           }}
         >
-          <TeamItem hideName={true} leftLogo={true} team={match.opponent} />
+          <TeamItem hideName={true} leftLogo={true} club={match.opponent} />
         </Box>
       </HtmlTooltip>
     </>

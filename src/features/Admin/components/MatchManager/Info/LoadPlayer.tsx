@@ -276,7 +276,7 @@ const LoadingPlayerMatch: React.FC<LoadingPlayerMatchProps> = ({ match }) => {
         <Grid container spacing={2} sx={{ pt: 2 }}>
           <Grid item xs={5} sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2, justifyContent: "center" }}>
-              <TeamItem team={match.team} />
+              <TeamItem club={match.team} />
             </Box>
             {renderPlayerRows(players, "Line-up", match.team.name)}
           </Grid>
@@ -287,7 +287,7 @@ const LoadingPlayerMatch: React.FC<LoadingPlayerMatchProps> = ({ match }) => {
 
           <Grid item xs={5} sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2, justifyContent: "center" }}>
-              <TeamItem team={match.opponent} />
+              <TeamItem club={match.opponent} />
             </Box>
             {renderPlayerRows(players, "Line-up", match.opponent.name)}
           </Grid>

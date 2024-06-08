@@ -83,7 +83,7 @@ export const LeaderBoard = () => {
                 }}
               >
                 {column.field === "team" ? (
-                  <TeamItem leftLogo={true} team={team[column.field] as Team} />
+                  <TeamItem leftLogo={true} club={team[column.field] as Team} />
                 ) : column.field === "recentMatches" ? (
                   <RecentMatches matches={team[column.field]} />
                 ) : column.field === "nextMatch" ? (

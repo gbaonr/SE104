@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import { Team } from "types/Team";
+import { Club } from "features/Admin/components/ClubManager/apis/types";
 
 export type TeamItemProps = {
-  team: Team;
+  club: Club;
   leftLogo?: boolean | false;
   align?: "center" | "left" | "right";
   useShortName?: boolean;
@@ -11,33 +11,37 @@ export type TeamItemProps = {
 
 export const TeamItem = (props: TeamItemProps) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {props.leftLogo && (
-        <img src={props.team.logo} alt={props.team.name} style={{ height: "30px" }} />
-      )}
-
-      {!props.hideName && (
-        <Typography
+    <>
+      {props.club && (
+        <Box
           sx={{
-            textAlign: "center",
-            fontWeight: 500,
-            mx: 1,
-            color: "#37003c",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {(props.useShortName && props.team.shortName) || props.team.name}
-        </Typography>
-      )}
+          {props.leftLogo && (
+            <img src={props.club.logo_low} alt={props.club.club_name} style={{ height: "30px" }} />
+          )}
 
-      {!props.leftLogo && (
-        <img src={props.team.logo} alt={props.team.name} style={{ height: "30px" }} />
+          {!props.hideName && (
+            <Typography
+              sx={{
+                textAlign: "center",
+                fontWeight: 500,
+                mx: 1,
+                color: "#37003c",
+              }}
+            >
+              {(props.useShortName && props.club.club_shortname) || props.club.club_name}
+            </Typography>
+          )}
+
+          {!props.leftLogo && (
+            <img src={props.club.logo_low} alt={props.club.club_name} style={{ height: "30px" }} />
+          )}
+        </Box>
       )}
-    </Box>
+    </>
   );
 };

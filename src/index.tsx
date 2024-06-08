@@ -35,6 +35,10 @@ import { UserManagement } from "features/Admin/components/Users";
 import { AuthenticatedComponent, AuthProvider } from "features/Auth/AuthProvider";
 import { useEffect, useMemo, useState } from "react";
 import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
+import { getMatchesApi } from "features/Admin/components/MatchManager/apis/get-matches";
+import { toast } from "react-toastify";
+import { Match } from "features/Admin/components/MatchManager/apis/types";
+import { Club } from "features/Admin/components/ClubManager/apis/types";
 
 const theme = createTheme({
   typography: {
@@ -48,7 +52,8 @@ const theme = createTheme({
 });
 
 const App = () => {
-  const [clubs, setClubs] = useState([]);
+  const [clubs, setClubs] = useState<Club[]>([]);
+  const [matches, setMatches] = useState<Match[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -56,11 +61,23 @@ const App = () => {
 
       if (response.status === "success") {
         setClubs(response.data);
+      } else {
+        toast.error("Failed to load clubs");
+      }
+    })();
+
+    (async () => {
+      const response = await getMatchesApi();
+
+      if (response.status === "success") {
+        setMatches(response.data);
+      } else {
+        toast.error("Failed to load matches");
       }
     })();
   }, []);
 
-  const memoizedValue = useMemo(() => ({ clubs }), [clubs]);
+  const memoizedValue = useMemo(() => ({ clubs, matches }), [clubs, matches]);
 
   const router = createBrowserRouter([
     {
@@ -101,13 +118,18 @@ const App = () => {
         })),
 
         // loading match info
-        ...dataDoneMatches.map((match) => ({
-          path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
-          element: <MatchDetailInfo match={match} />,
-        })),
-        ...dataUpcomingMatches.map((match) => ({
-          path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
-          element: <MatchDetailInfo match={match} />,
+        // ...dataDoneMatches.map((match) => ({
+        //   path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
+        //   element: <MatchDetailInfo match={match} />,
+        // })),
+        // ...dataUpcomingMatches.map((match) => ({
+        //   path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
+        //   element: <MatchDetailInfo match={match} />,
+        // })),
+
+        ...memoizedValue.matches.map((match) => ({
+          path: `${ADMIN_ROUTES.MATCH}/${match.match_id}`,
+          element: <MatchDetailInfo clubs={clubs} match={match} />,
         })),
 
         // { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },

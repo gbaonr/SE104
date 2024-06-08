@@ -71,7 +71,7 @@ export const TableMatches = (props: TableResultsProps) => {
               className="flex items-center"
             >
               <Grid item xs={props.mini ? 5 : 2}>
-                <TeamItem useShortName={props.useShortName} team={match.team} />
+                <TeamItem useShortName={props.useShortName} club={match.team} />
               </Grid>
 
               <Grid item xs={props.mini ? 2 : 1}>
@@ -79,7 +79,7 @@ export const TableMatches = (props: TableResultsProps) => {
               </Grid>
 
               <Grid item xs={props.mini ? 5 : 2}>
-                <TeamItem useShortName={props.useShortName} leftLogo={true} team={match.opponent} />
+                <TeamItem useShortName={props.useShortName} leftLogo={true} club={match.opponent} />
               </Grid>
 
               {!props.mini && (

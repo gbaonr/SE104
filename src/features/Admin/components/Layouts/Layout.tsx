@@ -1,7 +1,7 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import JoinInnerIcon from "@mui/icons-material/JoinInner";
 import { default as MenuIcon, default as PolicyIcon } from "@mui/icons-material/Menu";
-import { ListItemIcon } from "@mui/material";
+import { Backdrop, CircularProgress, ListItemIcon } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -58,7 +58,15 @@ interface Props {
 export const LayoutAdmin = (props: Props) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-  const { hasAdminAccess } = useAuth();
+  const { hasAdminAccess, isAuthLoading } = useAuth();
+
+  if (isAuthLoading) {
+    return (
+      <Backdrop open={true}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   if (!hasAdminAccess) {
     return <PermissionDeniedPage />;
@@ -101,7 +109,7 @@ export const LayoutAdmin = (props: Props) => {
           >
             <ListItem key={feature.name}>
               <ListItemButton>
-                <ListItemIcon>{feature.icon}</ListItemIcon>
+                <ListItemIcon key={feature.name}>{feature.icon}</ListItemIcon>
                 <ListItemText primary={feature.name} />
               </ListItemButton>
             </ListItem>

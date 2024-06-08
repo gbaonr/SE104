@@ -1,5 +1,5 @@
 export type Club = {
-  club_id?: string;
+  club_id?: number;
   club_name?: string;
   club_shortname?: string;
   manager?: number;

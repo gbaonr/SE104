@@ -264,7 +264,7 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                   if (column.id === "id") {
                     value = (index + 1).toString();
                   } else if (column.id === "team") {
-                    value = <TeamItem leftLogo={true} team={event.team} />;
+                    value = <TeamItem leftLogo={true} club={event.team} />;
                   } else if (column.id === "player") {
                     value = event.player.fullName;
                   } else if (column.id === "time") {

@@ -51,8 +51,9 @@ storage_postgres = StoragePostgres(
 data = json.load(
     open("/home/bao/Documents/UIT/SE104/Final/frontend/src/data/teams_info.json")
 )
-res = requests.get("https://www.premierleague.com/clubs")
-soup = BeautifulSoup(res.text, "html.parser")
+# res = requests.get("https://www.premierleague.com/clubs?se=578")
+res = open("./clubs.html").read()
+soup = BeautifulSoup(res, "html.parser")
 
 # club-card club-card--t3  indexItem t3
 clubs = soup.find_all("a", class_="club-card")
@@ -60,10 +61,9 @@ clubs = soup.find_all("a", class_="club-card")
 for club in clubs:
     club_name = club.find("h2", class_="club-card__name").text
     club_url = club["href"]
-    res = requests.get(f"https://www.premierleague.com{club_url}")
-    soup = BeautifulSoup(res.text, "html.parser")
 
-    print(club_url)
+    res = requests.get(club_url)
+    soup = BeautifulSoup(res.text, "html.parser")
 
     # club-header__team-name
     short_name = data[club_name]["shortName"]
@@ -81,7 +81,7 @@ for club in clubs:
 
     # player page
     player_url = club_url.replace("/overview", "") + "/squad?se=578"
-    res = requests.get(f"https://www.premierleague.com{player_url}")
+    res = requests.get(player_url)
     soup = BeautifulSoup(res.text, "html.parser")
 
     # squad-list__position-container
@@ -132,6 +132,9 @@ for club in clubs:
 
             max_id = storage_postgres.fetch("SELECT MAX(player_id) FROM players")[0][0]
 
+            if max_id is None:
+                max_id = 0
+
             if not storage_postgres.fetch(
                 f"SELECT * FROM players WHERE player_name = '{first_name} {last_name}' AND player_club = {club_id} AND player_pos = '{position_name}' AND player_nation = '{country}' AND js_number = '{number}'"
             ):
@@ -148,4 +151,13 @@ for club in clubs:
                     ),
                 )
 
-    time.sleep(2)
+    # get total player
+    total_player = len(
+        storage_postgres.fetch(f"SELECT * FROM players WHERE player_club = {club_id}")
+    )
+
+    storage_postgres.execute(
+        f"UPDATE clubs SET total_player = {total_player} WHERE club_id = {club_id}"
+    )
+
+    # time.sleep(2)

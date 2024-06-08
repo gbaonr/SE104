@@ -1,7 +1,8 @@
+// TODO: fix  teams and date is not center align
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EventIcon from "@mui/icons-material/Event";
-import StadiumIcon from "@mui/icons-material/Stadium";
 import {
   Box,
   Button,
@@ -12,32 +13,32 @@ import {
   Grid,
   MenuItem,
   Select,
-  TextField,
   Typography,
 } from "@mui/material";
-import { TeamItem } from "components/Items/ClubItem";
-import { teamsInfo } from "constants/Teams";
-import dayjs from "dayjs";
-import { useState } from "react";
-import { Match } from "types/Match";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { TeamItem } from "components/Items/ClubItem";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { Club } from "../../ClubManager/apis/types";
+import { Match } from "../apis/types";
 
 type LoadingInfoMatchProps = {
   match: Match;
+  clubs: Club[];
 };
 
 const optionInput = [
-  { id: "team", name: "Team" },
-  { id: "opponent", name: "Opponent" },
-  { id: "location", name: "Location" },
+  { id: "team1", name: "Team" },
+  { id: "team2", name: "Opponent" },
+  // { id: "location", name: "Location" },
   { id: "date", name: "Date" },
   { id: "time", name: "Time" },
 ];
 
-export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
+export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
   const [showEditMatch, setShowEditMatch] = useState<boolean>(false);
 
   return (
@@ -50,7 +51,7 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
               {optionInput.map((column) => {
                 let value = null;
 
-                if (column.id === "team" || column.id === "opponent") {
+                if (column.id === "team1" || column.id === "team2") {
                   value = (
                     <Select
                       fullWidth
@@ -58,49 +59,52 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
                       name={column.name}
                       id={column.id}
                       value={
-                        Object.keys(teamsInfo).find(
-                          (team) => teamsInfo[team].name === match[column.id].name,
-                        ) || ""
+                        // Object.keys(teamsInfo).find(
+                        //   (team) => teamsInfo[team].name === match[column.id].name,
+                        // ) || ""
+                        clubs.find((club) => club.club_id === match[column.id])?.club_id
                       }
                     >
-                      {Object.keys(teamsInfo).map((team) => (
+                      {/* {Object.keys(teamsInfo).map((team) => (
                         <MenuItem value={team}>{team}</MenuItem>
+                      ))} */}
+                      {clubs.map((club) => (
+                        <MenuItem value={club.club_id}>{club.club_name}</MenuItem>
                       ))}
                     </Select>
                   );
                 } else if (column.id === "time") {
-                  const date =
-                    match.date.replace(/\//g, "-").split("-").reverse().join("-") +
-                    "T" +
-                    match.time;
+                  const date = dayjs.unix(match[column.id]);
 
+                  // remove date part
+                  date.set("year", 0);
+                  date.set("month", 0);
+                  date.set("date", 0);
+
+                  console.log(date);
+
+                  // TODO: fix time picker
                   value = (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["TimePicker", "TimePicker"]}>
-                        <TimePicker label="Time" value={dayjs(date)} />
+                        <TimePicker label="Time" value={date} />
                       </DemoContainer>
                     </LocalizationProvider>
                   );
                 } else if (column.id === "date") {
+                  const date = dayjs.unix(match.start);
+
+                  date.set("hour", 0);
+                  date.set("minute", 0);
+                  date.set("second", 0);
+                  date.set("millisecond", 0);
+
                   value = (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DatePicker"]}>
-                        <DatePicker
-                          label="Date"
-                          value={dayjs(match.date)}
-                          views={["day", "month", "year"]}
-                        />
+                        <DatePicker label="Date" value={date} views={["day", "month", "year"]} />
                       </DemoContainer>
                     </LocalizationProvider>
-                  );
-                } else if (column.id === "location") {
-                  value = (
-                    <TextField
-                      fullWidth
-                      label={column.name}
-                      id={column.id}
-                      value={match.location}
-                    />
                   );
                 }
 
@@ -110,7 +114,6 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
                     xs={12}
                     sx={{
                       display: "flex",
-                      // alignItems: "center",
                     }}
                   >
                     <Grid
@@ -197,7 +200,7 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
               mb: 2,
             }}
           >
-            <TeamItem team={match.team} />
+            <TeamItem club={clubs.find((club) => club.club_id === match.team1)} />
           </Typography>
 
           <Typography
@@ -220,7 +223,7 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
               mb: 2,
             }}
           >
-            <TeamItem leftLogo={true} team={match.opponent} />
+            <TeamItem leftLogo={true} club={clubs.find((club) => club.club_id === match.team2)} />
           </Typography>
         </Box>
 
@@ -233,9 +236,9 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
             justifyContent: "center",
           }}
         >
-          <StadiumIcon />
-
-          <Typography
+          {/* TODO: fix stadium */}
+          {/* <StadiumIcon /> */}
+          {/* <Typography
             sx={{
               fontWeight: 500,
               fontSize: "1.2rem",
@@ -244,7 +247,7 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
             }}
           >
             {match.location}
-          </Typography>
+          </Typography> */}
 
           <EventIcon />
           <Typography
@@ -254,7 +257,7 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
               // color: "#37003c",
             }}
           >
-            {match.date}
+            {dayjs.unix(match.start).format("DD/MM/YYYY")}
           </Typography>
           <Typography
             sx={{
@@ -263,7 +266,7 @@ export const LoadingInfoMatch = ({ match }: LoadingInfoMatchProps) => {
               // color: "#37003c",
             }}
           >
-            {match.time}
+            {dayjs.unix(match.start).format("HH:mm")}
           </Typography>
         </Box>
 

@@ -9,43 +9,54 @@ import { teamsInfo } from "constants/Teams";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Match } from "types/Match";
+import { getMatchesApi } from "./apis/get-matches";
+import { Match } from "./apis/types";
+import { Club } from "../ClubManager/apis/types";
 
 const upCommingMatchesColumns = [
-  { id: "id", header: "#", width: 1 },
-  { id: "date", header: "Date", width: 2 },
-  { id: "time", header: "Time", width: 1 },
-  { id: "team", header: "Team", width: 2 },
-  { id: "opponent", header: "Opponent", width: 2 },
-  { id: "location", header: "Location", width: 2 },
+  { id: "match_id", header: "#", width: 1 },
+  { id: "team1", header: "Team 1", width: 2 },
+  { id: "team2", header: "Team 2", width: 2 },
+  { id: "start", header: "Start", width: 2 },
+  { id: "finish", header: "Finish", width: 2 },
+  // { id: "date", header: "Date", width: 2 },
+  // { id: "time", header: "Time", width: 1 },
+  // { id: "team", header: "Team", width: 2 },
+  // { id: "opponent", header: "Opponent", width: 2 },
+  // { id: "location", header: "Location", width: 2 },
 ];
 
 type LoadingMatchesProps = {
   data: Match[];
+  clubs: Club[];
   header: string;
+  showFinished?: boolean;
 };
 
-export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
+export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMatchesProps) => {
   const [selectedTeamOne, setSelectedTeamOne] = useState<string>("All");
   const [selectedTeamTwo, setSelectedTeamTwo] = useState<string>("All");
 
   const [startDate, setStartDate] = useState<Dayjs>(dayjs("1970-01-01"));
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
-
   const [filteredData, setFilteredData] = useState(data);
 
   useEffect(() => {
-    setFilteredData(
-      data.filter((match) => {
-        const teamOne = selectedTeamOne === "All" || match.team.name === selectedTeamOne;
-        const teamTwo = selectedTeamTwo === "All" || match.opponent.name === selectedTeamTwo;
-        const isAfterStartDate = dayjs(match.date).isAfter(startDate);
-        const isBeforeEndDate = dayjs(match.date).isBefore(endDate);
+    setFilteredData(data);
+  }, [data]);
 
-        return teamOne && teamTwo && isAfterStartDate && isBeforeEndDate;
-      }),
-    );
-  }, [selectedTeamOne, selectedTeamTwo, startDate, endDate, data]);
+  // useEffect(() => {
+  //   setFilteredData(
+  //     data.filter((match) => {
+  //       const teamOne = selectedTeamOne === "All" || match.team.name === selectedTeamOne;
+  //       const teamTwo = selectedTeamTwo === "All" || match.opponent.name === selectedTeamTwo;
+  //       const isAfterStartDate = dayjs(match.date).isAfter(startDate);
+  //       const isBeforeEndDate = dayjs(match.date).isBefore(endDate);
+
+  //       return teamOne && teamTwo && isAfterStartDate && isBeforeEndDate;
+  //     }),
+  //   );
+  // }, [selectedTeamOne, selectedTeamTwo, startDate, endDate, data]);
 
   return (
     <Box
@@ -69,14 +80,13 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
       </Typography>
 
       {/* loading filter */}
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           alignItems: "flex-end",
           alignContent: "center",
         }}
       >
-        {/* Team 1 */}
         <TextField
           value={selectedTeamOne}
           sx={{ mr: 2 }}
@@ -92,7 +102,6 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
           <MenuItem value="All">All</MenuItem>
         </TextField>
 
-        {/* Team 2 */}
         <TextField
           value={selectedTeamTwo}
           sx={{ mr: 2 }}
@@ -108,7 +117,6 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
           <MenuItem value="All">All</MenuItem>
         </TextField>
 
-        {/* date filtering */}
         <Box sx={{ mr: 2 }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
@@ -134,7 +142,7 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
             </DemoContainer>
           </LocalizationProvider>
         </Box>
-      </Box>
+      </Box> */}
 
       {/* loading matches */}
       <Box
@@ -147,26 +155,30 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
           columns={{ xs: upCommingMatchesColumns.reduce((acc, column) => acc + column.width, 0) }}
         >
           {/* load header */}
-          {upCommingMatchesColumns.map((column) => (
-            <Grid
-              item
-              xs={column.width}
-              sx={{
-                border: "1px solid #f0f0f0",
-                p: "0.5rem !important",
-                fontWeight: 700,
-                textAlign: "center",
-              }}
-            >
-              {column.header}
-            </Grid>
-          ))}
+          {upCommingMatchesColumns.map((column) => {
+            if ((column.id === "finish" && showFinished) || column.id !== "finish") {
+              return (
+                <Grid
+                  item
+                  xs={column.width}
+                  sx={{
+                    border: "1px solid #f0f0f0",
+                    p: "0.5rem !important",
+                    fontWeight: 700,
+                    textAlign: "center",
+                  }}
+                >
+                  {column.header}
+                </Grid>
+              );
+            }
+          })}
 
           {/* load data */}
           {filteredData.map((match) => (
             <>
               {upCommingMatchesColumns.map((column) => {
-                if (column.id === "team" || column.id === "opponent") {
+                if (column.id === "team1" || column.id === "team2") {
                   return (
                     <Grid
                       item
@@ -183,7 +195,7 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
                     >
                       <Box
                         component={Link}
-                        to={ADMIN_ROUTES.MATCH + "/" + match.id}
+                        to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
                         style={{
                           textDecoration: "none",
                           color: "inherit",
@@ -192,7 +204,12 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
                           display: "block",
                         }}
                       >
-                        <TeamItem team={match[column.id]} leftLogo={true} />
+                        <TeamItem
+                          club={clubs.find((club) => club.club_id === match[column.id])}
+                          leftLogo={
+                            column.id === "team1" ? true : column.id === "team2" ? false : false
+                          }
+                        />
                       </Box>
                     </Grid>
                   );
@@ -215,7 +232,7 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
                   >
                     <Box
                       component={Link}
-                      to={ADMIN_ROUTES.MATCH + "/" + match.id}
+                      to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
                       style={{
                         textDecoration: "none",
                         color: "inherit",
@@ -226,7 +243,9 @@ export const LoadingMatches = ({ data, header }: LoadingMatchesProps) => {
                         justifyContent: "center",
                       }}
                     >
-                      {match[column.id]}
+                      {column.id === "start" || column.id === "finish"
+                        ? dayjs(match[column.id] * 1000).format("DD/MM/YYYY HH:mm")
+                        : match[column.id]}
                     </Box>
                   </Grid>
                 );

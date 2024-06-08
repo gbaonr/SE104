@@ -12,12 +12,14 @@ const AuthContext = createContext({
   hasAdminAccess: false,
   setExpiredDate: (newExpiredDate) => {},
   expiredDate: null,
+  isAuthLoading: true,
 });
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
   const [expiredDate, setExpiredDate_] = useState(localStorage.getItem("expiredDate"));
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const updateAdminAccess = async () => {
     const response = await getUserInfo();
@@ -25,6 +27,8 @@ export const AuthProvider = ({ children }) => {
     if (response.status === "success") {
       setHasAdminAccess(response.data.role === "admin");
     }
+
+    setIsAuthLoading(false);
   };
 
   const setToken = (newToken) => {
@@ -37,6 +41,10 @@ export const AuthProvider = ({ children }) => {
 
   const isTokenExpired = () => {
     const expiryDate = new Date(expiredDate);
+
+    if (expiredDate === null) return true;
+    if (expiredDate === "null") return true;
+
     return new Date() > expiryDate;
   };
 
@@ -58,6 +66,7 @@ export const AuthProvider = ({ children }) => {
       handleExpiredToken();
     } else {
       delete axios.defaults.headers.common["Authorization"];
+
       localStorage.removeItem("token");
       localStorage.removeItem("expiredDate");
     }
@@ -74,8 +83,9 @@ export const AuthProvider = ({ children }) => {
       hasAdminAccess,
       setExpiredDate,
       expiredDate,
+      isAuthLoading,
     }),
-    [token, hasAdminAccess, expiredDate],
+    [token, hasAdminAccess, expiredDate, isAuthLoading],
   );
 
   // Provide the authentication context to the children components
