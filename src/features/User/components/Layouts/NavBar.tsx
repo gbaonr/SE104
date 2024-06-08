@@ -1,5 +1,16 @@
 import MenuIcon from "@mui/icons-material/Menu";
-import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Skeleton,
+  Toolbar,
+} from "@mui/material";
+import { Club } from "features/Admin/components/ClubManager/apis/types";
 import { useAuth } from "features/Auth/AuthProvider";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -41,7 +52,41 @@ const rightFeatures = [
   },
 ];
 
-function NavBar() {
+type NavBarProps = {
+  clubs: Club[];
+};
+
+const ClubImage = ({ club }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <Box sx={{ mx: 1, width: 40, height: 40, position: "relative" }}>
+      {!loaded && (
+        <Skeleton
+          variant="rectangular"
+          width={40}
+          height={40}
+          sx={{ bgcolor: "grey.300", position: "absolute", top: 0, left: 0 }}
+        />
+      )}
+      <img
+        src={club.logo_low}
+        alt={club.club_name}
+        style={{
+          width: "40px",
+          height: "40px",
+          display: loaded ? "block" : "none",
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+        onLoad={() => setLoaded(true)}
+      />
+    </Box>
+  );
+};
+
+const NavBar = ({ clubs }: NavBarProps) => {
   const [isOpenMenu, setIsOpenMenu] = useState<null | HTMLElement>(null);
   const { token, hasAdminAccess } = useAuth();
 
@@ -54,8 +99,15 @@ function NavBar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#37003c" }}>
-      <Container maxWidth="xl">
+    <AppBar position="static" sx={{ backgroundColor: "#fff" }}>
+      <Container maxWidth={false}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 1 }}>
+          {clubs.map((club) => (
+            <ClubImage key={club.club_id} club={club} />
+          ))}
+        </Box>
+      </Container>
+      <Container maxWidth={false} sx={{ backgroundColor: "#37003c" }}>
         <Toolbar sx={{ minHeight: "48px !important", padding: 1 }}>
           <Box
             sx={{
@@ -201,6 +253,6 @@ function NavBar() {
       </Container>
     </AppBar>
   );
-}
+};
 
 export default NavBar;

@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { deletePlayerApi } from "../apis/delete-players";
 import { getPlayersApi } from "../apis/get-players";
 import { Club, Player } from "../apis/types";
-import { AddPlayer } from "./AddPlayer";
+import { AddPlayer } from "./ManagePlayer";
 
 type ListPlayerTeamProps = {
   club: Club;

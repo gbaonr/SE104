@@ -69,7 +69,7 @@ const App = () => {
     },
     {
       path: "/",
-      element: <LayoutUser />,
+      element: <LayoutUser clubs={clubs} />,
       children: [
         { index: true, element: <HomePage /> },
         { path: USER_ROUTES.RESULTS, element: <ResultsPage /> },

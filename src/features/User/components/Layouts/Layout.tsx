@@ -4,8 +4,13 @@ import Footer from "./Footer";
 import NavBar from "./NavBar";
 import "react-toastify/dist/ReactToastify.css";
 import { Box, Container } from "@mui/material";
+import { Club } from "features/Admin/components/ClubManager/apis/types";
 
-export const LayoutUser = () => {
+type LayoutUserProps = {
+  clubs: Club[];
+};
+
+export const LayoutUser = ({ clubs }: LayoutUserProps) => {
   return (
     <>
       <Box
@@ -14,7 +19,7 @@ export const LayoutUser = () => {
           minHeight: "calc(100vh - 80px)",
         }}
       >
-        <NavBar />
+        <NavBar clubs={clubs} />
         <Outlet />
       </Box>
 

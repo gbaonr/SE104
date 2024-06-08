@@ -235,14 +235,19 @@ export const AddPlayer = ({
 
                 (async () => {
                   // TODO: wait for baonguyen fix, then uncomment this
-                  // const response = await addPlayerApi(playerToEdit);
-                  // if (response.status === "success") {
-                  //   toast.success("Player added successfully");
-                  //   setShowAddPlayerPopup(false);
-                  //   return;
-                  // }
-                  // toast.error("An error occurred while trying to add player");
-                  // console.log(response);
+
+                  if (typeToEdit === "add") {
+                    const response = await addPlayerApi(playerToEdit);
+
+                    if (response.status === "success") {
+                      toast.success("Player added successfully");
+                      setShowAddPlayerPopup(false);
+                      return;
+                    }
+
+                    toast.error("An error occurred while trying to add player");
+                  } else {
+                  }
                 })();
               }}
             >
