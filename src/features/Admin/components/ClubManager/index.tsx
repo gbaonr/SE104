@@ -7,6 +7,7 @@ import { Team } from "types/Team";
 import { ADMIN_ROUTES } from "constants/Paths";
 import { getClubsApi } from "./apis/get-clubs";
 import { Club } from "./apis/types";
+import { toast } from "react-toastify";
 
 // export type ClubManagerProps = {
 //   data: {
@@ -65,6 +66,8 @@ export const ClubManager = () => {
       if (response.status === "success") {
         setClubs(response.data);
         setFilteredClubs(response.data);
+      } else {
+        toast.error("Failed to fetch clubs");
       }
     })();
   }, []);

@@ -11,7 +11,7 @@ export type Player = {
   player_id?: string;
   player_name?: string;
   player_bday?: number;
-  player_club?: string;
+  player_club?: number;
   player_pos?: string;
   player_nation?: string;
   js_number?: number;

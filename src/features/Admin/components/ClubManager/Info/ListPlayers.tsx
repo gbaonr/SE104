@@ -1,15 +1,13 @@
-// TODO: we can also use AddPlayer component for updating player info
-
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { deletePlayerApi } from "../apis/delete-players";
 import { getPlayersApi } from "../apis/get-players";
 import { Club, Player } from "../apis/types";
 import { AddPlayer } from "./AddPlayer";
-import { toast } from "react-toastify";
-import { deletePlayerApi } from "../apis/delete-players";
 
 type ListPlayerTeamProps = {
   club: Club;
@@ -41,7 +39,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
       if (response.status === "success") {
         setPlayers(response.data);
       } else {
-        console.error(response.message);
+        toast.error("An error occurred while trying to get players");
       }
     })();
   }, [club]);
@@ -79,7 +77,12 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
 
         <Button
           variant="outlined"
-          onClick={(e) => setShowAddPlayerPopup(true)}
+          onClick={(e) => {
+            setPlayerToEdit({
+              player_club: club.club_id,
+            });
+            setShowAddPlayerPopup(true);
+          }}
           sx={{
             color: "white",
             backgroundColor: "#4caf50",
