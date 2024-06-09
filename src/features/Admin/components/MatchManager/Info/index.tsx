@@ -1,9 +1,8 @@
 import { Container } from "@mui/material";
+import { Club } from "../../ClubManager/apis/types";
+import { Match } from "../apis/types";
 import { LoadingGoalMatch } from "./LoadingGoal";
 import { LoadingInfoMatch } from "./LoadingInfo";
-import LoadingPlayerMatch from "./LoadPlayer";
-import { Match } from "../apis/types";
-import { Club } from "../../ClubManager/apis/types";
 
 type MatchDetailInfoProps = {
   match: Match;
@@ -20,9 +19,7 @@ export const MatchDetailInfo = ({ match, clubs }: MatchDetailInfoProps) => {
       }}
     >
       <LoadingInfoMatch clubs={clubs} match={match} />
-
-      {/* {match.finished && <LoadingGoalMatch match={match} />} */}
-      {match.finish < Date.now() / 1000 && <LoadingGoalMatch match={match} clubs={clubs} />}
+      <LoadingGoalMatch match={match} clubs={clubs} />
 
       {/* <LoadingPlayerMatch match={match} /> */}
     </Container>

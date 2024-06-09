@@ -42,7 +42,8 @@ export const RecentMatches = (props: RecentMatchesProps) => {
                 }}
               >
                 <TeamItem club={match.team} />
-                <ScoreItem match={match} />
+                {/* TODO: fix */}
+                {/* <ScoreItem match={match} /> */}
                 <TeamItem leftLogo={true} club={match.opponent} />
               </Box>
             </React.Fragment>

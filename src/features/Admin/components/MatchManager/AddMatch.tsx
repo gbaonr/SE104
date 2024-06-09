@@ -6,86 +6,187 @@ import {
   DialogTitle,
   Grid,
   MenuItem,
+  Radio,
   Select,
-  TextField,
+  Switch,
   Typography,
 } from "@mui/material";
-import { teamsInfo } from "constants/Teams";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Club } from "../ClubManager/apis/types";
+import { getRefereesApi } from "./apis/get-referees";
+import { Referee } from "./apis/types";
+import { validateMatch } from "./utils/validator";
+import { addMatchApi } from "./apis/add-match";
 
 const optionInput = [
-  { id: "team", name: "Team" },
-  { id: "opponent", name: "Opponent" },
-  { id: "location", name: "Location" },
-  { id: "date", name: "Date" },
-  { id: "time", name: "Time" },
-  { id: "referee", name: "Referee" },
-  { id: "assistantReferee", name: "Assistant Referee" },
-  { id: "assistantReferee2", name: "Assistant Referee 2" },
+  { id: "team1", name: "Home" },
+  { id: "team2", name: "Away" },
+
+  { id: "ref", name: "Referee" },
+  { id: "var", name: "VAR" },
+  { id: "lineman", name: "Lineman" },
+
+  { id: "start", name: "Start" },
+  { id: "check_finish", name: "Finished?" },
+  { id: "finish", name: "Finish" },
 ];
 
 type AddMatchProps = {
   showAddMatch: boolean;
   setShowAddMatch: (value: boolean) => void;
+  clubs: Club[];
+  setForceUpdate: (value: number) => void;
 };
 
-export const AddMatch = ({ showAddMatch, setShowAddMatch }: AddMatchProps) => {
+export const AddMatch = ({
+  showAddMatch,
+  setShowAddMatch,
+  clubs,
+  setForceUpdate,
+}: AddMatchProps) => {
+  const [matchToAdd, setMatchToAdd] = useState(null);
+  const [referees, setReferees] = useState<Referee[]>([]);
+  const [isMatchFinished, setIsMatchFinished] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getRefereesApi();
+
+      if (response.status === "success") {
+        setReferees(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!showAddMatch) {
+      setMatchToAdd(null);
+    }
+  }, [showAddMatch]);
+
+  useEffect(() => {
+    if (!matchToAdd && clubs.length && referees.length) {
+      setMatchToAdd({
+        team1: clubs[0].club_id,
+        team2: clubs[1].club_id,
+        ref: referees[0].ref_id,
+        var: referees[1].ref_id,
+        lineman: referees[2].ref_id,
+        start: Date.now() / 1000,
+        finish: Date.now() / 1000,
+      });
+    }
+  }, [matchToAdd, clubs, referees]);
+
   return (
     <>
-      {showAddMatch && (
+      {showAddMatch && matchToAdd && (
         <Dialog open={showAddMatch} onClose={(e) => setShowAddMatch(false)}>
           <DialogTitle>Add Match</DialogTitle>
+
           <DialogContent>
             <Grid container columns={12} spacing={2} sx={{ mt: 1 }}>
               {optionInput.map((column) => {
                 let value = null;
 
-                if (column.id === "team" || column.id === "opponent") {
+                if (column.id === "team1" || column.id === "team2") {
                   value = (
                     <Select
                       fullWidth
                       label={column.name}
                       name={column.name}
                       id={column.id}
-                      value={Object.keys(teamsInfo)[0]}
+                      value={matchToAdd[column.id]}
                     >
-                      {Object.keys(teamsInfo).map((team) => (
-                        <MenuItem value={team}>{team}</MenuItem>
+                      {clubs.map((club) => (
+                        <MenuItem key={club.club_id} value={club.club_id}>
+                          {club.club_name}
+                        </MenuItem>
                       ))}
                     </Select>
                   );
-                } else if (column.id === "time") {
+                } else if (column.id === "check_finish") {
                   value = (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["TimePicker", "TimePicker"]}>
-                        <TimePicker label="Time" value={dayjs(new Date())} />
-                      </DemoContainer>
-                    </LocalizationProvider>
+                    <Switch
+                      checked={isMatchFinished}
+                      onChange={(e) => setIsMatchFinished(e.target.checked)}
+                    />
                   );
-                } else if (column.id === "date") {
+                } else if (column.id === "start" || (column.id === "finish" && isMatchFinished)) {
                   value = (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker
-                          label="Date"
-                          value={dayjs(new Date())}
-                          views={["day", "month", "year"]}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
+                    <Grid
+                      container
+                      columns={12}
+                      spacing={2}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Grid item xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["DatePicker"]}>
+                            <DatePicker
+                              label="Date"
+                              value={dayjs.unix(matchToAdd.start)}
+                              views={["day", "month", "year"]}
+                              onChange={(newValue) => {
+                                console.log(newValue);
+
+                                setMatchToAdd({
+                                  ...matchToAdd,
+                                  [column.id]: newValue.unix(),
+                                });
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </Grid>
+
+                      <Grid item xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["TimePicker"]}>
+                            <TimePicker
+                              views={["hours", "minutes", "seconds"]}
+                              label="Time"
+                              value={dayjs.unix(matchToAdd.finish)}
+                              onChange={(newValue) => {
+                                setMatchToAdd({
+                                  ...matchToAdd,
+                                  [column.id]: newValue.unix(),
+                                });
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </Grid>
+                    </Grid>
                   );
-                } else if (
-                  column.id === "location" ||
-                  column.id === "referee" ||
-                  column.id === "assistantReferee" ||
-                  column.id === "assistantReferee2"
-                ) {
-                  value = <TextField fullWidth label={column.name} id={column.id} />;
+                } else if (["ref", "var", "lineman"].includes(column.id)) {
+                  value = (
+                    <Select
+                      fullWidth
+                      label={column.name}
+                      name={column.name}
+                      id={column.id}
+                      value={matchToAdd[column.id]}
+                    >
+                      {referees.map((referee) => (
+                        <MenuItem key={referee.ref_id} value={referee.ref_id}>
+                          {referee.ref_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  );
                 }
 
                 return (
@@ -94,21 +195,22 @@ export const AddMatch = ({ showAddMatch, setShowAddMatch }: AddMatchProps) => {
                     xs={12}
                     sx={{
                       display: "flex",
-                      // alignItems: "center",
                     }}
                   >
                     <Grid
                       item
-                      xs={4}
+                      xs={2}
                       sx={{
                         display: "flex",
                         alignItems: "center",
                       }}
                     >
-                      <Typography>{column.name}</Typography>
+                      {((column.id === "finish" && isMatchFinished) || column.id !== "finish") && (
+                        <Typography>{column.name}</Typography>
+                      )}
                     </Grid>
 
-                    <Grid item xs={8}>
+                    <Grid item xs={10}>
                       {value}
                     </Grid>
                   </Grid>
@@ -148,7 +250,42 @@ export const AddMatch = ({ showAddMatch, setShowAddMatch }: AddMatchProps) => {
                   backgroundColor: "#4caf50",
                 },
               }}
-              onClick={(e) => setShowAddMatch(false)}
+              onClick={(e) => {
+                // if not finished, set finish to to very far in the future
+                let match = { ...matchToAdd };
+
+                if (!isMatchFinished) {
+                  const future = new Date();
+                  future.setFullYear(future.getFullYear() + 100);
+
+                  match = {
+                    ...match,
+                    finish: Math.round(future.getTime() / 1000),
+                  };
+                }
+
+                // convert start and finish to integer
+                match.start = Math.round(match.start);
+                match.finish = Math.round(match.finish);
+
+                if (validateMatch(match, clubs, referees) !== "") {
+                  toast.error(validateMatch(match, clubs, referees));
+                  return;
+                }
+
+                (async () => {
+                  const response = await addMatchApi(match);
+
+                  if (response.status === "success") {
+                    toast.success("Match added successfully");
+                  } else {
+                    toast.error(response.message);
+                  }
+
+                  setShowAddMatch(false);
+                  setForceUpdate(new Date().getTime() / 1000);
+                })();
+              }}
             >
               Save
             </Button>

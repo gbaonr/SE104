@@ -1,15 +1,10 @@
 import axios from "axios";
 import { Match } from "./types";
 
-const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/matches/get-matches";
-
-export const getMatchesApiUrl = () => {
-  return endpoint;
-}
-
-export const getMatchesApi = async () => {
+export const addMatchApi = async (match: Match) => {
   try {
-    const response = await axios.get<Match[]>(endpoint);
+    const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/matches/add-match";
+    const response = await axios.post(endpoint, match);
 
     if (response.status !== 200) {
       return {

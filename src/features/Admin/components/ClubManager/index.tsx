@@ -1,13 +1,13 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { alpha, Box, Container, Grid, InputBase, styled, Typography } from "@mui/material";
+import { ADMIN_ROUTES } from "constants/Paths";
 import Fuse from "fuse.js";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Team } from "types/Team";
-import { ADMIN_ROUTES } from "constants/Paths";
+import { toast } from "react-toastify";
 import { getClubsApi } from "./apis/get-clubs";
 import { Club } from "./apis/types";
-import { toast } from "react-toastify";
+import { BlockComponent } from "components/Items/BlockComponent";
 
 // export type ClubManagerProps = {
 //   data: {
@@ -20,7 +20,7 @@ const Search = styled("div")(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   boxShadow: "0px 0px 2px 0px #7b7b7b",
-  width: "100%",
+  width: "50%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
     width: "auto",
@@ -76,104 +76,108 @@ export const ClubManager = () => {
     setFilteredClubs(clubs);
   }, [clubs]);
 
-  // useEffect(() => {
-  //   const fuse = new Fuse(Object.values(props.data), {
-  //     keys: ["name", "shortName"],
-  //     includeScore: true,
-  //   });
+  useEffect(() => {
+    const fuse = new Fuse(Object.values(clubs), {
+      keys: ["club_name", "club_shortname"],
+      includeScore: true,
+    });
 
-  //   if (searchTerm) {
-  //     const result = fuse.search(searchTerm);
-  //     const matches = result.map(({ item }) => item);
-  //     setFilteredClubs(matches);
-  //   } else {
-  //     setFilteredClubs(Object.values(props.data));
-  //   }
-  // }, [searchTerm]);
+    if (searchTerm) {
+      const result = fuse.search(searchTerm);
+      const matches = result.map(({ item }) => item);
+      setFilteredClubs(matches);
+    } else {
+      setFilteredClubs(clubs);
+    }
+  }, [searchTerm, clubs]);
 
   return (
-    <Container maxWidth="lg">
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase
-          placeholder="Search…"
-          inputProps={{ "aria-label": "search" }}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          inputRef={searchRef}
-        />
-      </Search>
+    <Container
+      maxWidth={false}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <BlockComponent>
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ "aria-label": "search" }}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            inputRef={searchRef}
+          />
+        </Search>
+      </BlockComponent>
 
-      <Grid
-        container
-        spacing={3}
-        sx={{
-          my: 2,
-        }}
-      >
-        {filteredClubs.map((club, index) => (
-          <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
-            <Link
-              to={ADMIN_ROUTES.CLUB + "/" + club.club_shortname}
-              style={{ textDecoration: "none", color: "inherit", width: "100%" }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  width: "100%",
-                  borderRadius: "10px",
-                  boxShadow: "0px 0px 3px 0px #7b7b7b",
-                  backgroundColor: "#fff",
-                  p: 1.5,
-                  "&:hover": {
-                    color: "#fff",
-                    cursor: "pointer",
-                    background:
-                      "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                  },
-                }}
+      <BlockComponent sx={{ my: 2 }}>
+        <Grid container spacing={3}>
+          {filteredClubs.map((club, index) => (
+            <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
+              <Link
+                to={ADMIN_ROUTES.CLUB + "/" + club.club_shortname}
+                style={{ textDecoration: "none", color: "inherit", width: "100%" }}
               >
-                <img src={club.logo_high} alt="" width="30%" />
-
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
                     alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    width: "100%",
+                    borderRadius: "10px",
+                    boxShadow: "0px 0px 3px 0px #7b7b7b",
+                    backgroundColor: "#fff",
+                    p: 1.5,
+                    "&:hover": {
+                      color: "#fff",
+                      cursor: "pointer",
+                      background:
+                        "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                    },
                   }}
                 >
-                  <Typography
-                    sx={{
-                      color: "#37003c",
-                      fontSize: "1.2rem",
-                      fontWeight: 700,
-                      mt: 1.5,
-                    }}
-                  >
-                    {club.club_name}
-                  </Typography>
+                  <img src={club.logo_high} alt="" width="30%" />
 
-                  <Typography
+                  <Box
                     sx={{
-                      color: "#37003c",
-                      fontSize: "1rem",
-                      fontWeight: 400,
-                      mt: 0.5,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    {club.club_shortname}
-                  </Typography>
+                    <Typography
+                      sx={{
+                        color: "#37003c",
+                        fontSize: "1.2rem",
+                        fontWeight: 700,
+                        mt: 1.5,
+                      }}
+                    >
+                      {club.club_name}
+                    </Typography>
+
+                    <Typography
+                      sx={{
+                        color: "#37003c",
+                        fontSize: "1rem",
+                        fontWeight: 400,
+                        mt: 0.5,
+                      }}
+                    >
+                      {club.club_shortname}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            </Link>
-          </Grid>
-        ))}
-      </Grid>
+              </Link>
+            </Grid>
+          ))}
+        </Grid>
+      </BlockComponent>
     </Container>
   );
 };

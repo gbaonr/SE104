@@ -41,7 +41,8 @@ export const NextMatch = ({ match }: NextMatchProps) => {
               }}
             >
               <TeamItem club={match.team} />
-              <ScoreItem match={match} />
+              {/* TODO: fix this */}
+              {/* <ScoreItem match={match} /> */}
               <TeamItem leftLogo={true} club={match.opponent} />
             </Box>
           </React.Fragment>

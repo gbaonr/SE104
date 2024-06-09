@@ -21,9 +21,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TeamItem } from "components/Items/ClubItem";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Club } from "../../ClubManager/apis/types";
-import { Match } from "../apis/types";
+import { getRefereesApi } from "../apis/get-referees";
+import { Match, Referee } from "../apis/types";
+import { updateMatchApi } from "../apis/update-match";
+import { validateMatch } from "../utils/validator";
+import { deleteMatchApi } from "../apis/delete-match";
+import { ScoreItem } from "components/Items/ScoreItem";
 
 type LoadingInfoMatchProps = {
   match: Match;
@@ -33,17 +39,39 @@ type LoadingInfoMatchProps = {
 const optionInput = [
   { id: "team1", name: "Team" },
   { id: "team2", name: "Opponent" },
-  // { id: "location", name: "Location" },
-  { id: "date", name: "Date" },
-  { id: "time", name: "Time" },
+  { id: "start", name: "Start" },
+  { id: "finish", name: "Finish" },
+  { id: "ref", name: "Referee" },
+  { id: "var", name: "VAR" },
+  { id: "lineman", name: "Line" },
 ];
 
 export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
   const [showEditMatch, setShowEditMatch] = useState<boolean>(false);
+  const [matchToEdit, setMatchToEdit] = useState<Match | null>(null);
+  const [referees, setReferees] = useState<Referee[]>([]);
+
+  useEffect(() => {
+    if (!showEditMatch) {
+      setMatchToEdit(null);
+    }
+  }, [showEditMatch]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getRefereesApi();
+
+      if (response.status === "success") {
+        setReferees(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    })();
+  }, []);
 
   return (
     <>
-      {showEditMatch && (
+      {showEditMatch && matchToEdit && (
         <Dialog open={showEditMatch} onClose={(e) => setShowEditMatch(false)}>
           <DialogTitle>Edit Match</DialogTitle>
           <DialogContent>
@@ -58,53 +86,82 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
                       label={column.name}
                       name={column.name}
                       id={column.id}
-                      value={
-                        // Object.keys(teamsInfo).find(
-                        //   (team) => teamsInfo[team].name === match[column.id].name,
-                        // ) || ""
-                        clubs.find((club) => club.club_id === match[column.id])?.club_id
-                      }
+                      value={clubs.find((club) => club.club_id === matchToEdit[column.id])?.club_id}
+                      onChange={(e) => {
+                        setMatchToEdit({
+                          ...matchToEdit,
+                          [column.id]: parseInt(e.target.value.toString()),
+                        });
+                      }}
                     >
-                      {/* {Object.keys(teamsInfo).map((team) => (
-                        <MenuItem value={team}>{team}</MenuItem>
-                      ))} */}
                       {clubs.map((club) => (
                         <MenuItem value={club.club_id}>{club.club_name}</MenuItem>
                       ))}
                     </Select>
                   );
-                } else if (column.id === "time") {
-                  const date = dayjs.unix(match[column.id]);
-
-                  // remove date part
-                  date.set("year", 0);
-                  date.set("month", 0);
-                  date.set("date", 0);
-
-                  console.log(date);
-
-                  // TODO: fix time picker
+                } else if (column.id === "start" || column.id === "finish") {
                   value = (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["TimePicker", "TimePicker"]}>
-                        <TimePicker label="Time" value={date} />
-                      </DemoContainer>
-                    </LocalizationProvider>
+                    <Grid container spacing={1}>
+                      <Grid item xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["DatePicker"]}>
+                            <DatePicker
+                              label="Date"
+                              value={dayjs.unix(matchToEdit.start)}
+                              views={["day", "month", "year"]}
+                              onChange={(newValue) => {
+                                console.log(newValue);
+
+                                setMatchToEdit({
+                                  ...matchToEdit,
+                                  [column.id]: newValue.unix(),
+                                });
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </Grid>
+
+                      <Grid item xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["TimePicker"]}>
+                            <TimePicker
+                              views={["hours", "minutes", "seconds"]}
+                              label="Time"
+                              value={dayjs.unix(matchToEdit.start)}
+                              onChange={(newValue) => {
+                                console.log(newValue);
+
+                                setMatchToEdit({
+                                  ...matchToEdit,
+                                  [column.id]: newValue.unix(),
+                                });
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </Grid>
+                    </Grid>
                   );
-                } else if (column.id === "date") {
-                  const date = dayjs.unix(match.start);
-
-                  date.set("hour", 0);
-                  date.set("minute", 0);
-                  date.set("second", 0);
-                  date.set("millisecond", 0);
-
+                } else if (["ref", "var", "lineman"].includes(column.id)) {
                   value = (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker label="Date" value={date} views={["day", "month", "year"]} />
-                      </DemoContainer>
-                    </LocalizationProvider>
+                    <Select
+                      fullWidth
+                      label={column.name}
+                      name={column.name}
+                      id={column.id}
+                      value={matchToEdit[column.id]}
+                      onChange={(e) => {
+                        setMatchToEdit({
+                          ...matchToEdit,
+                          [column.id]: parseInt(e.target.value),
+                        });
+                      }}
+                    >
+                      {referees.map((referee, index) => (
+                        <MenuItem value={referee.ref_id}>{referee.ref_name}</MenuItem>
+                      ))}
+                    </Select>
                   );
                 }
 
@@ -167,7 +224,24 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
                   backgroundColor: "#4caf50",
                 },
               }}
-              onClick={(e) => setShowEditMatch(false)}
+              onClick={() => {
+                if (validateMatch(matchToEdit, clubs, referees) !== "") {
+                  toast.error(validateMatch(matchToEdit, clubs, referees));
+                  return;
+                }
+
+                (async () => {
+                  const response = await updateMatchApi(matchToEdit);
+
+                  if (response.status === "success") {
+                    toast.success("Match updated successfully");
+                  } else {
+                    toast.error(response.message);
+                  }
+
+                  setShowEditMatch(false);
+                })();
+              }}
             >
               Save
             </Button>
@@ -249,7 +323,15 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
             {match.location}
           </Typography> */}
 
-          <EventIcon />
+          <Typography
+            sx={{
+              fontWeight: 500,
+              fontSize: "1.2rem",
+              // color: "#37003c",
+            }}
+          >
+            Date & Time
+          </Typography>
           <Typography
             sx={{
               fontWeight: 500,
@@ -263,11 +345,22 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
             sx={{
               fontWeight: 500,
               fontSize: "1rem",
-              // color: "#37003c",
             }}
           >
             {dayjs.unix(match.start).format("HH:mm")}
           </Typography>
+
+          <Box sx={{ my: 2 }}>
+            <Typography
+              sx={{
+                fontWeight: 500,
+                fontSize: "1.2rem",
+              }}
+            >
+              Results
+            </Typography>
+            <ScoreItem match={match} />
+          </Box>
         </Box>
 
         <Box
@@ -276,7 +369,6 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
             justifyContent: "center",
           }}
         >
-          {/* edit */}
           <Button
             variant="outlined"
             sx={{
@@ -290,6 +382,7 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
               },
             }}
             onClick={() => {
+              setMatchToEdit(match);
               setShowEditMatch(true);
             }}
           >
@@ -310,7 +403,15 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
               },
             }}
             onClick={() => {
-              alert("delete");
+              (async () => {
+                const response = await deleteMatchApi(match);
+
+                if (response.status === "success") {
+                  toast.success("Match deleted successfully");
+                } else {
+                  toast.error(response.message);
+                }
+              })();
             }}
           >
             <DeleteIcon />

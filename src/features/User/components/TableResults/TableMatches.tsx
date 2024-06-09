@@ -75,7 +75,8 @@ export const TableMatches = (props: TableResultsProps) => {
               </Grid>
 
               <Grid item xs={props.mini ? 2 : 1}>
-                <ScoreItem match={match} />
+                {/* TODO: fix this */}
+                {/* <ScoreItem match={match} /> */}
               </Grid>
 
               <Grid item xs={props.mini ? 5 : 2}>

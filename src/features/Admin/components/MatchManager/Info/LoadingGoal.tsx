@@ -15,16 +15,16 @@ import {
   Typography,
 } from "@mui/material";
 import { TeamItem } from "components/Items/ClubItem";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getPlayersApi } from "../../ClubManager/apis/get-players";
 import { Club, Player } from "../../ClubManager/apis/types";
+import { addEventMatchApi } from "../apis/add-event";
+import { deleteEventApi } from "../apis/delete-event";
 import { getEventsMatchApi } from "../apis/get-events";
 import { Match, MatchEvent } from "../apis/types";
-import { addEventMatchApi } from "../apis/add-event";
-import { validateEventMatch } from "../utils/validate-event";
 import { updateEventMatchApi } from "../apis/update-event";
-import { deleteEventApi } from "../apis/delete-event";
+import { validateEventMatch } from "../utils/validator";
 
 type LoadingGoalMatchProps = {
   match: Match;

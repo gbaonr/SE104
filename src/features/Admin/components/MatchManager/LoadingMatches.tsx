@@ -1,62 +1,71 @@
-import { Box, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import { Box, Checkbox, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TeamItem } from "components/Items/ClubItem";
+import { ScoreItem } from "components/Items/ScoreItem";
 import { ADMIN_ROUTES } from "constants/Paths";
-import { teamsInfo } from "constants/Teams";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getMatchesApi } from "./apis/get-matches";
-import { Match } from "./apis/types";
 import { Club } from "../ClubManager/apis/types";
+import { Match } from "./apis/types";
+import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 
 const upCommingMatchesColumns = [
-  { id: "match_id", header: "#", width: 1 },
-  { id: "team1", header: "Team 1", width: 2 },
-  { id: "team2", header: "Team 2", width: 2 },
-  { id: "start", header: "Start", width: 2 },
-  { id: "finish", header: "Finish", width: 2 },
-  // { id: "date", header: "Date", width: 2 },
-  // { id: "time", header: "Time", width: 1 },
-  // { id: "team", header: "Team", width: 2 },
-  // { id: "opponent", header: "Opponent", width: 2 },
-  // { id: "location", header: "Location", width: 2 },
+  { id: "match_id", header: "#", width: 1, needDone: false },
+  { id: "team1", header: "Team 1", width: 2, needDone: false },
+  { id: "goal", header: "Goal", width: 1, needDone: false },
+  { id: "team2", header: "Team 2", width: 2, needDone: false },
+  { id: "start", header: "Start", width: 2, needDone: false },
+  { id: "finish", header: "Finish", width: 2, needDone: true },
+  { id: "running", header: "Running", width: 2, needDone: false },
 ];
 
 type LoadingMatchesProps = {
   data: Match[];
   clubs: Club[];
   header: string;
-  showFinished?: boolean;
+  // showFinished?: boolean;
+  // showGoal?: boolean;
+  isDone?: boolean;
 };
 
-export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMatchesProps) => {
-  const [selectedTeamOne, setSelectedTeamOne] = useState<string>("All");
-  const [selectedTeamTwo, setSelectedTeamTwo] = useState<string>("All");
+export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingMatchesProps) => {
+  const [selectedTeamOne, setSelectedTeamOne] = useState<number>(-1);
+  const [selectedTeamTwo, setSelectedTeamTwo] = useState<number>(-1);
 
   const [startDate, setStartDate] = useState<Dayjs>(dayjs("1970-01-01"));
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
   const [filteredData, setFilteredData] = useState(data);
+  const [respectOrder, setRespectOrder] = useState(true);
 
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
 
-  // useEffect(() => {
-  //   setFilteredData(
-  //     data.filter((match) => {
-  //       const teamOne = selectedTeamOne === "All" || match.team.name === selectedTeamOne;
-  //       const teamTwo = selectedTeamTwo === "All" || match.opponent.name === selectedTeamTwo;
-  //       const isAfterStartDate = dayjs(match.date).isAfter(startDate);
-  //       const isBeforeEndDate = dayjs(match.date).isBefore(endDate);
+  useEffect(() => {
+    setFilteredData(
+      data.filter((match) => {
+        const teamOne =
+          selectedTeamOne === -1 ||
+          match.team1 === selectedTeamOne ||
+          (!respectOrder && match.team2 === selectedTeamOne);
 
-  //       return teamOne && teamTwo && isAfterStartDate && isBeforeEndDate;
-  //     }),
-  //   );
-  // }, [selectedTeamOne, selectedTeamTwo, startDate, endDate, data]);
+        const teamTwo =
+          selectedTeamTwo === -1 ||
+          match.team2 === selectedTeamTwo ||
+          (!respectOrder && match.team1 === selectedTeamTwo);
+
+        const isAfterStartDate = dayjs.unix(match.start).isAfter(startDate);
+        const isBeforeEndDate =
+          dayjs.unix(match.finish).isBefore(endDate) || match.finish === 2 * 10 ** 9;
+
+        return teamOne && teamTwo && isAfterStartDate && isBeforeEndDate;
+      }),
+    );
+  }, [selectedTeamOne, selectedTeamTwo, startDate, endDate, data, respectOrder]);
 
   return (
     <Box
@@ -65,7 +74,7 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
         p: 2,
         boxShadow: "0 0 10px 0 rgba(100, 100, 100, 0.1)",
         borderRadius: 2,
-        my: 2,
+        my: 1,
       }}
     >
       <Typography
@@ -80,7 +89,7 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
       </Typography>
 
       {/* loading filter */}
-      {/* <Box
+      <Box
         sx={{
           display: "flex",
           alignItems: "flex-end",
@@ -88,33 +97,33 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
         }}
       >
         <TextField
-          value={selectedTeamOne}
+          value={selectedTeamOne.toString()}
           sx={{ mr: 2 }}
           select
           label="Team 1"
-          onChange={(e) => setSelectedTeamOne(e.target.value as string)}
+          onChange={(e) => setSelectedTeamOne(parseInt(e.target.value))}
         >
-          {Object.keys(teamsInfo).map((team) => (
-            <MenuItem key={team} value={team}>
-              {team}
+          {clubs.map((club) => (
+            <MenuItem key={club.club_id} value={club.club_id}>
+              {club.club_name}
             </MenuItem>
           ))}
-          <MenuItem value="All">All</MenuItem>
+          <MenuItem value="-1">All</MenuItem>
         </TextField>
 
         <TextField
-          value={selectedTeamTwo}
+          value={selectedTeamTwo.toString()}
           sx={{ mr: 2 }}
           select
           label="Team 2"
-          onChange={(e) => setSelectedTeamTwo(e.target.value as string)}
+          onChange={(e) => setSelectedTeamTwo(parseInt(e.target.value as string))}
         >
-          {Object.keys(teamsInfo).map((team) => (
-            <MenuItem key={team} value={team}>
-              {team}
+          {clubs.map((club) => (
+            <MenuItem key={club.club_id} value={club.club_id}>
+              {club.club_name}
             </MenuItem>
           ))}
-          <MenuItem value="All">All</MenuItem>
+          <MenuItem value="-1">All</MenuItem>
         </TextField>
 
         <Box sx={{ mr: 2 }}>
@@ -142,7 +151,12 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
             </DemoContainer>
           </LocalizationProvider>
         </Box>
-      </Box> */}
+
+        <Box sx={{ mr: 2, display: "flex", flexDirection: "column" }}>
+          <Typography>Respect Order</Typography>
+          <Checkbox checked={respectOrder} onChange={(e) => setRespectOrder(e.target.checked)} />
+        </Box>
+      </Box>
 
       {/* loading matches */}
       <Box
@@ -152,11 +166,23 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
       >
         <Grid
           container
-          columns={{ xs: upCommingMatchesColumns.reduce((acc, column) => acc + column.width, 0) }}
+          columns={{
+            xs: upCommingMatchesColumns
+              .filter(
+                (c) =>
+                  (c.id !== "running" || (c.id === "running" && !isDone)) &&
+                  (c.needDone === isDone || !c.needDone),
+              )
+              .reduce((acc, column) => acc + column.width, 0),
+          }}
         >
           {/* load header */}
           {upCommingMatchesColumns.map((column) => {
-            if ((column.id === "finish" && showFinished) || column.id !== "finish") {
+            if (
+              (column.id === "finish" && isDone) ||
+              (column.id === "running" && !isDone) ||
+              (column.id !== "finish" && column.id !== "running")
+            ) {
               return (
                 <Grid
                   item
@@ -175,10 +201,53 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
           })}
 
           {/* load data */}
-          {filteredData.map((match) => (
-            <>
-              {upCommingMatchesColumns.map((column) => {
-                if (column.id === "team1" || column.id === "team2") {
+          {filteredData
+            .sort((a, b) => {
+              return b.start - a.start;
+            })
+            .map((match, index) => (
+              <>
+                {upCommingMatchesColumns.map((column) => {
+                  if (column.id === "finish" && !isDone) return null;
+                  if (column.id === "running" && isDone) return null;
+
+                  if (column.id === "team1" || column.id === "team2") {
+                    return (
+                      <Grid
+                        item
+                        xs={column.width}
+                        sx={{
+                          border: "1px solid #f0f0f0",
+                          p: "0.5rem !important",
+                          "&:hover": {
+                            background:
+                              "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                          },
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Box
+                          component={Link}
+                          to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
+                          style={{
+                            textDecoration: "none",
+                            color: "inherit",
+                            width: "100%",
+                            height: "100%",
+                            display: "block",
+                          }}
+                        >
+                          <TeamItem
+                            club={clubs.find((club) => club.club_id === match[column.id])}
+                            leftLogo={
+                              column.id === "team1" ? true : column.id === "team2" ? false : false
+                            }
+                          />
+                        </Box>
+                      </Grid>
+                    );
+                  }
+
                   return (
                     <Grid
                       item
@@ -186,6 +255,7 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
                       sx={{
                         border: "1px solid #f0f0f0",
                         p: "0.5rem !important",
+                        textAlign: "center",
                         "&:hover": {
                           background:
                             "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
@@ -201,57 +271,30 @@ export const LoadingMatches = ({ data, clubs, header, showFinished }: LoadingMat
                           color: "inherit",
                           width: "100%",
                           height: "100%",
-                          display: "block",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        <TeamItem
-                          club={clubs.find((club) => club.club_id === match[column.id])}
-                          leftLogo={
-                            column.id === "team1" ? true : column.id === "team2" ? false : false
-                          }
-                        />
+                        {column.id === "goal" ? (
+                          <ScoreItem match={match} />
+                        ) : column.id === "start" || column.id === "finish" ? (
+                          dayjs(match[column.id] * 1000).format("DD/MM/YYYY - HH:mm")
+                        ) : column.id === "match_id" ? (
+                          index + 1
+                        ) : column.id === "running" &&
+                          Date.now() / 1000 < match.finish &&
+                          Date.now() / 1000 > match.start ? (
+                          <DirectionsRunIcon />
+                        ) : (
+                          match[column.id]
+                        )}
                       </Box>
                     </Grid>
                   );
-                }
-
-                return (
-                  <Grid
-                    item
-                    xs={column.width}
-                    sx={{
-                      border: "1px solid #f0f0f0",
-                      p: "0.5rem !important",
-                      textAlign: "center",
-                      "&:hover": {
-                        background:
-                          "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                      },
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Box
-                      component={Link}
-                      to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
-                      style={{
-                        textDecoration: "none",
-                        color: "inherit",
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {column.id === "start" || column.id === "finish"
-                        ? dayjs(match[column.id] * 1000).format("DD/MM/YYYY HH:mm")
-                        : match[column.id]}
-                    </Box>
-                  </Grid>
-                );
-              })}
-            </>
-          ))}
+                })}
+              </>
+            ))}
         </Grid>
       </Box>
     </Box>
