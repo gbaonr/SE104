@@ -8,7 +8,7 @@ export type Club = {
 };
 
 export type Player = {
-  player_id?: string;
+  player_id?: number;
   player_name?: string;
   player_bday?: number;
   player_club?: number;

@@ -1,3 +1,5 @@
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
@@ -13,22 +15,28 @@ import {
   Typography,
 } from "@mui/material";
 import { TeamItem } from "components/Items/ClubItem";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { dataPlayers } from "constants/Players";
-import { useState } from "react";
-import { Match } from "types/Match";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import { useEffect, useReducer, useState } from "react";
+import { toast } from "react-toastify";
+import { getPlayersApi } from "../../ClubManager/apis/get-players";
+import { Club, Player } from "../../ClubManager/apis/types";
+import { getEventsMatchApi } from "../apis/get-events";
+import { Match, MatchEvent } from "../apis/types";
+import { addEventMatchApi } from "../apis/add-event";
+import { validateEventMatch } from "../utils/validate-event";
+import { updateEventMatchApi } from "../apis/update-event";
+import { deleteEventApi } from "../apis/delete-event";
 
 type LoadingGoalMatchProps = {
   match: Match;
+  clubs: Club[];
 };
 
 const columns = [
   { id: "id", header: "#", width: 1 },
-  { id: "team", header: "Team", width: 2 },
-  { id: "player", header: "Player", width: 2 },
-  { id: "time", header: "Time", width: 1 },
-  { id: "type", header: "Type", width: 1 },
+  { id: "team_id", header: "Team", width: 2 },
+  { id: "player_id", header: "Player", width: 2 },
+  { id: "seconds", header: "Time", width: 1 },
+  { id: "events", header: "Type", width: 1 },
   { id: "edit", header: "Edit", width: 1 },
   { id: "delete", header: "Delete", width: 1 },
 ];
@@ -40,14 +48,72 @@ const optionInput = [
   { id: "type", name: "Type" },
 ];
 
-export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
+export const LoadingGoalMatch = ({ match, clubs }: LoadingGoalMatchProps) => {
   const [showEditGoal, setShowEditGoal] = useState<boolean>(false);
-  const [eventToEdit, setEventToEdit] = useState(null);
-  const [typeToEdit, setTypeToEdit] = useState("add");
+  const [eventToEdit, setEventToEdit] = useState<MatchEvent>(null);
+  const [typeToEdit, setTypeToEdit] = useState<"add" | "edit">("add");
+
+  const [events, setEvents] = useState<MatchEvent[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [forceUpdateEvents, setForceUpdateEvents] = useState<number>(0);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getEventsMatchApi(match);
+
+      if (response.status === "success") {
+        setEvents(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    })();
+  }, [match, forceUpdateEvents]);
+
+  useEffect(() => {
+    (async () => {
+      const playerTeam1 = await getPlayersApi(clubs.find((club) => club.club_id === match.team1));
+      const playerTeam2 = await getPlayersApi(clubs.find((club) => club.club_id === match.team2));
+
+      if (playerTeam1.status === "success" && playerTeam2.status === "success") {
+        setPlayers([...playerTeam1.data, ...playerTeam2.data]);
+      } else {
+        toast.error(playerTeam1.message);
+        toast.error(playerTeam2.message);
+      }
+    })();
+  }, [match, clubs]);
+
+  useEffect(() => {
+    const data = {};
+
+    if (eventToEdit?.team_id === undefined) data["team_id"] = match.team1;
+
+    if (eventToEdit?.player_id === undefined && players.length > 0)
+      data["player_id"] = players.filter((e) => e.player_club === match.team1)[0].player_id;
+
+    if (eventToEdit?.seconds === undefined) data["seconds"] = 0;
+    if (eventToEdit?.events === undefined) data["events"] = "A";
+
+    console.log("update", eventToEdit, data);
+
+    if (Object.keys(data).length > 0) {
+      setEventToEdit({
+        ...eventToEdit,
+        ...data,
+      });
+    }
+  }, [eventToEdit, players]);
+
+  useEffect(() => {
+    if (!showEditGoal) {
+      setEventToEdit(null);
+      setTypeToEdit("add");
+    }
+  }, [showEditGoal]);
 
   return (
     <>
-      {showEditGoal && (
+      {showEditGoal && eventToEdit && (
         <Dialog open={showEditGoal} onClose={(e) => setShowEditGoal(false)}>
           <DialogTitle>{typeToEdit === "add" ? "Add" : "Edit"} Goal</DialogTitle>
           <DialogContent>
@@ -56,42 +122,107 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                 let value = null;
 
                 if (column.id === "team") {
+                  const team1 = clubs.find((club) => club.club_id === match.team1);
+                  const team2 = clubs.find((club) => club.club_id === match.team2);
+
                   value = (
                     <Select
                       fullWidth
                       label={column.name}
                       name={column.name}
                       id={column.id}
-                      value={eventToEdit?.team.name}
+                      value={eventToEdit?.team_id}
+                      onChange={(e) => {
+                        setEventToEdit({
+                          ...eventToEdit,
+                          team_id: parseInt(e.target.value.toString()),
+                        });
+                      }}
                     >
-                      <MenuItem value={match.team.name}>{match.team.name}</MenuItem>
-                      <MenuItem value={match.opponent.name}>{match.opponent.name}</MenuItem>
+                      <MenuItem value={team1.club_id}>{team1.club_name}</MenuItem>
+                      <MenuItem value={team2.club_id}>{team2.club_name}</MenuItem>
                     </Select>
                   );
                 } else if (column.id === "player") {
-                  value = (
-                    <Select
-                      fullWidth
-                      label={column.name}
-                      name={column.name}
-                      id={column.id}
-                      value={eventToEdit?.player.fullName}
-                    >
-                      {dataPlayers
-                        .filter((player) => player.team.name === match.team.name)
-                        .map((player) => (
-                          <MenuItem value={player.fullName}>{player.fullName}</MenuItem>
-                        ))}
-                    </Select>
-                  );
+                  {
+                    eventToEdit &&
+                      (value = (
+                        <Select
+                          fullWidth
+                          label={column.name}
+                          name={column.name}
+                          id={column.id}
+                          value={eventToEdit?.player_id}
+                          onChange={(e) => {
+                            setEventToEdit({
+                              ...eventToEdit,
+                              player_id: parseInt(e.target.value.toString()),
+                            });
+                          }}
+                        >
+                          {eventToEdit &&
+                            eventToEdit.team_id &&
+                            players
+                              .filter((e) => e.player_club === eventToEdit.team_id)
+                              .map((player) => (
+                                <MenuItem value={player.player_id}>{player.player_name}</MenuItem>
+                              ))}
+                        </Select>
+                      ));
+                  }
                 } else if (column.id === "time") {
                   value = (
-                    <TextField
-                      fullWidth
-                      label={column.name}
-                      id={column.id}
-                      defaultValue={eventToEdit?.time}
-                    />
+                    <Grid
+                      container
+                      columns={12}
+                      spacing={2}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Grid item xs={6}>
+                        <TextField
+                          fullWidth
+                          label="Minutes"
+                          type="number"
+                          value={Math.floor(eventToEdit?.seconds / 60)}
+                          onChange={(e) => {
+                            let minutes = parseInt(e.target.value);
+                            let seconds = eventToEdit?.seconds % 60;
+
+                            if (isNaN(minutes)) minutes = 0;
+                            if (isNaN(seconds)) seconds = 0;
+
+                            setEventToEdit({
+                              ...eventToEdit,
+                              seconds: minutes * 60 + (seconds % 60),
+                            });
+                          }}
+                        />
+                      </Grid>
+
+                      <Grid item xs={6}>
+                        <TextField
+                          fullWidth
+                          label="Seconds"
+                          type="number"
+                          value={eventToEdit?.seconds % 60}
+                          onChange={(e) => {
+                            let minutes = Math.floor(eventToEdit?.seconds / 60);
+                            let seconds = parseInt(e.target.value);
+
+                            if (isNaN(minutes)) minutes = 0;
+                            if (isNaN(seconds)) seconds = 0;
+
+                            setEventToEdit({
+                              ...eventToEdit,
+                              seconds: minutes * 60 + (seconds % 60),
+                            });
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
                   );
                 } else if (column.id === "type") {
                   value = (
@@ -100,8 +231,15 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                       label={column.name}
                       name={column.name}
                       id={column.id}
-                      value={eventToEdit?.type}
+                      value={eventToEdit?.events}
+                      onChange={(e) => {
+                        setEventToEdit({
+                          ...eventToEdit,
+                          events: e.target.value.toString(),
+                        });
+                      }}
                     >
+                      {/* TODO: fix this when events is customizable */}
                       <MenuItem value="A">A</MenuItem>
                       <MenuItem value="B">B</MenuItem>
                       <MenuItem value="C">C</MenuItem>
@@ -170,13 +308,52 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
                   backgroundColor: "#4caf50",
                 },
               }}
-              onClick={(e) => setShowEditGoal(false)}
+              onClick={(e) => {
+                const event = {
+                  ...eventToEdit,
+                  match_id: match.match_id,
+                };
+
+                if (validateEventMatch(event, match, players) !== "") {
+                  toast.error(validateEventMatch(event, match, players));
+                  return;
+                }
+
+                if (typeToEdit === "add") {
+                  (async () => {
+                    const response = await addEventMatchApi(event);
+
+                    if (response.status === "success") {
+                      setForceUpdateEvents(forceUpdateEvents + 1);
+                      toast.success("Event added successfully");
+                    } else {
+                      toast.error(response.message);
+                    }
+                  })();
+                }
+
+                if (typeToEdit === "edit") {
+                  (async () => {
+                    const response = await updateEventMatchApi(event);
+
+                    if (response.status === "success") {
+                      setForceUpdateEvents(forceUpdateEvents + 1);
+                      toast.success("Event updated successfully");
+                    } else {
+                      toast.error(response.message);
+                    }
+                  })();
+                }
+
+                setShowEditGoal(false);
+              }}
             >
               Save
             </Button>
           </DialogActions>
         </Dialog>
       )}
+
       <Box
         sx={{
           backgroundColor: "white",
@@ -211,6 +388,7 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
             onClick={(e) => {
               setTypeToEdit("add");
               setShowEditGoal(true);
+              setEventToEdit(null);
             }}
             sx={{
               color: "white",
@@ -256,67 +434,91 @@ export const LoadingGoalMatch = ({ match }: LoadingGoalMatchProps) => {
             ))}
 
             {/* loading data */}
-            {match.events.map((event, index) => (
-              <>
-                {columns.map((column) => {
-                  let value = null;
+            {events
+              .sort((a, b) => (a.seconds < b.seconds ? -1 : 1))
+              .map((event, index) => (
+                <>
+                  {columns.map((column) => {
+                    let value = null;
 
-                  if (column.id === "id") {
-                    value = (index + 1).toString();
-                  } else if (column.id === "team") {
-                    value = <TeamItem leftLogo={true} club={event.team} />;
-                  } else if (column.id === "player") {
-                    value = event.player.fullName;
-                  } else if (column.id === "time") {
-                    value = event.time;
-                  } else if (column.id === "type") {
-                    value = event.type;
-                  } else if (column.id === "edit") {
-                    value = (
-                      <Button
-                        variant="outlined"
-                        sx={{ color: "green" }}
-                        onClick={(e) => {
-                          setShowEditGoal(true);
-                          setEventToEdit(event);
+                    if (column.id === "id") {
+                      value = (index + 1).toString();
+                    } else if (column.id === "team_id") {
+                      value = (
+                        <TeamItem
+                          leftLogo={true}
+                          club={clubs.find((club) => club.club_id === event.team_id)}
+                        />
+                      );
+                    } else if (column.id === "player_id") {
+                      value = players.find(
+                        (player) => player.player_id === event.player_id,
+                      )?.player_name;
+                    } else if (column.id === "seconds") {
+                      // convert seconds to mm:ss
+                      const minutes = Math.floor(event.seconds / 60);
+                      const seconds = event.seconds - minutes * 60;
+
+                      // value = `${minutes}:${seconds}`;
+                      value = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+                    } else if (column.id === "events") {
+                      value = event.events;
+                    } else if (column.id === "edit") {
+                      value = (
+                        <Button
+                          variant="outlined"
+                          sx={{ color: "green" }}
+                          onClick={(e) => {
+                            setTypeToEdit("edit");
+                            setShowEditGoal(true);
+                            setEventToEdit(event);
+                          }}
+                        >
+                          <EditIcon />
+                        </Button>
+                      );
+                    } else if (column.id === "delete") {
+                      value = (
+                        <Button
+                          variant="outlined"
+                          sx={{ color: "red" }}
+                          onClick={(e) => {
+                            (async () => {
+                              const response = await deleteEventApi(event);
+
+                              if (response.status === "success") {
+                                setForceUpdateEvents(forceUpdateEvents + 1);
+                                toast.success("Event deleted successfully");
+                              } else {
+                                toast.error(response.message);
+                              }
+                            })();
+                          }}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                      );
+                    }
+
+                    return (
+                      <Grid
+                        item
+                        xs={column.width}
+                        sx={{
+                          border: "1px solid #f0f0f0",
+                          p: "0.5rem !important",
+                          textAlign: "center",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        <EditIcon />
-                      </Button>
+                        {value}
+                      </Grid>
                     );
-                  } else if (column.id === "delete") {
-                    value = (
-                      <Button
-                        variant="outlined"
-                        sx={{ color: "red" }}
-                        onClick={(e) => {
-                          alert("Delete");
-                        }}
-                      >
-                        <DeleteIcon />
-                      </Button>
-                    );
-                  }
-
-                  return (
-                    <Grid
-                      item
-                      xs={column.width}
-                      sx={{
-                        border: "1px solid #f0f0f0",
-                        p: "0.5rem !important",
-                        textAlign: "center",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {value}
-                    </Grid>
-                  );
-                })}
-              </>
-            ))}
+                  })}
+                </>
+              ))}
           </Grid>
         </Box>
       </Box>

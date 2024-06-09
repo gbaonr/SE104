@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, Container } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AddMatch } from "./AddMatch";
 import { getMatchesApi } from "./apis/get-matches";
 import { Match } from "./apis/types";
@@ -12,8 +12,6 @@ export const MatchManger = () => {
   const [showAddMatch, setShowAddMatch] = useState(false);
   const [clubs, setClubs] = useState<any[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
-  const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
-  const [doneMatches, setDoneMatches] = useState<Match[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -37,20 +35,15 @@ export const MatchManger = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    if (matches.length > 0) {
-      console.log(matches);
-      console.log(Date.now() / 1000);
+  const upcomingMatches = useMemo(
+    () => matches.filter((match) => match.start > Date.now() / 1000),
+    [matches],
+  );
 
-      const upcoming = matches.filter((match) => match.start > Date.now() / 1000);
-      const done = matches.filter((match) => match.finish < Date.now() / 1000);
-
-      console.log(upcoming, done);
-
-      setUpcomingMatches(upcoming);
-      setDoneMatches(done);
-    }
-  }, [matches]);
+  const doneMatches = useMemo(
+    () => matches.filter((match) => match.finish < Date.now() / 1000),
+    [matches],
+  );
 
   return (
     <Container

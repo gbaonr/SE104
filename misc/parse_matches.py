@@ -155,9 +155,18 @@ def get_matches():
                 type_goal = random.choice(["A", "B", "C"])
                 time_goal = random.randint(0, 90 * 60)
 
+                event_id = storage_postgres.fetch("SELECT MAX(event_id) FROM events")[
+                    0
+                ][0]
+
+                if event_id is None:
+                    event_id = 0
+
+                event_id += 1
+
                 storage_postgres.execute(
-                    "INSERT INTO events (match_id, events, player_id, seconds) VALUES (%s, %s, %s, %s)",
-                    (match_id, type_goal, player_id, time_goal),
+                    "INSERT INTO events (match_id, events, player_id, seconds, team_id, event_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (match_id, type_goal, player_id, time_goal, team1_id, event_id),
                 )
 
             for _ in range(score2):
@@ -165,9 +174,18 @@ def get_matches():
                 type_goal = random.choice(["A", "B", "C"])
                 time_goal = random.randint(0, 90 * 60)
 
+                event_id = storage_postgres.fetch("SELECT MAX(event_id) FROM events")[
+                    0
+                ][0]
+
+                if event_id is None:
+                    event_id = 0
+
+                event_id += 1
+
                 storage_postgres.execute(
-                    "INSERT INTO events (match_id, events, player_id, seconds) VALUES (%s, %s, %s, %s)",
-                    (match_id, type_goal, player_id, time_goal),
+                    "INSERT INTO events (match_id, events, player_id, seconds, team_id, event_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (match_id, type_goal, player_id, time_goal, team2_id, event_id),
                 )
 
 

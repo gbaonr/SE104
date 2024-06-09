@@ -10,3 +10,12 @@ export type Match = {
   start?: number;
   finish?: number;
 };
+
+export type MatchEvent = {
+  player_id?: number;
+  match_id?: number;
+  seconds?: number;
+  events?: string;
+  event_id?: number;
+  team_id?: number;
+};

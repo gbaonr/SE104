@@ -22,7 +22,7 @@ export const MatchDetailInfo = ({ match, clubs }: MatchDetailInfoProps) => {
       <LoadingInfoMatch clubs={clubs} match={match} />
 
       {/* {match.finished && <LoadingGoalMatch match={match} />} */}
-      {/* {match.finish < Date.now() / 1000 && <LoadingGoalMatch match={match} />} */}
+      {match.finish < Date.now() / 1000 && <LoadingGoalMatch match={match} clubs={clubs} />}
 
       {/* <LoadingPlayerMatch match={match} /> */}
     </Container>
