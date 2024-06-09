@@ -1,4 +1,4 @@
-import { Box, Checkbox, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import { Box, Checkbox, Grid, MenuItem, Skeleton, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -40,9 +40,14 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
   const [filteredData, setFilteredData] = useState(data);
   const [respectOrder, setRespectOrder] = useState(true);
+  const [loading, setLoading] = useState(true); // State to track loading
 
   useEffect(() => {
-    setFilteredData(data);
+    // Simulate an API call to fetch matches
+    setTimeout(() => {
+      setFilteredData(data);
+      setLoading(false); // Set loading to false once data is fetched
+    }, 2000);
   }, [data]);
 
   useEffect(() => {
@@ -200,101 +205,131 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
             }
           })}
 
-          {/* load data */}
-          {filteredData
-            .sort((a, b) => {
-              return b.start - a.start;
-            })
-            .map((match, index) => (
-              <>
-                {upCommingMatchesColumns.map((column) => {
-                  if (column.id === "finish" && !isDone) return null;
-                  if (column.id === "running" && isDone) return null;
+          {/* load data or skeletons */}
+          {loading
+            ? Array.from(new Array(5)).map((_, rowIndex) => (
+                <Grid container columns={12} key={rowIndex}>
+                  {upCommingMatchesColumns.map((column) => {
+                    if (
+                      (column.id === "finish" && isDone) ||
+                      (column.id === "running" && !isDone) ||
+                      (column.id !== "finish" && column.id !== "running")
+                    ) {
+                      return (
+                        <Grid
+                          item
+                          xs={column.width}
+                          sx={{
+                            border: "1px solid #f0f0f0",
+                            p: "0.5rem !important",
+                            textAlign: "center",
+                          }}
+                          key={column.id}
+                        >
+                          <Skeleton variant="text" />
+                        </Grid>
+                      );
+                    }
+                  })}
+                </Grid>
+              ))
+            : filteredData
+                .sort((a, b) => {
+                  return b.start - a.start;
+                })
+                .map((match, index) => (
+                  <>
+                    {upCommingMatchesColumns.map((column) => {
+                      if (column.id === "finish" && !isDone) return null;
+                      if (column.id === "running" && isDone) return null;
+                      if (column.id === "team1" || column.id === "team2") {
+                        return (
+                          <Grid
+                            item
+                            xs={column.width}
+                            sx={{
+                              border: "1px solid #f0f0f0",
+                              p: "0.5rem !important",
+                              "&:hover": {
+                                background:
+                                  "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                              },
+                              cursor: "pointer",
+                            }}
+                          >
+                            <Box
+                              component={Link}
+                              to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
+                              style={{
+                                textDecoration: "none",
+                                color: "inherit",
+                                width: "100%",
+                                height: "100%",
+                                display: "block",
+                              }}
+                            >
+                              <TeamItem
+                                club={clubs.find((club) => club.club_id === match[column.id])}
+                                leftLogo={
+                                  column.id === "team1"
+                                    ? true
+                                    : column.id === "team2"
+                                      ? false
+                                      : false
+                                }
+                              />
+                            </Box>
+                          </Grid>
+                        );
+                      }
 
-                  if (column.id === "team1" || column.id === "team2") {
-                    return (
-                      <Grid
-                        item
-                        xs={column.width}
-                        sx={{
-                          border: "1px solid #f0f0f0",
-                          p: "0.5rem !important",
-                          "&:hover": {
-                            background:
-                              "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                          },
-                          cursor: "pointer",
-                        }}
-                      >
-                        <Box
-                          component={Link}
-                          to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
-                          style={{
-                            textDecoration: "none",
-                            color: "inherit",
-                            width: "100%",
-                            height: "100%",
-                            display: "block",
+                      return (
+                        <Grid
+                          item
+                          xs={column.width}
+                          sx={{
+                            border: "1px solid #f0f0f0",
+                            p: "0.5rem !important",
+                            textAlign: "center",
+                            "&:hover": {
+                              background:
+                                "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                            },
+                            cursor: "pointer",
                           }}
                         >
-                          <TeamItem
-                            club={clubs.find((club) => club.club_id === match[column.id])}
-                            leftLogo={
-                              column.id === "team1" ? true : column.id === "team2" ? false : false
-                            }
-                          />
-                        </Box>
-                      </Grid>
-                    );
-                  }
-
-                  return (
-                    <Grid
-                      item
-                      xs={column.width}
-                      sx={{
-                        border: "1px solid #f0f0f0",
-                        p: "0.5rem !important",
-                        textAlign: "center",
-                        "&:hover": {
-                          background:
-                            "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                        },
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Box
-                        component={Link}
-                        to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
-                        style={{
-                          textDecoration: "none",
-                          color: "inherit",
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {column.id === "goal" ? (
-                          <ScoreItem match={match} />
-                        ) : column.id === "start" || column.id === "finish" ? (
-                          dayjs(match[column.id] * 1000).format("DD/MM/YYYY - HH:mm")
-                        ) : column.id === "match_id" ? (
-                          index + 1
-                        ) : column.id === "running" &&
-                          Date.now() / 1000 < match.finish &&
-                          Date.now() / 1000 > match.start ? (
-                          <DirectionsRunIcon />
-                        ) : (
-                          match[column.id]
-                        )}
-                      </Box>
-                    </Grid>
-                  );
-                })}
-              </>
-            ))}
+                          <Box
+                            component={Link}
+                            to={ADMIN_ROUTES.MATCH + "/" + match.match_id}
+                            style={{
+                              textDecoration: "none",
+                              color: "inherit",
+                              width: "100%",
+                              height: "100%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {column.id === "goal" ? (
+                              <ScoreItem match={match} />
+                            ) : column.id === "start" || column.id === "finish" ? (
+                              dayjs(match[column.id] * 1000).format("DD/MM/YYYY - HH:mm")
+                            ) : column.id === "match_id" ? (
+                              index + 1
+                            ) : column.id === "running" &&
+                              Date.now() / 1000 < match.finish &&
+                              Date.now() / 1000 > match.start ? (
+                              <DirectionsRunIcon />
+                            ) : (
+                              match[column.id]
+                            )}
+                          </Box>
+                        </Grid>
+                      );
+                    })}
+                  </>
+                ))}
         </Grid>
       </Box>
     </Box>

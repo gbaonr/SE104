@@ -1,5 +1,14 @@
 import SearchIcon from "@mui/icons-material/Search";
-import { alpha, Box, Container, Grid, InputBase, styled, Typography } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Container,
+  Grid,
+  InputBase,
+  Skeleton,
+  styled,
+  Typography,
+} from "@mui/material";
 import { ADMIN_ROUTES } from "constants/Paths";
 import Fuse from "fuse.js";
 import { useEffect, useRef, useState } from "react";
@@ -8,12 +17,6 @@ import { toast } from "react-toastify";
 import { getClubsApi } from "./apis/get-clubs";
 import { Club } from "./apis/types";
 import { BlockComponent } from "components/Items/BlockComponent";
-
-// export type ClubManagerProps = {
-//   data: {
-//     [team: string]: Team;
-//   };
-// };
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,6 +61,7 @@ export const ClubManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredClubs, setFilteredClubs] = useState<Club[]>([]);
   const [clubs, setClubs] = useState<Club[]>([]);
+  const [loading, setLoading] = useState(true); // State to track loading
 
   useEffect(() => {
     (async () => {
@@ -69,6 +73,8 @@ export const ClubManager = () => {
       } else {
         toast.error("Failed to fetch clubs");
       }
+
+      setLoading(false);
     })();
   }, []);
 
@@ -115,67 +121,100 @@ export const ClubManager = () => {
 
       <BlockComponent sx={{ my: 2 }}>
         <Grid container spacing={3}>
-          {filteredClubs.map((club, index) => (
-            <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
-              <Link
-                to={ADMIN_ROUTES.CLUB + "/" + club.club_shortname}
-                style={{ textDecoration: "none", color: "inherit", width: "100%" }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    width: "100%",
-                    borderRadius: "10px",
-                    boxShadow: "0px 0px 3px 0px #7b7b7b",
-                    backgroundColor: "#fff",
-                    p: 1.5,
-                    "&:hover": {
-                      color: "#fff",
-                      cursor: "pointer",
-                      background:
-                        "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                    },
-                  }}
-                >
-                  <img src={club.logo_high} alt="" width="30%" />
-
+          {loading
+            ? Array.from(new Array(12)).map((_, index) => (
+                <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
                       alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      width: "100%",
+                      borderRadius: "10px",
+                      boxShadow: "0px 0px 3px 0px #7b7b7b",
+                      backgroundColor: "#fff",
+                      p: 1.5,
                     }}
                   >
-                    <Typography
+                    <Skeleton variant="rectangular" width="30%" height={60} />
+                    <Box
                       sx={{
-                        color: "#37003c",
-                        fontSize: "1.2rem",
-                        fontWeight: 700,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
                         mt: 1.5,
+                        width: "100%",
                       }}
                     >
-                      {club.club_name}
-                    </Typography>
-
-                    <Typography
-                      sx={{
-                        color: "#37003c",
-                        fontSize: "1rem",
-                        fontWeight: 400,
-                        mt: 0.5,
-                      }}
-                    >
-                      {club.club_shortname}
-                    </Typography>
+                      <Skeleton width="60%" />
+                      <Skeleton width="40%" />
+                    </Box>
                   </Box>
-                </Box>
-              </Link>
-            </Grid>
-          ))}
+                </Grid>
+              ))
+            : filteredClubs.map((club, index) => (
+                <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
+                  <Link
+                    to={ADMIN_ROUTES.CLUB + "/" + club.club_shortname}
+                    style={{ textDecoration: "none", color: "inherit", width: "100%" }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        width: "100%",
+                        borderRadius: "10px",
+                        boxShadow: "0px 0px 3px 0px #7b7b7b",
+                        backgroundColor: "#fff",
+                        p: 1.5,
+                        "&:hover": {
+                          color: "#fff",
+                          cursor: "pointer",
+                          background:
+                            "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                        },
+                      }}
+                    >
+                      <img src={club.logo_high} alt="" width="30%" />
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            color: "#37003c",
+                            fontSize: "1.2rem",
+                            fontWeight: 700,
+                            mt: 1.5,
+                          }}
+                        >
+                          {club.club_name}
+                        </Typography>
+
+                        <Typography
+                          sx={{
+                            color: "#37003c",
+                            fontSize: "1rem",
+                            fontWeight: 400,
+                            mt: 0.5,
+                          }}
+                        >
+                          {club.club_shortname}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Link>
+                </Grid>
+              ))}
         </Grid>
       </BlockComponent>
     </Container>
