@@ -1,9 +1,35 @@
-import { Box, Button, Container, Typography } from "@mui/material";
-import { dataDoneMatches } from "constants/DoneMatchResults";
-import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
+import { Box, Button, Container, Divider, Typography } from "@mui/material";
+import { getMatchesApi } from "features/Admin/components/MatchManager/apis/get-matches";
+import { Match } from "features/Admin/components/MatchManager/apis/types";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import { TableMatches } from "../TableResults/TableMatches";
 
 export default function LeftSideBar() {
+  const [matches, setMatches] = useState<Match[]>();
+
+  useEffect(() => {
+    (async () => {
+      const response = await getMatchesApi();
+
+      if (response.status === "success") {
+        setMatches(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    })();
+  }, []);
+
+  const dataDoneMatches = useMemo(() => {
+    return matches?.filter((match) => match.finish <= Date.now() / 1000);
+  }, [matches]);
+
+  const dataUpcomingMatches = useMemo(() => {
+    return matches?.filter(
+      (match) => match.start >= Date.now() / 1000 || match.finish === 2 * 10 ** 9,
+    );
+  }, [matches]);
+
   return (
     <Container maxWidth="lg" sx={{ mt: 3 }}>
       <Box sx={{ position: "relative" }}>
@@ -114,8 +140,15 @@ export default function LeftSideBar() {
             All times shown are your local time
           </Typography>
 
-          <TableMatches useShortName={true} mini={true} data={dataDoneMatches} />
-          <TableMatches useShortName={true} mini={true} data={dataUpcomingMatches} />
+          <TableMatches
+            useShortName={true}
+            mini={true}
+            matches={dataUpcomingMatches}
+            sortAsc={true}
+            limit={2}
+          />
+          <Divider />
+          <TableMatches useShortName={true} mini={true} matches={dataDoneMatches} limit={2} />
         </Box>
 
         <Box>

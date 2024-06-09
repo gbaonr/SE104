@@ -1,95 +1,262 @@
-import StadiumIcon from "@mui/icons-material/Stadium";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, MenuItem, Switch, TextField, Typography } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TeamItem } from "components/Items/ClubItem";
 import { ScoreItem } from "components/Items/ScoreItem";
-import { Match } from "types/Match";
+import dayjs, { Dayjs } from "dayjs";
+import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
+import { Club } from "features/Admin/components/ClubManager/apis/types";
+import { Match } from "features/Admin/components/MatchManager/apis/types";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export type TableResultsProps = {
   mini?: boolean;
   useShortName?: boolean;
-  data: Match[];
+  matches: Match[];
+  sortAsc?: boolean;
+  limit?: number;
 };
 
-export const TableMatches = (props: TableResultsProps) => {
-  const uniqueDates = Array.from(new Set(props.data.map((match) => match.date)));
-  const matchesByDate = uniqueDates.map((date) => ({
-    date,
-    matches: props.data.filter((match) => match.date === date),
-  }));
+export const TableMatches = ({
+  matches,
+  mini,
+  useShortName,
+  sortAsc,
+  limit = 10 ** 9,
+}: TableResultsProps) => {
+  const [clubs, setClubs] = useState<Club[]>();
+  const [filteredData, setFilteredData] = useState<Match[]>();
+  const [selectedTeamOne, setSelectedTeamOne] = useState<number>(-1);
+  const [selectedTeamTwo, setSelectedTeamTwo] = useState<number>(-1);
+  const [respectOrder, setRespectOrder] = useState(true);
 
-  matchesByDate.sort((a, b) => {
-    return new Date(a.date) > new Date(b.date) ? 1 : -1;
-  });
+  const [startDate, setStartDate] = useState<Dayjs>(dayjs("1970-01-01"));
+  const [endDate, setEndDate] = useState<Dayjs>(dayjs());
+  const [matchesByDate, setMatchesByDate] = useState<{ date: string; matches: Match[] }[]>();
+
+  useEffect(() => {
+    if (!matches) return;
+
+    setFilteredData(
+      matches.filter((match) => {
+        const teamOne =
+          selectedTeamOne === -1 ||
+          match.team1 === selectedTeamOne ||
+          (!respectOrder && match.team2 === selectedTeamOne);
+
+        const teamTwo =
+          selectedTeamTwo === -1 ||
+          match.team2 === selectedTeamTwo ||
+          (!respectOrder && match.team1 === selectedTeamTwo);
+
+        const isAfterStartDate = dayjs.unix(match.start).isAfter(startDate);
+        const isBeforeEndDate =
+          dayjs.unix(match.finish).isBefore(endDate) || match.finish === 2 * 10 ** 9;
+
+        return teamOne && teamTwo && isAfterStartDate && isBeforeEndDate;
+      }),
+    );
+  }, [selectedTeamOne, selectedTeamTwo, startDate, endDate, matches, respectOrder]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getClubsApi();
+
+      if (response.status === "success") {
+        setClubs(response.data);
+      } else {
+        toast.error(response.message);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    setFilteredData(matches);
+  }, [matches]);
+
+  useEffect(() => {
+    if (!filteredData) return;
+
+    const uniqueDates = Array.from(
+      new Set(filteredData.map((match) => dayjs.unix(match.start).format("DD/MM/YYYY"))),
+    );
+
+    const matchesByDate = uniqueDates.map((date) => ({
+      date,
+      matches:
+        filteredData.filter((match) => dayjs.unix(match.start).format("DD/MM/YYYY") === date) || [],
+    }));
+
+    if (sortAsc) {
+      setMatchesByDate(
+        matchesByDate.sort((a, b) => dayjs(a.date, "DD/MM/YYYY").diff(dayjs(b.date, "DD/MM/YYYY"))),
+      );
+    } else {
+      setMatchesByDate(
+        matchesByDate.sort((a, b) => dayjs(b.date, "DD/MM/YYYY").diff(dayjs(a.date, "DD/MM/YYYY"))),
+      );
+    }
+  }, [filteredData, sortAsc]);
 
   return (
     <>
-      {matchesByDate.map((matchByDate) => (
+      {!mini && (
         <Box
           sx={{
-            my: 4,
+            display: "flex",
+            alignItems: "flex-end",
+            alignContent: "center",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: props.mini ? "center" : "space-between",
-            }}
+          <TextField
+            value={selectedTeamOne.toString()}
+            sx={{ mr: 2 }}
+            select
+            label="Team 1"
+            onChange={(e) => setSelectedTeamOne(parseInt(e.target.value))}
           >
-            <Typography
-              variant="h5"
-              style={{
-                fontWeight: props.mini ? 700 : 900,
-                fontSize: props.mini ? "1rem" : "1.2rem",
-                margin: "0.3rem",
-              }}
-            >
-              {matchByDate.date}
-            </Typography>
+            {clubs &&
+              clubs.map((club) => (
+                <MenuItem key={club.club_id} value={club.club_id}>
+                  {club.club_name}
+                </MenuItem>
+              ))}
+            <MenuItem value="-1">All</MenuItem>
+          </TextField>
 
-            {!props.mini && (
-              <img
-                src="/assets/images/main/competition_1.png"
-                alt="competition"
-                style={{ height: "30px" }}
-              />
-            )}
+          <TextField
+            value={selectedTeamTwo.toString()}
+            sx={{ mr: 2 }}
+            select
+            label="Team 2"
+            onChange={(e) => setSelectedTeamTwo(parseInt(e.target.value as string))}
+          >
+            {clubs &&
+              clubs.map((club) => (
+                <MenuItem key={club.club_id} value={club.club_id}>
+                  {club.club_name}
+                </MenuItem>
+              ))}
+            <MenuItem value="-1">All</MenuItem>
+          </TextField>
+
+          <Box sx={{ mr: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(date) => setStartDate(date as Dayjs)}
+                  views={["day", "month", "year"]}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
           </Box>
 
-          {matchByDate.matches.map((match, index) => (
-            <Grid
-              container
-              spacing={0}
+          <Box sx={{ mr: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={(date) => setEndDate(date as Dayjs)}
+                  views={["day", "month", "year"]}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Box>
+
+          <Box sx={{ mr: 2, display: "flex", flexDirection: "column" }}>
+            <Typography>Respect Order</Typography>
+            <Switch checked={respectOrder} onChange={(e) => setRespectOrder(e.target.checked)} />
+          </Box>
+        </Box>
+      )}
+
+      {matchesByDate &&
+        matchesByDate.map((matchByDate, index) => {
+          if (index >= limit) return null;
+
+          return (
+            <Box
               sx={{
-                my: 0.2,
-                py: (props.mini && 0) || 1,
-                "&:hover": {
-                  background:
-                    "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                },
+                my: 4,
               }}
-              className="flex items-center"
             >
-              <Grid item xs={props.mini ? 5 : 2}>
-                <TeamItem useShortName={props.useShortName} club={match.team} />
-              </Grid>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: mini ? "center" : "space-between",
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  style={{
+                    fontWeight: mini ? 700 : 900,
+                    fontSize: mini ? "1rem" : "1.2rem",
+                    margin: "0.3rem",
+                  }}
+                >
+                  {matchByDate.date}
+                </Typography>
 
-              <Grid item xs={props.mini ? 2 : 1}>
-                {/* TODO: fix this */}
-                {/* <ScoreItem match={match} /> */}
-              </Grid>
+                {!mini && (
+                  <img
+                    src="/assets/images/main/competition_1.png"
+                    alt="competition"
+                    style={{ height: "30px" }}
+                  />
+                )}
+              </Box>
 
-              <Grid item xs={props.mini ? 5 : 2}>
-                <TeamItem useShortName={props.useShortName} leftLogo={true} club={match.opponent} />
-              </Grid>
+              {matchByDate.matches.map((match, index) => (
+                <Grid
+                  container
+                  spacing={0}
+                  sx={{
+                    my: 0.2,
+                    py: (mini && 0) || 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                    },
+                  }}
+                  className="flex items-center"
+                >
+                  <Grid item xs={mini ? 4 : 3}>
+                    <TeamItem
+                      useShortName={useShortName}
+                      club={clubs?.find((club) => club.club_id === match.team1)}
+                    />
+                  </Grid>
 
-              {!props.mini && (
+                  <Grid item xs={mini ? 4 : 1}>
+                    <Box sx={{ mx: 2 }}>
+                      <ScoreItem match={match} />
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={mini ? 4 : 3}>
+                    <TeamItem
+                      useShortName={useShortName}
+                      leftLogo={true}
+                      club={clubs?.find((club) => club.club_id === match.team2)}
+                    />
+                  </Grid>
+
+                  {/* {!props.mini && (
                 <Grid item xs={2}>
                   {" "}
                 </Grid>
-              )}
+              )} */}
 
-              {!props.mini && (
+                  {/* {!props.mini && (
                 <Grid item xs={5} className="flex items-center">
                   <StadiumIcon />
 
@@ -103,11 +270,12 @@ export const TableMatches = (props: TableResultsProps) => {
                     {match.location}
                   </Typography>
                 </Grid>
-              )}
-            </Grid>
-          ))}
-        </Box>
-      ))}
+              )} */}
+                </Grid>
+              ))}
+            </Box>
+          );
+        })}
     </>
   );
 };
