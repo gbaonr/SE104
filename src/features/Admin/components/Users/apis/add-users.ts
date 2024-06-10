@@ -9,13 +9,13 @@ export const addUsersApi = async (data: User) => {
     return {
       status: "success",
       data: response.data,
-      code: response.status,
+      code:  response?.status,
     };
   } catch (error) {
     return {
       status: "error",
       message: "An error occurred while trying to get users",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

@@ -118,7 +118,7 @@ const NavBar = ({ clubs }: NavBarProps) => {
           >
             <Link to="/" style={{ textDecoration: "none" }}>
               <img
-                src="assets/images/main/pl-main-logo.png"
+                src="/assets/images/main/pl-main-logo.png"
                 alt="logo"
                 style={{ width: "50px", height: "50px" }}
               />

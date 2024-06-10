@@ -5,11 +5,13 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TeamItem } from "components/Items/ClubItem";
 import { ScoreItem } from "components/Items/ScoreItem";
+import { USER_ROUTES } from "constants/Paths";
 import dayjs, { Dayjs } from "dayjs";
 import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
 import { Club } from "features/Admin/components/ClubManager/apis/types";
 import { Match } from "features/Admin/components/MatchManager/apis/types";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export type TableResultsProps = {
@@ -65,7 +67,7 @@ export const TableMatches = ({
     (async () => {
       const response = await getClubsApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setClubs(response.data);
       } else {
         toast.error(response.message);
@@ -214,49 +216,50 @@ export const TableMatches = ({
               </Box>
 
               {matchByDate.matches.map((match, index) => (
-                <Grid
-                  container
-                  spacing={0}
-                  sx={{
-                    my: 0.2,
-                    py: (mini && 0) || 1,
-                    display: "flex",
-                    justifyContent: "center",
-                    "&:hover": {
-                      background:
-                        "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                    },
-                  }}
-                  className="flex items-center"
-                >
-                  <Grid item xs={mini ? 4 : 3}>
-                    <TeamItem
-                      useShortName={useShortName}
-                      club={clubs?.find((club) => club.club_id === match.team1)}
-                    />
-                  </Grid>
+                <Link to={`${USER_ROUTES.MATCH_INFO}/${match.match_id}`}>
+                  <Grid
+                    container
+                    spacing={0}
+                    sx={{
+                      my: 0.2,
+                      py: (mini && 0) || 1,
+                      display: "flex",
+                      justifyContent: "center",
+                      "&:hover": {
+                        background:
+                          "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                      },
+                    }}
+                    className="flex items-center"
+                  >
+                    <Grid item xs={mini ? 4 : 3}>
+                      <TeamItem
+                        useShortName={useShortName}
+                        club={clubs?.find((club) => club.club_id === match.team1)}
+                      />
+                    </Grid>
 
-                  <Grid item xs={mini ? 4 : 1}>
-                    <Box sx={{ mx: 2 }}>
-                      <ScoreItem match={match} />
-                    </Box>
-                  </Grid>
+                    <Grid item xs={mini ? 4 : 1}>
+                      <Box sx={{ mx: 2 }}>
+                        <ScoreItem match={match} />
+                      </Box>
+                    </Grid>
 
-                  <Grid item xs={mini ? 4 : 3}>
-                    <TeamItem
-                      useShortName={useShortName}
-                      leftLogo={true}
-                      club={clubs?.find((club) => club.club_id === match.team2)}
-                    />
-                  </Grid>
+                    <Grid item xs={mini ? 4 : 3}>
+                      <TeamItem
+                        useShortName={useShortName}
+                        leftLogo={true}
+                        club={clubs?.find((club) => club.club_id === match.team2)}
+                      />
+                    </Grid>
 
-                  {/* {!props.mini && (
+                    {/* {!props.mini && (
                 <Grid item xs={2}>
                   {" "}
                 </Grid>
               )} */}
 
-                  {/* {!props.mini && (
+                    {/* {!props.mini && (
                 <Grid item xs={5} className="flex items-center">
                   <StadiumIcon />
 
@@ -271,7 +274,8 @@ export const TableMatches = ({
                   </Typography>
                 </Grid>
               )} */}
-                </Grid>
+                  </Grid>
+                </Link>
               ))}
             </Box>
           );

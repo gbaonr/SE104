@@ -12,7 +12,7 @@ export default function LeftSideBar() {
     (async () => {
       const response = await getMatchesApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setMatches(response.data);
       } else {
         toast.error(response.message);

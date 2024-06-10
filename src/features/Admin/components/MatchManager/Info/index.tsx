@@ -7,9 +7,10 @@ import { LoadingInfoMatch } from "./LoadingInfo";
 type MatchDetailInfoProps = {
   match: Match;
   clubs: Club[];
+  setForceUpdate: (value: number) => void;
 };
 
-export const MatchDetailInfo = ({ match, clubs }: MatchDetailInfoProps) => {
+export const MatchDetailInfo = ({ match, clubs, setForceUpdate }: MatchDetailInfoProps) => {
   return (
     <Container
       maxWidth={false}
@@ -18,8 +19,8 @@ export const MatchDetailInfo = ({ match, clubs }: MatchDetailInfoProps) => {
         flexDirection: "column",
       }}
     >
-      <LoadingInfoMatch clubs={clubs} match={match} />
-      <LoadingGoalMatch match={match} clubs={clubs} />
+      <LoadingInfoMatch clubs={clubs} match={match} setForceUpdate={setForceUpdate} />
+      <LoadingGoalMatch match={match} clubs={clubs} setForceUpdate={setForceUpdate} />
 
       {/* <LoadingPlayerMatch match={match} /> */}
     </Container>

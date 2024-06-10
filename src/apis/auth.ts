@@ -13,22 +13,22 @@ export const loginApi = async (username: string, password: string) => {
     return {
       status: "success",
       data: response.data,
-      code: response.status,
+      code:  response?.status,
     };
   } catch (error) {
-    // get type of error.request.status
-    if (error.request.status === 401) {
+    // get type of error.request?.status
+    if (error.request?.status === 401) {
       return {
         status: "error",
         message: "Invalid username or password",
-        code: error.request.status,
+        code: error.request?.status,
       };
     }
 
     return {
       status: "error",
       message: "An error occurred while trying to login",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

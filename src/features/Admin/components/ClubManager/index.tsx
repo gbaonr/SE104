@@ -67,7 +67,7 @@ export const ClubManager = () => {
     (async () => {
       const response = await getClubsApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setClubs(response.data);
         setFilteredClubs(response.data);
       } else {

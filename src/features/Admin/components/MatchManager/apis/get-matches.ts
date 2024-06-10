@@ -11,24 +11,24 @@ export const getMatchesApi = async () => {
   try {
     const response = await axios.get<Match[]>(endpoint);
 
-    if (response.status !== 200) {
+    if ( response?.status !== 200) {
       return {
         status: "error",
         message: "An error occurred while trying to get matches",
-        code: response.status,
+        code:  response?.status,
       };
     }
 
     return {
       status: "success",
       data: response.data,
-      code: response.status,
+      code:  response?.status,
     };
   } catch (error) {
     return {
       status: "error",
       message: "An error occurred while trying to get users",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

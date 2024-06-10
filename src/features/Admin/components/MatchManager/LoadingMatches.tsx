@@ -27,8 +27,6 @@ type LoadingMatchesProps = {
   data: Match[];
   clubs: Club[];
   header: string;
-  // showFinished?: boolean;
-  // showGoal?: boolean;
   isDone?: boolean;
 };
 
@@ -41,6 +39,16 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
   const [filteredData, setFilteredData] = useState(data);
   const [respectOrder, setRespectOrder] = useState(true);
   const [loading, setLoading] = useState(true); // State to track loading
+  const [currentDateTime, setCurrentDateTime] = useState(Date.now());
+
+  // update current time every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDateTime(Date.now());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Simulate an API call to fetch matches
@@ -235,6 +243,8 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
               ))
             : filteredData
                 .sort((a, b) => {
+                  if (!isDone) return a.start - b.start;
+
                   return b.start - a.start;
                 })
                 .map((match, index) => (
@@ -314,13 +324,26 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
                             {column.id === "goal" ? (
                               <ScoreItem match={match} />
                             ) : column.id === "start" || column.id === "finish" ? (
-                              dayjs(match[column.id] * 1000).format("DD/MM/YYYY - HH:mm")
+                              dayjs.unix(match[column.id]).format("DD/MM/YYYY - HH:mm")
                             ) : column.id === "match_id" ? (
                               index + 1
                             ) : column.id === "running" &&
                               Date.now() / 1000 < match.finish &&
                               Date.now() / 1000 > match.start ? (
-                              <DirectionsRunIcon />
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: 2,
+                                }}
+                              >
+                                <DirectionsRunIcon />
+                                <Typography>
+                                  {dayjs
+                                    .unix(currentDateTime / 1000 - match.start)
+                                    .subtract(8, "hours")
+                                    .format("HH:mm:ss")}
+                                </Typography>
+                              </Box>
                             ) : (
                               match[column.id]
                             )}

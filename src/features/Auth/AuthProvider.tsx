@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   const updateAdminAccess = async () => {
     const response = await getUserInfo();
 
-    if (response.status === "success") {
+    if ( response?.status === "success") {
       setHasAdminAccess(response.data.role === "admin");
     }
 

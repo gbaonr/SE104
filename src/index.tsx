@@ -7,7 +7,7 @@ import "./assets/css/index.css";
 import { grey } from "@mui/material/colors";
 import { FixturesPage } from "./features/User/routes/Fixtures";
 import { HomePage } from "./features/User/routes/HomePage";
-import { LeaderBoard } from "./features/User/routes/LeaderBoard";
+import { LeaderBoard } from "features/User/components/LeaderBoard";
 import { ResultsPage } from "./features/User/routes/Results";
 
 import "@fontsource/roboto/300.css";
@@ -21,24 +21,21 @@ import { HomePageAdminRoute } from "features/Admin/routes/HomePage";
 import { LayoutUser } from "features/User/components/Layouts/Layout";
 
 import NotFoundPage from "components/NotFound";
-import { dataDoneMatches } from "constants/DoneMatchResults";
 import { ADMIN_ROUTES, USER_ROUTES } from "constants/Paths";
-import { teamsInfo } from "constants/Teams";
-import { dataUpcomingMatches } from "constants/UpcomingMatchResults";
 import { TeamDetailInfo } from "features/Admin/components/ClubManager/Info";
 import { MatchDetailInfo } from "features/Admin/components/MatchManager/Info";
-// import MatchRegistrationPage from "features/Admin/components/MatchReg/MatchReg";
-import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
-import SignOut from "features/Auth/SignOut";
+import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
+import { Club } from "features/Admin/components/ClubManager/apis/types";
+import { getMatchesApi } from "features/Admin/components/MatchManager/apis/get-matches";
+import { Match } from "features/Admin/components/MatchManager/apis/types";
 import PolicyAdj from "features/Admin/components/PolicyAdj";
 import { UserManagement } from "features/Admin/components/Users";
+import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
 import { AuthenticatedComponent, AuthProvider } from "features/Auth/AuthProvider";
+import SignOut from "features/Auth/SignOut";
 import { useEffect, useMemo, useState } from "react";
-import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
-import { getMatchesApi } from "features/Admin/components/MatchManager/apis/get-matches";
 import { toast } from "react-toastify";
-import { Match } from "features/Admin/components/MatchManager/apis/types";
-import { Club } from "features/Admin/components/ClubManager/apis/types";
+import { MatchInfoUserPage } from "features/User/components/MatchInfo";
 
 const theme = createTheme({
   typography: {
@@ -54,12 +51,13 @@ const theme = createTheme({
 const App = () => {
   const [clubs, setClubs] = useState<Club[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
+  const [forceUpdate, setForceUpdate] = useState<number>(Date.now());
 
-  useEffect(() => {
+  const updateInfo = () => {
     (async () => {
       const response = await getClubsApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setClubs(response.data);
       } else {
         toast.error("Failed to load clubs");
@@ -69,13 +67,21 @@ const App = () => {
     (async () => {
       const response = await getMatchesApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setMatches(response.data);
       } else {
         toast.error("Failed to load matches");
       }
     })();
+  };
+
+  useEffect(() => {
+    updateInfo();
   }, []);
+
+  useEffect(() => {
+    updateInfo();
+  }, [forceUpdate]);
 
   const memoizedValue = useMemo(() => ({ clubs, matches }), [clubs, matches]);
 
@@ -94,6 +100,11 @@ const App = () => {
         { path: USER_ROUTES.TABLES, element: <LeaderBoard /> },
         { path: USER_ROUTES.SIGN_IN, element: <Login /> },
         { path: USER_ROUTES.SIGN_OUT, element: <SignOut /> },
+
+        ...memoizedValue.matches.map((match) => ({
+          path: `${USER_ROUTES.MATCH_INFO}/${match.match_id}`,
+          element: <MatchInfoUserPage match={match} />,
+        })),
       ],
     },
     {
@@ -107,29 +118,15 @@ const App = () => {
         { index: true, element: <HomePageAdminRoute /> },
         { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },
         { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
-        // loading team info
-        // ...Object.keys(teamsInfo).map((team) => ({
-        //   path: `${ADMIN_ROUTES.CLUB}/${teamsInfo[team].shortName}`,
-        //   element: <TeamDetailInfo club={teamsInfo[team]} />,
-        // })),
+
         ...memoizedValue.clubs.map((club) => ({
           path: `${ADMIN_ROUTES.CLUB}/${club.club_shortname}`,
           element: <TeamDetailInfo club={club} />,
         })),
 
-        // loading match info
-        // ...dataDoneMatches.map((match) => ({
-        //   path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
-        //   element: <MatchDetailInfo match={match} />,
-        // })),
-        // ...dataUpcomingMatches.map((match) => ({
-        //   path: `${ADMIN_ROUTES.MATCH}/${match.id}`,
-        //   element: <MatchDetailInfo match={match} />,
-        // })),
-
         ...memoizedValue.matches.map((match) => ({
           path: `${ADMIN_ROUTES.MATCH}/${match.match_id}`,
-          element: <MatchDetailInfo clubs={clubs} match={match} />,
+          element: <MatchDetailInfo setForceUpdate={setForceUpdate} clubs={clubs} match={match} />,
         })),
 
         // { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },

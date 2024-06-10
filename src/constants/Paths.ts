@@ -14,4 +14,5 @@ export const USER_ROUTES = {
   TABLES: "/tables",
   SIGN_IN: "/sign-in",
   SIGN_OUT: "/sign-out",
+  MATCH_INFO: "/match",
 };

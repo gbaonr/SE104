@@ -8,11 +8,11 @@ export const getEventsMatchApi = async (match: Match) => {
     // TODO: fix filter by match id
     const response = await axios.get<MatchEvent[]>(endpoint);
 
-    if (response.status !== 200) {
+    if ( response?.status !== 200) {
       return {
         status: "error",
         message: "An error occurred while trying to get matches",
-        code: response.status,
+        code:  response?.status,
       };
     }
     
@@ -21,13 +21,13 @@ export const getEventsMatchApi = async (match: Match) => {
     return {
       status: "success",
       data: response.data,
-      code: response.status,
+      code:  response?.status,
     };
   } catch (error) {
     return {
       status: "error",
       message: "An error occurred while trying to get users",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

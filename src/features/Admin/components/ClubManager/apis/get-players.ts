@@ -11,13 +11,15 @@ export const getPlayersApi = async (filterClub: Club) => {
     return {
       status: "success",
       data: response.data,
-      code: response.status,
+      code:  response?.status,
     };
   } catch (error) {
+    console.error(error);
+
     return {
       status: "error",
       message: "An error occurred while trying to get users",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

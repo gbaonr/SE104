@@ -13,7 +13,7 @@ export const ResultsPage = () => {
     (async () => {
       const response = await getMatchesApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         const data = response.data.filter((match) => match.finish <= Date.now() / 1000);
         setMatches(data);
       } else {

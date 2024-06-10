@@ -8,24 +8,24 @@ export const updatePlayerApi = async (player: Player) => {
     const playerID = player.player_id;
     const response = await axios.put(`${endpoint}?playerID=${playerID}`, player);
 
-    if (response.status === 200) {
+    if ( response?.status === 200) {
       return {
         status: "success",
         message: "Player updated successfully",
-        code: response.status,
+        code:  response?.status,
       };
     } else {
       return {
         status: "error",
         message: "An error occurred while trying to update player",
-        code: response.status,
+        code:  response?.status,
       };
     }
   } catch (error) {
     return {
       status: "error",
       message: "An error occurred while trying to update player",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

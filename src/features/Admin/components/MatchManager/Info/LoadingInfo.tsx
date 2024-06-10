@@ -2,7 +2,6 @@
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import EventIcon from "@mui/icons-material/Event";
 import {
   Box,
   Button,
@@ -10,9 +9,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   Grid,
   MenuItem,
   Select,
+  Switch,
   Typography,
 } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
@@ -20,48 +21,63 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TeamItem } from "components/Items/ClubItem";
+import { ScoreItem } from "components/Items/ScoreItem";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Club } from "../../ClubManager/apis/types";
+import { deleteMatchApi } from "../apis/delete-match";
 import { getRefereesApi } from "../apis/get-referees";
 import { Match, Referee } from "../apis/types";
 import { updateMatchApi } from "../apis/update-match";
 import { validateMatch } from "../utils/validator";
-import { deleteMatchApi } from "../apis/delete-match";
-import { ScoreItem } from "components/Items/ScoreItem";
 
 type LoadingInfoMatchProps = {
   match: Match;
   clubs: Club[];
+  setForceUpdate: (value: number) => void;
 };
 
 const optionInput = [
   { id: "team1", name: "Team" },
   { id: "team2", name: "Opponent" },
   { id: "start", name: "Start" },
+  { id: "check_finish", name: "Finished?" },
   { id: "finish", name: "Finish" },
   { id: "ref", name: "Referee" },
   { id: "var", name: "VAR" },
   { id: "lineman", name: "Line" },
 ];
 
-export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
+export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMatchProps) => {
   const [showEditMatch, setShowEditMatch] = useState<boolean>(false);
   const [matchToEdit, setMatchToEdit] = useState<Match | null>(null);
   const [referees, setReferees] = useState<Referee[]>([]);
+  const [isMatchFinished, setIsMatchFinished] = useState<boolean>(false);
+  const [currentDateTime, setCurrentDateTime] = useState<number>(Date.now() / 1000);
 
   useEffect(() => {
     if (!showEditMatch) {
       setMatchToEdit(null);
+      setIsMatchFinished(false);
+    } else {
+      setIsMatchFinished(match.finish <= Date.now() / 1000);
     }
-  }, [showEditMatch]);
+  }, [showEditMatch, match]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDateTime(Date.now() / 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     (async () => {
       const response = await getRefereesApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setReferees(response.data);
       } else {
         toast.error(response.message);
@@ -79,7 +95,14 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
               {optionInput.map((column) => {
                 let value = null;
 
-                if (column.id === "team1" || column.id === "team2") {
+                if (column.id === "check_finish") {
+                  value = (
+                    <Switch
+                      checked={isMatchFinished}
+                      onChange={(e) => setIsMatchFinished(e.target.checked)}
+                    />
+                  );
+                } else if (column.id === "team1" || column.id === "team2") {
                   value = (
                     <Select
                       fullWidth
@@ -100,6 +123,10 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
                     </Select>
                   );
                 } else if (column.id === "start" || column.id === "finish") {
+                  if (!isMatchFinished && column.id === "finish") {
+                    return null;
+                  }
+
                   value = (
                     <Grid container spacing={1}>
                       <Grid item xs={6}>
@@ -107,7 +134,7 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
                           <DemoContainer components={["DatePicker"]}>
                             <DatePicker
                               label="Date"
-                              value={dayjs.unix(matchToEdit.start)}
+                              value={dayjs.unix(matchToEdit[column.id])}
                               views={["day", "month", "year"]}
                               onChange={(newValue) => {
                                 console.log(newValue);
@@ -128,7 +155,7 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
                             <TimePicker
                               views={["hours", "minutes", "seconds"]}
                               label="Time"
-                              value={dayjs.unix(matchToEdit.start)}
+                              value={dayjs.unix(matchToEdit[column.id])}
                               onChange={(newValue) => {
                                 console.log(newValue);
 
@@ -225,21 +252,28 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
                 },
               }}
               onClick={() => {
-                if (validateMatch(matchToEdit, clubs, referees) !== "") {
-                  toast.error(validateMatch(matchToEdit, clubs, referees));
+                const match = { ...matchToEdit };
+
+                if (!isMatchFinished) {
+                  match.finish = 2 * 10 ** 9;
+                }
+
+                if (validateMatch(match, clubs, referees) !== "") {
+                  toast.error(validateMatch(match, clubs, referees));
                   return;
                 }
 
                 (async () => {
-                  const response = await updateMatchApi(matchToEdit);
+                  const response = await updateMatchApi(match);
 
-                  if (response.status === "success") {
+                  if ( response?.status === "success") {
                     toast.success("Match updated successfully");
                   } else {
                     toast.error(response.message);
                   }
 
                   setShowEditMatch(false);
+                  setForceUpdate(Date.now());
                 })();
               }}
             >
@@ -336,7 +370,6 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
             sx={{
               fontWeight: 500,
               fontSize: "1rem",
-              // color: "#37003c",
             }}
           >
             {dayjs.unix(match.start).format("DD/MM/YYYY")}
@@ -350,6 +383,41 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
             {dayjs.unix(match.start).format("HH:mm")}
           </Typography>
 
+          {!isMatchFinished && (
+            <Box
+              sx={{
+                my: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                alignContent: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "1.2rem",
+                  color: "#4caf50",
+                }}
+              >
+                Live
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "1rem",
+                }}
+              >
+                {dayjs
+                  .unix(currentDateTime - match.start)
+                  .subtract(8, "hour")
+                  .format("HH:mm:ss")}
+              </Typography>
+            </Box>
+          )}
+
           <Box sx={{ my: 2 }}>
             <Typography
               sx={{
@@ -362,6 +430,12 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
             <ScoreItem match={match} />
           </Box>
         </Box>
+
+        <Divider
+          sx={{
+            my: 3,
+          }}
+        />
 
         <Box
           sx={{
@@ -406,7 +480,7 @@ export const LoadingInfoMatch = ({ match, clubs }: LoadingInfoMatchProps) => {
               (async () => {
                 const response = await deleteMatchApi(match);
 
-                if (response.status === "success") {
+                if ( response?.status === "success") {
                   toast.success("Match deleted successfully");
                 } else {
                   toast.error(response.message);

@@ -7,24 +7,24 @@ export const addPlayerApi = async (player: Player) => {
   try {
     const response = await axios.post(`${endpoint}`, player);
 
-    if (response.status === 200) {
+    if ( response?.status === 200) {
       return {
         status: "success",
         message: "Player added successfully",
-        code: response.status,
+        code:  response?.status,
       };
     } else {
       return {
         status: "error",
         message: "An error occurred while trying to add player",
-        code: response.status,
+        code:  response?.status,
       };
     }
   } catch (error) {
     return {
       status: "error",
       message: "An error occurred while trying to get users",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

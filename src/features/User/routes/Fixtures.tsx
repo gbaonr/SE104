@@ -15,7 +15,7 @@ export const FixturesPage = () => {
     (async () => {
       const response = await getMatchesApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         const data = response.data.filter(
           (match) => match.start >= Date.now() / 1000 || match.finish === 2 * 10 ** 9,
         );

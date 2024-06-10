@@ -22,13 +22,13 @@ export const updateParamsApi = async (params: updateParamsQuery) => {
     return {
       status: "success",
       data: response.data,
-      code: response.status,
+      code:  response?.status,
     };
   } catch (error) {
     return {
       status: "error",
       message: "An error occurred while trying to update params",
-      code: error.request.status,
+      code: error.request?.status,
     };
   }
 };

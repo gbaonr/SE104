@@ -239,7 +239,7 @@ export const AddPlayer = ({
                   if (typeToEdit === "add") {
                     const response = await addPlayerApi(playerToEdit);
 
-                    if (response.status === "success") {
+                    if ( response?.status === "success") {
                       toast.success("Player added successfully");
                       setShowAddPlayerPopup(false);
                       return;

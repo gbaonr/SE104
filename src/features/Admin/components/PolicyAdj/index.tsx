@@ -81,7 +81,7 @@ export const PolicyAdj = () => {
     const fetchParams = async () => {
       const response = await getParamsApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         const responseData = response.data;
 
         setPlayerCount({
@@ -173,7 +173,7 @@ export const PolicyAdj = () => {
 
   const handleOnSaveChanges = (params: updateParamsQuery) => {
     updateParamsApi(params).then((response) => {
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         toast.success("Params updated successfully");
       } else {
         toast.error("An error occurred while trying to update params");

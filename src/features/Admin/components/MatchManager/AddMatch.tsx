@@ -59,7 +59,7 @@ export const AddMatch = ({
     (async () => {
       const response = await getRefereesApi();
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setReferees(response.data);
       } else {
         toast.error(response.message);
@@ -276,7 +276,7 @@ export const AddMatch = ({
                 (async () => {
                   const response = await addMatchApi(match);
 
-                  if (response.status === "success") {
+                  if ( response?.status === "success") {
                     toast.success("Match added successfully");
                   } else {
                     toast.error(response.message);

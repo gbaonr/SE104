@@ -29,6 +29,7 @@ import { validateEventMatch } from "../utils/validator";
 type LoadingGoalMatchProps = {
   match: Match;
   clubs: Club[];
+  setForceUpdate: (value: number) => void;
 };
 
 const columns = [
@@ -48,26 +49,25 @@ const optionInput = [
   { id: "type", name: "Type" },
 ];
 
-export const LoadingGoalMatch = ({ match, clubs }: LoadingGoalMatchProps) => {
+export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMatchProps) => {
   const [showEditGoal, setShowEditGoal] = useState<boolean>(false);
   const [eventToEdit, setEventToEdit] = useState<MatchEvent>(null);
   const [typeToEdit, setTypeToEdit] = useState<"add" | "edit">("add");
 
   const [events, setEvents] = useState<MatchEvent[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
-  const [forceUpdateEvents, setForceUpdateEvents] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       const response = await getEventsMatchApi(match);
 
-      if (response.status === "success") {
+      if ( response?.status === "success") {
         setEvents(response.data);
       } else {
         toast.error(response.message);
       }
     })();
-  }, [match, forceUpdateEvents]);
+  }, [match]);
 
   useEffect(() => {
     (async () => {
@@ -323,8 +323,8 @@ export const LoadingGoalMatch = ({ match, clubs }: LoadingGoalMatchProps) => {
                   (async () => {
                     const response = await addEventMatchApi(event);
 
-                    if (response.status === "success") {
-                      setForceUpdateEvents(forceUpdateEvents + 1);
+                    if ( response?.status === "success") {
+                      setForceUpdate(Date.now());
                       toast.success("Event added successfully");
                     } else {
                       toast.error(response.message);
@@ -336,8 +336,8 @@ export const LoadingGoalMatch = ({ match, clubs }: LoadingGoalMatchProps) => {
                   (async () => {
                     const response = await updateEventMatchApi(event);
 
-                    if (response.status === "success") {
-                      setForceUpdateEvents(forceUpdateEvents + 1);
+                    if ( response?.status === "success") {
+                      setForceUpdate(Date.now());
                       toast.success("Event updated successfully");
                     } else {
                       toast.error(response.message);
@@ -486,8 +486,8 @@ export const LoadingGoalMatch = ({ match, clubs }: LoadingGoalMatchProps) => {
                             (async () => {
                               const response = await deleteEventApi(event);
 
-                              if (response.status === "success") {
-                                setForceUpdateEvents(forceUpdateEvents + 1);
+                              if ( response?.status === "success") {
+                                setForceUpdate(Date.now());
                                 toast.success("Event deleted successfully");
                               } else {
                                 toast.error(response.message);

@@ -22,7 +22,7 @@ const usersColumns = [
 const fetchUsers = async () => {
   const response = await getUsersApi({});
 
-  if (response.status === "success") {
+  if ( response?.status === "success") {
     return response.data;
   }
 
@@ -225,7 +225,7 @@ export const LoadingUsers = () => {
                             } else {
                               const response = await deleteUserApi({ user_id: userId });
 
-                              if (response.status === "success") {
+                              if ( response?.status === "success") {
                                 toast.success("User deleted successfully");
                                 setUsers(users.filter((user) => user.user_id !== userId));
                               }
