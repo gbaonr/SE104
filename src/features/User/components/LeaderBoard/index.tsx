@@ -10,6 +10,8 @@ import { getRankingApi } from "./apis/get-ranking";
 import { toast } from "react-toastify";
 import { Club } from "features/Admin/components/ClubManager/apis/types";
 import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
+import { Link } from "react-router-dom";
+import { USER_ROUTES } from "constants/Paths";
 
 export type ColumnProps = {
   width?: number;
@@ -42,7 +44,7 @@ export const LeaderBoard = () => {
   const fetchClubs = async () => {
     const response = await getClubsApi();
 
-    if ( response?.status === "success") {
+    if (response?.status === "success") {
       setClubs(response.data);
     } else {
       toast.error("Failed to load clubs");
@@ -52,7 +54,7 @@ export const LeaderBoard = () => {
   const fetchRankingList = async () => {
     const response = await getRankingApi(false);
 
-    if ( response?.status === "success") {
+    if (response?.status === "success") {
       setRankingResult(response.data);
     } else {
       toast.error("Failed to load ranking");
@@ -118,10 +120,12 @@ export const LeaderBoard = () => {
                 }}
               >
                 {column.field === "club_id" ? (
-                  <TeamItem
-                    leftLogo={true}
-                    club={clubs.find((c) => c.club_id === club[column.field]) as Team}
-                  />
+                  <Link to={`${USER_ROUTES.CLUB_INFO}/${club[column.field]}`}>
+                    <TeamItem
+                      leftLogo={true}
+                      club={clubs.find((c) => c.club_id === club[column.field]) as Team}
+                    />
+                  </Link>
                 ) : column.field === "recentMatches" ? (
                   <RecentMatches matches={club[column.field]} />
                 ) : column.field === "nextMatch" ? (
@@ -139,9 +143,7 @@ export const LeaderBoard = () => {
                   <Typography>{index + 1}</Typography>
                 ) : (
                   <Typography>
-                    {typeof club[column.field] === "number"
-                      ? club[column.field].toString()
-                      : "--"}
+                    {typeof club[column.field] === "number" ? club[column.field].toString() : "--"}
                   </Typography>
                 )}
               </Grid>
