@@ -1,6 +1,11 @@
 import { Box, Container, Typography } from "@mui/material";
 
-export default function HeaderPage(props: any) {
+type HeaderPageProps = {
+  headerName: string;
+  logo?: string;
+};
+
+export default function HeaderPage({ headerName, logo }: HeaderPageProps) {
   return (
     <Container maxWidth={false} sx={{ height: "200px", padding: "0 !important", mb: 5 }}>
       <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
@@ -28,19 +33,31 @@ export default function HeaderPage(props: any) {
             }}
           ></Box>
         </Box>
-        <Typography
-          variant="h3"
+
+        <Box
           sx={{
-            fontWeight: 700,
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            color: "white",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          {props.headerName}
-        </Typography>
+          {logo && <img src={logo} alt={headerName} style={{ height: "100px" }} />}
+
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 700,
+              color: "white",
+              my: 1,
+            }}
+          >
+            {headerName}
+          </Typography>
+        </Box>
       </Box>
     </Container>
   );

@@ -30,6 +30,14 @@ export const LoadPlayersClubPage = ({ club }: LoadPlayersClubPageProps) => {
   }, []);
 
   useEffect(() => {
+    if (!club) return;
+    fetchPlayers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [club]);
+
+  useEffect(() => {
+    if (!players || !players.length) return;
+
     const positions = players.map((player) => player.player_pos);
     const uniquePositions = Array.from(new Set(positions));
     setUniquePositions(uniquePositions);
@@ -62,99 +70,105 @@ export const LoadPlayersClubPage = ({ club }: LoadPlayersClubPageProps) => {
           </Typography>
 
           <Grid container spacing={2}>
-            {players
-              .filter((player) => player.player_pos === position)
-              .map((player) => {
-                let c =
-                  Object.keys(country)
-                    .find((key) => country[key] === player.player_nation)
-                    ?.toLowerCase() || "";
+            {players &&
+              players
+                .filter((player) => player.player_pos === position)
+                .map((player) => {
+                  let c =
+                    Object.keys(country)
+                      .find((key) => country[key] === player.player_nation)
+                      ?.toLowerCase() || "";
 
-                return (
-                  <Grid item xs={3} key={player.player_id}>
-                    <Box
-                      sx={{
-                        border: "2px solid #f0f0f0",
-                        borderRadius: "5px",
-                      }}
-                    >
-                      <img
-                        src="https://resources.premierleague.com/premierleague/photos/players/110x140/p224068.png"
-                        alt={player.player_name}
-                        style={{ width: "100%", height: "auto" }}
-                      />
-
-                      <Typography
+                  return (
+                    <Grid item xs={3} key={player.player_id}>
+                      <Box
                         sx={{
-                          fontWeight: 700,
-                          fontSize: "1.5rem",
-                          color: "#37003c",
-                          mt: 1,
-                          px: 1,
+                          border: "2px solid #f0f0f0",
+                          borderRadius: "8px",
+                          backgroundColor: "#f0f0f0",
                         }}
                       >
-                        {player.player_name.split(" ")[0]}
-                      </Typography>
+                        <img
+                          src={player?.avatar_url}
+                          alt={player.player_name}
+                          style={{ width: "100%", height: "auto" }}
+                          onError={(e) => {
+                            e.currentTarget.src =
+                              "https://resources.premierleague.com/premierleague/photos/players/110x140/Photo-Missing.png";
+                          }}
+                        />
 
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: "2rem",
-                          color: "#37003c",
-                          px: 1,
-                        }}
-                      >
-                        {player.player_name.split(" ").slice(1).join(" ")}
-                      </Typography>
-
-                      <Box sx={{ display: "flex", justifyContent: "left", my: 1 }}>
                         <Typography
                           sx={{
                             fontWeight: 700,
-                            fontSize: "1rem",
+                            fontSize: "1.5rem",
+                            color: "#37003c",
+                            mt: 1,
+                            px: 1,
+                          }}
+                        >
+                          {player.player_name.split(" ")[0]}
+                        </Typography>
+
+                        <Typography
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: "2rem",
                             color: "#37003c",
                             px: 1,
                           }}
                         >
-                          {player.js_number}
+                          {player.player_name.split(" ").slice(1).join(" ")}
                         </Typography>
 
-                        <Typography
+                        <Box sx={{ display: "flex", justifyContent: "left", my: 1 }}>
+                          <Typography
+                            sx={{
+                              fontWeight: 700,
+                              fontSize: "1rem",
+                              color: "#37003c",
+                              px: 1,
+                            }}
+                          >
+                            {player.js_number}
+                          </Typography>
+
+                          <Typography
+                            sx={{
+                              fontSize: "1rem",
+                              color: "#37003c",
+                            }}
+                          >
+                            {player.player_pos}
+                          </Typography>
+                        </Box>
+
+                        <Divider />
+
+                        <Box
                           sx={{
-                            fontSize: "1rem",
-                            color: "#37003c",
+                            display: "flex",
+                            px: 1,
+                            my: 2,
+                            alignItems: "center",
                           }}
                         >
-                          {player.player_pos}
-                        </Typography>
+                          <img src={`https://flagcdn.com/w40/${c}.png`} alt="flag" />
+
+                          <Typography
+                            sx={{
+                              fontSize: "1rem",
+                              color: "#37003c",
+                              mx: 2,
+                            }}
+                          >
+                            {player.player_nation}
+                          </Typography>
+                        </Box>
                       </Box>
-
-                      <Divider />
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          px: 1,
-                          my: 2,
-                          alignItems: "center",
-                        }}
-                      >
-                        <img src={`https://flagcdn.com/w40/${c}.png`} alt="flag" />
-
-                        <Typography
-                          sx={{
-                            fontSize: "1rem",
-                            color: "#37003c",
-                            mx: 2,
-                          }}
-                        >
-                          {player.player_nation}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                );
-              })}
+                    </Grid>
+                  );
+                })}
           </Grid>
         </Container>
       ))}

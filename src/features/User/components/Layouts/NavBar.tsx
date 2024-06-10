@@ -10,6 +10,7 @@ import {
   Skeleton,
   Toolbar,
 } from "@mui/material";
+import { USER_ROUTES } from "constants/Paths";
 import { Club } from "features/Admin/components/ClubManager/apis/types";
 import { useAuth } from "features/Auth/AuthProvider";
 import { useState } from "react";
@@ -104,7 +105,12 @@ const NavBar = ({ clubs }: NavBarProps) => {
       <Container maxWidth={false}>
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 1 }}>
           {clubs.map((club) => (
-            <ClubImage key={club.club_id} club={club} />
+            <Link
+              to={`${USER_ROUTES.CLUB_INFO}/${club.club_id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <ClubImage key={club.club_id} club={club} />
+            </Link>
           ))}
         </Box>
       </Container>

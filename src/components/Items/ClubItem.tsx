@@ -32,6 +32,7 @@ export const TeamItem = (props: TeamItemProps) => {
                 fontWeight: 500,
                 mx: 1,
                 color: "#37003c",
+                fontSize: "1.2rem",
               }}
             >
               {(props.useShortName && props.club.club_shortname) || props.club.club_name}

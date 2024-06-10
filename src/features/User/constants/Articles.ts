@@ -4,7 +4,7 @@ export const latestVideos: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 1",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -21,7 +21,7 @@ export const latestVideos: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 2",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -36,7 +36,7 @@ export const latestVideos: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 3",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -51,7 +51,7 @@ export const latestVideos: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 3",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -69,7 +69,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 1",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -84,7 +84,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 2",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -99,7 +99,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 3",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -114,7 +114,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 4",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -129,7 +129,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 5",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -144,7 +144,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 5",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -159,7 +159,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 5",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -174,7 +174,7 @@ export const latestArticles: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 5",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -192,7 +192,7 @@ export const latestFPLNews: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 1",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -207,7 +207,7 @@ export const latestFPLNews: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 2",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",
@@ -222,7 +222,7 @@ export const latestFPLNews: ArticleProps[] = [
   {
     title: "Lorem Ipsum is simply dummy text of the printing",
     content: "Content 3",
-    thumbnail: "assets/images/main/random_image.jpeg",
+    thumbnail: "/assets/images/main/random_image.jpeg",
     source: [
       {
         name: "Lorem Ipsum is simply dummy text of the printing",

@@ -1,28 +1,33 @@
 import axios from "axios";
 import { Match } from "./types";
+import { Club } from "../../ClubManager/apis/types";
 
-const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/matches/get-matches";
+export const getMatchesApi = async (club?: Club) => {
+  let endpoint = "";
 
-export const getMatchesApiUrl = () => {
-  return endpoint;
-}
+  if (club) {
+    endpoint =
+      process.env.REACT_APP_BACKEND_URL +
+      `/api/v1/matches/filter-matches-by-team-name?club=${club.club_name}`;
+  } else {
+    endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/matches/get-matches";
+  }
 
-export const getMatchesApi = async () => {
   try {
     const response = await axios.get<Match[]>(endpoint);
 
-    if ( response?.status !== 200) {
+    if (response?.status !== 200) {
       return {
         status: "error",
         message: "An error occurred while trying to get matches",
-        code:  response?.status,
+        code: response?.status,
       };
     }
 
     return {
       status: "success",
       data: response.data,
-      code:  response?.status,
+      code: response?.status,
     };
   } catch (error) {
     return {
