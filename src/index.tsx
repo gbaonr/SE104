@@ -36,6 +36,7 @@ import SignOut from "features/Auth/SignOut";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { MatchInfoUserPage } from "features/User/components/MatchInfo";
+import { ClubInfoPage } from "features/User/components/ClubInfo";
 
 const theme = createTheme({
   typography: {
@@ -57,7 +58,7 @@ const App = () => {
     (async () => {
       const response = await getClubsApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setClubs(response.data);
       } else {
         toast.error("Failed to load clubs");
@@ -67,7 +68,7 @@ const App = () => {
     (async () => {
       const response = await getMatchesApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setMatches(response.data);
       } else {
         toast.error("Failed to load matches");
@@ -104,6 +105,11 @@ const App = () => {
         ...memoizedValue.matches.map((match) => ({
           path: `${USER_ROUTES.MATCH_INFO}/${match.match_id}`,
           element: <MatchInfoUserPage match={match} />,
+        })),
+
+        ...memoizedValue.clubs.map((club) => ({
+          path: `${USER_ROUTES.CLUB_INFO}/${club.club_id}`,
+          element: <ClubInfoPage club={club} />,
         })),
       ],
     },

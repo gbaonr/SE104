@@ -25,6 +25,7 @@ import { getEventsMatchApi } from "../apis/get-events";
 import { Match, MatchEvent } from "../apis/types";
 import { updateEventMatchApi } from "../apis/update-event";
 import { validateEventMatch } from "../utils/validator";
+import { TimeItem } from "components/Items/TimeItem";
 
 type LoadingGoalMatchProps = {
   match: Match;
@@ -61,7 +62,7 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
     (async () => {
       const response = await getEventsMatchApi(match);
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setEvents(response.data);
       } else {
         toast.error(response.message);
@@ -323,7 +324,7 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                   (async () => {
                     const response = await addEventMatchApi(event);
 
-                    if ( response?.status === "success") {
+                    if (response?.status === "success") {
                       setForceUpdate(Date.now());
                       toast.success("Event added successfully");
                     } else {
@@ -336,7 +337,7 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                   (async () => {
                     const response = await updateEventMatchApi(event);
 
-                    if ( response?.status === "success") {
+                    if (response?.status === "success") {
                       setForceUpdate(Date.now());
                       toast.success("Event updated successfully");
                     } else {
@@ -418,8 +419,9 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
             }}
             columns={{ xs: columns.reduce((acc, cur) => acc + cur.width, 0) }}
           >
-            {columns.map((column) => (
+            {columns.map((column, index) => (
               <Grid
+                key={index}
                 item
                 xs={column.width}
                 sx={{
@@ -456,11 +458,13 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                       )?.player_name;
                     } else if (column.id === "seconds") {
                       // convert seconds to mm:ss
-                      const minutes = Math.floor(event.seconds / 60);
-                      const seconds = event.seconds - minutes * 60;
+                      // const minutes = Math.floor(event.seconds / 60);
+                      // const seconds = event.seconds - minutes * 60;
 
                       // value = `${minutes}:${seconds}`;
-                      value = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+                      // value = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+                      value = <TimeItem event={event} />;
                     } else if (column.id === "events") {
                       value = event.events;
                     } else if (column.id === "edit") {
@@ -486,7 +490,7 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                             (async () => {
                               const response = await deleteEventApi(event);
 
-                              if ( response?.status === "success") {
+                              if (response?.status === "success") {
                                 setForceUpdate(Date.now());
                                 toast.success("Event deleted successfully");
                               } else {

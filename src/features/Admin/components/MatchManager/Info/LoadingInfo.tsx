@@ -66,6 +66,12 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
   }, [showEditMatch, match]);
 
   useEffect(() => {
+    if (match) {
+      setIsMatchFinished(match.finish <= Date.now() / 1000);
+    }
+  }, [match]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentDateTime(Date.now() / 1000);
     }, 1000);
@@ -77,7 +83,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
     (async () => {
       const response = await getRefereesApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setReferees(response.data);
       } else {
         toast.error(response.message);
@@ -266,7 +272,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
                 (async () => {
                   const response = await updateMatchApi(match);
 
-                  if ( response?.status === "success") {
+                  if (response?.status === "success") {
                     toast.success("Match updated successfully");
                   } else {
                     toast.error(response.message);
@@ -289,7 +295,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
           p: 2,
           boxShadow: "0 0 10px 0 rgba(100, 100, 100, 0.1)",
           borderRadius: 2,
-          my: 2,
+          mb: 2,
         }}
       >
         <Box
@@ -480,7 +486,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
               (async () => {
                 const response = await deleteMatchApi(match);
 
-                if ( response?.status === "success") {
+                if (response?.status === "success") {
                   toast.success("Match deleted successfully");
                 } else {
                   toast.error(response.message);

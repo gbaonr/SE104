@@ -1,5 +1,6 @@
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { ScoreItem } from "components/Items/ScoreItem";
+import { TimeItem } from "components/Items/TimeItem";
 import dayjs from "dayjs";
 import { getPlayersApi } from "features/Admin/components/ClubManager/apis/get-players";
 import { Club, Player } from "features/Admin/components/ClubManager/apis/types";
@@ -43,12 +44,15 @@ const LoadingGoalPerTeam = ({ goalsTeam, playersRender }: LoadingGoalPerTeamProp
         >
           <Typography
             sx={{
-              fontWeight: "bold",
+              // fontWeight: "bold",
+              fontSize: "1.2rem",
+              color: "#37003c",
             }}
           >
             {playersRender.find((player) => player.player_id === goal.player_id)?.player_name}
           </Typography>
-          <Typography>{dayjs.unix(goal.seconds).subtract(8, "hour").format("HH:mm:ss")}</Typography>
+
+          <TimeItem event={goal} />
         </Box>
       ))}
     </Box>
@@ -160,7 +164,16 @@ export const SummaryMatch = ({ match, clubs }: SummaryMatchProps) => {
             alignItems: "center",
           }}
         >
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: 1,
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
             <ScoreItem
               match={match}
               sx={{
@@ -168,6 +181,18 @@ export const SummaryMatch = ({ match, clubs }: SummaryMatchProps) => {
                 p: 1,
               }}
             />
+
+            {match.start <= Date.now() / 1000 && match.finish === 2 * 10 ** 9 && (
+              <Typography
+                sx={{
+                  fontSize: "1.2rem",
+                  fontWeight: "bold",
+                  color: "green",
+                }}
+              >
+                Live
+              </Typography>
+            )}
           </Box>
         </Grid>
 

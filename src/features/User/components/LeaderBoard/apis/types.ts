@@ -9,4 +9,6 @@ type RankingClub = {
   club_draw?: number;
   club_goals?: number;
   club_gdif?: number;
+  next_match?: number;
+  recent_matches?: number[];
 };

@@ -101,6 +101,12 @@ for club in clubs:
                 country = player.find("span", class_="stats-card__player-country").text
                 number = player.find("div", class_="stats-card__squad-number").text
                 url_player = player.find("a", class_="stats-card__wrapper")["href"]
+
+                data_player = player.find(
+                    "div", class_="stats-card__player-image"
+                ).find("img")["data-player"]
+
+                avatar_url = f"https://resources.premierleague.com/premierleague/photos/players/110x140/{data_player}.png"
             except Exception as e:
                 print(e)
                 continue
@@ -139,7 +145,7 @@ for club in clubs:
                 f"SELECT * FROM players WHERE player_name = '{first_name} {last_name}' AND player_club = {club_id} AND player_pos = '{position_name}' AND player_nation = '{country}' AND js_number = '{number}'"
             ):
                 storage_postgres.execute(
-                    "INSERT INTO players (player_name, player_club, player_pos, player_nation, js_number, player_id, player_bday) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    "INSERT INTO players (player_name, player_club, player_pos, player_nation, js_number, player_id, player_bday, avatar_url) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                     (
                         f"{first_name} {last_name}",
                         club_id,
@@ -148,6 +154,7 @@ for club in clubs:
                         number,
                         max_id + 1,
                         birthdate,
+                        avatar_url,
                     ),
                 )
 
