@@ -12,7 +12,7 @@ import {
 import { ADMIN_ROUTES } from "constants/Paths";
 import Fuse from "fuse.js";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getClubsApi } from "./apis/get-clubs";
 import { Club } from "./apis/types";
@@ -65,6 +65,17 @@ export const ClubManager = () => {
   const [loading, setLoading] = useState(true); // State to track loading
   const { hasManagerAccess, hasAdminAccess, currentUser } = useAuth();
   const [onlyHasManagerAccess, setOnlyHasManagerAccess] = useState(false);
+  
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (hasManagerAccess && currentUser) {
+  //     console.log(clubs)
+  //     const club = clubs.find((club) => club.manager === currentUser?.user_id);
+
+  //     if (club) toast.info(club.club_id);
+  //   }
+  // }, [hasManagerAccess, hasAdminAccess, currentUser]);
 
   useEffect(() => {
     if (hasManagerAccess && !hasAdminAccess) {
@@ -87,6 +98,10 @@ export const ClubManager = () => {
       const response = await getClubsApi(idToFilter);
 
       if (response?.status === "success") {
+        if (response.data.length && hasManagerAccess) {
+          navigate(ADMIN_ROUTES.CLUB + "/" + response.data[0].club_id);
+        }
+
         setClubs(response.data);
         setFilteredClubs(response.data);
       } else {

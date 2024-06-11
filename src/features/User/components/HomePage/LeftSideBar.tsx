@@ -117,7 +117,7 @@ export default function LeftSideBar() {
             width: "100%",
           }}
         >
-          Matchweek 37
+          Recent Matches
         </Typography>
       </Box>
 

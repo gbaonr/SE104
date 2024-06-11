@@ -31,7 +31,7 @@ import { Match } from "features/Admin/components/MatchManager/apis/types";
 import PolicyAdj from "features/Admin/components/PolicyAdj";
 import { UserManagement } from "features/Admin/components/Users";
 import { MatchManagerRoute } from "features/Admin/routes/MatchManager";
-import { AuthenticatedComponent, AuthProvider } from "features/Auth/AuthProvider";
+import { AuthenticatedComponent, AuthProvider, useAuth } from "features/Auth/AuthProvider";
 import SignOut from "features/Auth/SignOut";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
@@ -57,6 +57,7 @@ const App = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [forceUpdate, setForceUpdate] = useState<number>(Date.now());
   const [loading, setLoading] = useState<boolean>(true);
+  const { hasManagerAccess, currentUser } = useAuth();
 
   const updateInfo = async () => {
     try {
@@ -147,6 +148,7 @@ const App = () => {
           path: ADMIN_ROUTES.MATCH,
           element: <MatchManagerRoute forceUpdate={forceUpdate} setForceUpdate={setForceUpdate} />,
         },
+
         { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
 
         ...memoizedValue.clubs.map((club) => ({

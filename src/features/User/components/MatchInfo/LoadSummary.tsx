@@ -258,7 +258,16 @@ export const SummaryMatch = ({ match, clubs }: SummaryMatchProps) => {
               {dayjs.unix(match.start).format("DD/MM/YYYY - HH:mm")}
             </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                my: 2,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <StadiumIcon />
               {stadiums && stadiums.find((stadium) => stadium.std_id === match.stadium)?.std_name}
             </Box>
