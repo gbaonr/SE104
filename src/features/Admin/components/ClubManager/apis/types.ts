@@ -15,5 +15,5 @@ export type Player = {
   player_pos?: string;
   player_nation?: string;
   js_number?: number;
-  avatar_url?: string;
+  ava_url?: string;
 };

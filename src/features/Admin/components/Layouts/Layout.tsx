@@ -5,11 +5,23 @@ import { default as PolicyIcon } from "@mui/icons-material/Menu";
 import { Divider, Grid, useMediaQuery, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { BlockComponent } from "components/Items/BlockComponent";
-import { ADMIN_ROUTES } from "constants/Paths";
+import { ADMIN_ROUTES, USER_ROUTES } from "constants/Paths";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import LogoutIcon from "@mui/icons-material/Logout";
+import HomeIcon from "@mui/icons-material/Home";
 
 const features = [
+  {
+    name: "Home",
+    icon: <HomeIcon />,
+    path: "/",
+  },
+  {
+    name: "Club",
+    icon: <GroupsIcon />,
+    path: ADMIN_ROUTES.CLUB,
+  },
   {
     name: "Club",
     icon: <GroupsIcon />,
@@ -29,6 +41,11 @@ const features = [
     name: "Users",
     icon: <GroupsIcon />,
     path: ADMIN_ROUTES.USER_MANAGER,
+  },
+  {
+    name: "Sign Out",
+    path: USER_ROUTES.SIGN_OUT,
+    icon: <LogoutIcon />,
   },
 ];
 

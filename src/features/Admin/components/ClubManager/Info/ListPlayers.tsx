@@ -38,7 +38,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
         club_name: club.club_name,
       });
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setPlayers(response.data);
       } else {
         toast.error("An error occurred while trying to get players");
@@ -158,7 +158,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
                         (async () => {
                           const response = await deletePlayerApi(player);
 
-                          if ( response?.status === "success") {
+                          if (response?.status === "success") {
                             setPlayers(players.filter((p) => p.player_id !== player.player_id));
                             toast.success("Player deleted successfully");
                           } else {

@@ -1,5 +1,3 @@
-// TODO: fix  teams and date is not center align
-
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -21,8 +19,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { ScoreItem } from "components/Items/ScoreItem";
+import { ADMIN_ROUTES } from "constants/Paths";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Club } from "../../ClubManager/apis/types";
 import { deleteMatchApi } from "../apis/delete-match";
@@ -30,8 +30,6 @@ import { getRefereesApi } from "../apis/get-referees";
 import { Match, Referee } from "../apis/types";
 import { updateMatchApi } from "../apis/update-match";
 import { validateMatch } from "../utils/validator";
-import { useNavigate } from "react-router-dom";
-import { ADMIN_ROUTES } from "constants/Paths";
 
 type LoadingInfoMatchProps = {
   match: Match;
@@ -70,6 +68,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
   useEffect(() => {
     if (match) {
       setIsMatchFinished(match.finish <= Date.now() / 1000);
+      setMatchToEdit(match);
     }
   }, [match]);
 
@@ -96,8 +95,6 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
 
       if (response?.status === "success") {
         setReferees(response.data);
-      } else {
-        toast.error(response.message);
       }
     })();
   }, []);
@@ -288,8 +285,6 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
 
                   if (response?.status === "success") {
                     toast.success("Match updated successfully");
-                  } else {
-                    toast.error(response.message);
                   }
 
                   setShowEditMatch(false);
@@ -379,7 +374,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
               {dayjs.unix(match.start).format("HH:mm")}
             </Typography>
 
-            {!isMatchFinished && (
+            {match.finish >= Date.now() / 1000 && (
               <Box
                 sx={{
                   my: 2,
@@ -477,8 +472,6 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
 
                     if (response?.status === "success") {
                       toast.success("Match deleted successfully");
-                    } else {
-                      toast.error(response.message);
                     }
 
                     navigate(ADMIN_ROUTES.MATCH);

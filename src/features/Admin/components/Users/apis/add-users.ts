@@ -1,21 +1,8 @@
 import axios from "axios";
+import { handleApiResponse } from "libs/api-client";
 
 export const addUsersApi = async (data: User) => {
   const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/users/create-user";
 
-  try {
-    const response = await axios.post(endpoint, data);
-
-    return {
-      status: "success",
-      data: response.data,
-      code:  response?.status,
-    };
-  } catch (error) {
-    return {
-      status: "error",
-      message: "An error occurred while trying to add users",
-      code: error.request?.status,
-    };
-  }
+  return handleApiResponse(axios.post(endpoint, data));
 };

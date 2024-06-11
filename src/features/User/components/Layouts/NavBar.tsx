@@ -14,23 +14,27 @@ import { USER_ROUTES } from "constants/Paths";
 import { Club } from "features/Admin/components/ClubManager/apis/types";
 import { useAuth } from "features/Auth/AuthProvider";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Link, useLocation } from "react-router-dom";
 
 const leftFeatures = [
   {
     name: "Results",
-    link: "/results",
+    link: USER_ROUTES.RESULTS,
     needAdmin: false,
   },
   {
     name: "Fixtures",
-    link: "/fixtures",
+    link: USER_ROUTES.FIXTURES,
     needAdmin: false,
   },
   {
     name: "Tables",
-    link: "/tables",
+    link: USER_ROUTES.TABLES,
+    needAdmin: false,
+  },
+  {
+    name: "Clubs",
+    link: USER_ROUTES.CLUB_LIST,
     needAdmin: false,
   },
 ];
@@ -44,12 +48,12 @@ const rightFeatures = [
   },
   {
     name: "Sign In",
-    link: "/sign-in",
+    link: USER_ROUTES.SIGN_IN,
     hideLogin: true,
   },
   {
     name: "Sign Out",
-    link: "/sign-out",
+    link: USER_ROUTES.SIGN_OUT,
     needLogin: true,
   },
 ];
@@ -91,6 +95,7 @@ const ClubImage = ({ club }) => {
 const NavBar = ({ clubs }: NavBarProps) => {
   const [isOpenMenu, setIsOpenMenu] = useState<null | HTMLElement>(null);
   const { token, hasAdminAccess } = useAuth();
+  const location = useLocation(); // Hook to get current location
 
   const handleOpenMenuIcon = (event: React.MouseEvent<HTMLElement>) => {
     setIsOpenMenu(event.currentTarget);
@@ -162,25 +167,21 @@ const NavBar = ({ clubs }: NavBarProps) => {
               }}
             >
               {leftFeatures.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <Link to={`${page.link}`} style={{ textDecoration: "none" }}>
+                <Link to={`${page.link}`} style={{ textDecoration: "none" }}>
+                  <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                     {page.name}
-                  </Link>
-                </MenuItem>
+                  </MenuItem>
+                </Link>
               ))}
 
               {token ? (
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Link to="/sign-out" style={{ textDecoration: "none" }}>
-                    Sign Out
-                  </Link>
-                </MenuItem>
+                <Link to="/sign-out" style={{ textDecoration: "none" }}>
+                  <MenuItem onClick={handleCloseNavMenu}>Sign Out</MenuItem>
+                </Link>
               ) : (
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Link to="/sign-in" style={{ textDecoration: "none" }}>
-                    Sign In
-                  </Link>
-                </MenuItem>
+                <Link to="/sign-in" style={{ textDecoration: "none" }}>
+                  <MenuItem onClick={handleCloseNavMenu}>Sign In</MenuItem>
+                </Link>
               )}
             </Menu>
           </Box>
@@ -200,21 +201,25 @@ const NavBar = ({ clubs }: NavBarProps) => {
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {leftFeatures.map((page) => (
-              <Button
-                key={page.name}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 0,
-                  mx: 1,
-                  color: "white",
-                  display: "block",
-                  fontWeight: 700,
-                }}
-              >
-                <Link to={`${page.link}`} style={{ textDecoration: "none", color: "white" }}>
+              <Link to={`${page.link}`} style={{ textDecoration: "none", color: "white" }}>
+                <Button
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 0,
+                    mx: 1,
+                    color: "white",
+                    display: "block",
+                    fontWeight: 700,
+                    borderRadius: 0,
+                    borderBottom: location.pathname.startsWith(page.link)
+                      ? "2px solid white"
+                      : "none",
+                  }}
+                >
                   {page.name}
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             ))}
           </Box>
 

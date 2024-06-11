@@ -16,13 +16,13 @@ export const LoadPlayersClubPage = ({ club }: LoadPlayersClubPageProps) => {
 
   const fetchPlayers = async () => {
     if (!club) return;
-    
-    const response = await getPlayersApi(club);
 
+    const response = await getPlayersApi({
+      club_name: club.club_name,
+    });
+    
     if (response?.status === "success") {
       setPlayers(response.data);
-    } else {
-      toast.error("Failed to load players");
     }
   };
 
@@ -91,7 +91,7 @@ export const LoadPlayersClubPage = ({ club }: LoadPlayersClubPageProps) => {
                         }}
                       >
                         <img
-                          src={player?.avatar_url}
+                          src={player?.ava_url}
                           alt={player.player_name}
                           style={{ width: "100%", height: "auto" }}
                           onError={(e) => {

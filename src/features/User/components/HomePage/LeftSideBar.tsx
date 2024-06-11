@@ -4,6 +4,8 @@ import { Match } from "features/Admin/components/MatchManager/apis/types";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { TableMatches } from "../TableResults/TableMatches";
+import { Link } from "react-router-dom";
+import { USER_ROUTES } from "constants/Paths";
 
 export default function LeftSideBar() {
   const [matches, setMatches] = useState<Match[]>();
@@ -12,11 +14,9 @@ export default function LeftSideBar() {
     (async () => {
       const response = await getMatchesApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setMatches(response.data);
-      } else {
-        toast.error(response.message);
-      }
+      } 
     })();
   }, []);
 
@@ -152,22 +152,24 @@ export default function LeftSideBar() {
         </Box>
 
         <Box>
-          <Button
-            variant="contained"
-            sx={{
-              width: "100%",
-              borderRadius: "5px",
-              border: "0.5px solid #37003c",
-              backgroundColor: "white",
-              color: "#37003c",
-              boxShadow: "0",
-              "&:hover": {
-                backgroundColor: "#f5f2f5",
-              },
-            }}
-          >
-            View All Fixtures
-          </Button>
+          <Link to={USER_ROUTES.FIXTURES}>
+            <Button
+              variant="contained"
+              sx={{
+                width: "100%",
+                borderRadius: "5px",
+                border: "0.5px solid #37003c",
+                backgroundColor: "white",
+                color: "#37003c",
+                boxShadow: "0",
+                "&:hover": {
+                  backgroundColor: "#f5f2f5",
+                },
+              }}
+            >
+              View All Fixtures
+            </Button>
+          </Link>
         </Box>
       </Box>
     </Container>

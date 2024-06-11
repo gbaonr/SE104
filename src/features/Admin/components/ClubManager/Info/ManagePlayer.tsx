@@ -12,17 +12,18 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useEffect } from "react";
-import { CountryDropdown } from "react-country-region-selector";
-import { Club, Player } from "../apis/types";
-import { validateAddPlayers } from "../utils/validate-add-players";
-import { toast } from "react-toastify";
-import { addPlayerApi } from "../apis/add-players";
-import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { CountryDropdown } from "react-country-region-selector";
+import { toast } from "react-toastify";
+import { addPlayerApi } from "../apis/add-players";
+import { Player } from "../apis/types";
+import { validateAddPlayers } from "../utils/validate-add-players";
+import { updatePlayerApi } from "../apis/update-player";
 
 type AddPlayerProps = {
   showAddPlayerPopup: boolean;
@@ -234,12 +235,10 @@ export const AddPlayer = ({
                 }
 
                 (async () => {
-                  // TODO: wait for baonguyen fix, then uncomment this
-
                   if (typeToEdit === "add") {
                     const response = await addPlayerApi(playerToEdit);
 
-                    if ( response?.status === "success") {
+                    if (response?.status === "success") {
                       toast.success("Player added successfully");
                       setShowAddPlayerPopup(false);
                       return;
@@ -247,6 +246,15 @@ export const AddPlayer = ({
 
                     toast.error("An error occurred while trying to add player");
                   } else {
+                    const response = await updatePlayerApi(playerToEdit);
+
+                    if (response?.status === "success") {
+                      toast.success("Player updated successfully");
+                      setShowAddPlayerPopup(false);
+                      return;
+                    }
+                    
+                    toast.error("An error occurred while trying to update player");
                   }
                 })();
               }}

@@ -3,6 +3,7 @@ import { Club } from "../../ClubManager/apis/types";
 import { Match } from "../apis/types";
 import { LoadingGoalMatch } from "./LoadingGoal";
 import { LoadingInfoMatch } from "./LoadingInfo";
+import LoadingPlayerMatch from "./LoadPlayer";
 
 type MatchDetailInfoProps = {
   match: Match;

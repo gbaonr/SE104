@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, Switch, TextField, Typography } from "@mui/material";
+import { Box, Divider, Grid, MenuItem, Switch, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -67,11 +67,9 @@ export const TableMatches = ({
     (async () => {
       const response = await getClubsApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setClubs(response.data);
-      } else {
-        toast.error(response.message);
-      }
+      } 
     })();
   }, []);
 
@@ -183,83 +181,86 @@ export const TableMatches = ({
           if (index >= limit) return null;
 
           return (
-            <Box
-              sx={{
-                my: 4,
-              }}
-            >
+            <>
+              {index !== 0 && <Divider />}
+
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: mini ? "center" : "space-between",
+                  my: 4,
                 }}
               >
-                <Typography
-                  variant="h5"
-                  style={{
-                    fontWeight: mini ? 700 : 900,
-                    fontSize: mini ? "1rem" : "1.2rem",
-                    margin: "0.3rem",
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: mini ? "center" : "space-between",
                   }}
                 >
-                  {matchByDate.date}
-                </Typography>
-
-                {!mini && (
-                  <img
-                    src="/assets/images/main/competition_1.png"
-                    alt="competition"
-                    style={{ height: "30px" }}
-                  />
-                )}
-              </Box>
-
-              {matchByDate.matches.map((match, index) => (
-                <Link to={`${USER_ROUTES.MATCH_INFO}/${match.match_id}`}>
-                  <Grid
-                    container
-                    spacing={0}
-                    sx={{
-                      my: 0.2,
-                      py: (mini && 0) || 1,
-                      display: "flex",
-                      justifyContent: "center",
-                      "&:hover": {
-                        background:
-                          "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
-                      },
+                  <Typography
+                    variant="h5"
+                    style={{
+                      fontWeight: mini ? 700 : 900,
+                      fontSize: mini ? "1rem" : "1.2rem",
+                      margin: "0.3rem",
                     }}
-                    className="flex items-center"
                   >
-                    <Grid item xs={mini ? 4 : 3}>
-                      <TeamItem
-                        useShortName={useShortName}
-                        club={clubs?.find((club) => club.club_id === match.team1)}
-                      />
-                    </Grid>
+                    {matchByDate.date}
+                  </Typography>
 
-                    <Grid item xs={mini ? 4 : 1}>
-                      <Box sx={{ mx: 2 }}>
-                        <ScoreItem match={match} />
-                      </Box>
-                    </Grid>
+                  {!mini && (
+                    <img
+                      src="/assets/images/main/competition_1.png"
+                      alt="competition"
+                      style={{ height: "30px" }}
+                    />
+                  )}
+                </Box>
 
-                    <Grid item xs={mini ? 4 : 3}>
-                      <TeamItem
-                        useShortName={useShortName}
-                        leftLogo={true}
-                        club={clubs?.find((club) => club.club_id === match.team2)}
-                      />
-                    </Grid>
+                {matchByDate.matches.map((match, index) => (
+                  <Link to={`${USER_ROUTES.MATCH_INFO}/${match.match_id}`}>
+                    <Grid
+                      container
+                      spacing={0}
+                      sx={{
+                        my: 0.2,
+                        py: (mini && 0) || 1,
+                        display: "flex",
+                        justifyContent: "center",
+                        "&:hover": {
+                          background:
+                            "linear-gradient(98.5deg, #05f0ff -46.16%, #948bff 42.64%, #bf8afb 70.3%);",
+                        },
+                      }}
+                      className="flex items-center"
+                    >
+                      <Grid item xs={mini ? 4 : 3}>
+                        <TeamItem
+                          useShortName={useShortName}
+                          club={clubs?.find((club) => club.club_id === match.team1)}
+                        />
+                      </Grid>
 
-                    {/* {!props.mini && (
+                      <Grid item xs={mini ? 4 : 1}>
+                        <Box sx={{ mx: 2 }}>
+                          <ScoreItem match={match} />
+                        </Box>
+                      </Grid>
+
+                      <Grid item xs={mini ? 4 : 3}>
+                        <TeamItem
+                          useShortName={useShortName}
+                          leftLogo={true}
+                          club={clubs?.find((club) => club.club_id === match.team2)}
+                        />
+                      </Grid>
+
+                      {/* {!props.mini && (
                 <Grid item xs={2}>
                   {" "}
                 </Grid>
               )} */}
 
-                    {/* {!props.mini && (
+                      {/* {!props.mini && (
                 <Grid item xs={5} className="flex items-center">
                   <StadiumIcon />
 
@@ -274,10 +275,11 @@ export const TableMatches = ({
                   </Typography>
                 </Grid>
               )} */}
-                  </Grid>
-                </Link>
-              ))}
-            </Box>
+                    </Grid>
+                  </Link>
+                ))}
+              </Box>
+            </>
           );
         })}
     </>

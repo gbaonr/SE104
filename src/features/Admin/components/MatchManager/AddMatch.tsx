@@ -60,9 +60,7 @@ export const AddMatch = ({
 
       if ( response?.status === "success") {
         setReferees(response.data);
-      } else {
-        toast.error(response.message);
-      }
+      } 
     })();
   }, []);
 
@@ -277,8 +275,6 @@ export const AddMatch = ({
 
                   if ( response?.status === "success") {
                     toast.success("Match added successfully");
-                  } else {
-                    toast.error(response.message);
                   }
 
                   setShowAddMatch(false);

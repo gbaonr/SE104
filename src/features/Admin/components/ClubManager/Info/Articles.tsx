@@ -36,7 +36,7 @@ export const Articles = ({ club }: ArticlesProps) => {
         >
           Articles
         </Typography>
-
+{/* 
         <Button
           variant="outlined"
           disabled
@@ -52,7 +52,7 @@ export const Articles = ({ club }: ArticlesProps) => {
           }}
         >
           <EditIcon />
-        </Button>
+        </Button> */}
       </Box>
 
       <Grid container spacing={2}>

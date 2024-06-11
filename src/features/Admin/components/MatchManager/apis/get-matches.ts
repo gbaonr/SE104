@@ -1,8 +1,11 @@
 import axios from "axios";
 import { Match } from "./types";
 import { Club } from "../../ClubManager/apis/types";
+import { handleApiResponse, updateClientApi } from "libs/api-client";
 
 export const getMatchesApi = async (club?: Club) => {
+  updateClientApi();
+
   let endpoint = "";
 
   if (club) {
@@ -13,27 +16,5 @@ export const getMatchesApi = async (club?: Club) => {
     endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/matches/get-matches";
   }
 
-  try {
-    const response = await axios.get<Match[]>(endpoint);
-
-    if (response?.status !== 200) {
-      return {
-        status: "error",
-        message: "An error occurred while trying to get matches",
-        code: response?.status,
-      };
-    }
-
-    return {
-      status: "success",
-      data: response.data,
-      code: response?.status,
-    };
-  } catch (error) {
-    return {
-      status: "error",
-      message: "An error occurred while trying to get matches",
-      code: error.request?.status,
-    };
-  }
+  return handleApiResponse<Match[]>(axios.get(endpoint));
 };

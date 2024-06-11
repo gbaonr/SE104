@@ -157,7 +157,7 @@ export const ClubManager = () => {
             : filteredClubs.map((club, index) => (
                 <Grid item xs={12} md={4} lg={3} key={index} className="flex items-center">
                   <Link
-                    to={ADMIN_ROUTES.CLUB + "/" + club.club_shortname}
+                    to={ADMIN_ROUTES.CLUB + "/" + club.club_id}
                     style={{ textDecoration: "none", color: "inherit", width: "100%" }}
                   >
                     <Box

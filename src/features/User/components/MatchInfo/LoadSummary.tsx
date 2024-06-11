@@ -113,8 +113,13 @@ export const SummaryMatch = ({ match, clubs }: SummaryMatchProps) => {
   const fetchPlayers = async () => {
     if (!team1 || !team2) return;
 
-    const responseTeam1 = await getPlayersApi(team1);
-    const responseTeam2 = await getPlayersApi(team2);
+    const responseTeam1 = await getPlayersApi({
+      club_name: team1.club_name,
+    });
+
+    const responseTeam2 = await getPlayersApi({
+      club_name: team2.club_name,
+    });
 
     if (responseTeam1 && responseTeam1.status === "success") {
       setPlayersTeam1(responseTeam1.data);

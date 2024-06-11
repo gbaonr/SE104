@@ -13,7 +13,7 @@ export const HeaderClubInfo = ({ club }: HeaderClubInfoProps) => {
         p: 4,
         boxShadow: "0 0 10px 0 rgba(100, 100, 100, 0.1)",
         borderRadius: 2,
-        my: 2,
+        mb: 2,
       }}
     >
       <Box

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { addUsersApi } from "./apis/add-users";
 import { toast } from "react-toastify";
 import { User } from "types/User";
+import { validateUser } from "../MatchManager/utils/validator";
 
 const optionInput = [
   { id: "full_name", name: "Full Name" },
@@ -74,31 +75,17 @@ export const AddUserPopup = ({
 
   useEffect(() => {
     if (!showAddUser) {
-      // TODO: uncomment below codes
-      // setInputFullname("");
-      // setInputRole("");
-      // setInputUsername("");
-      // setInputEmail("");
-      // setInputNation("");
-      // setInputBirthday("");
-      // setInputPassword("");
-      // setInputConfirmPassword("");
+      setInputFullname("");
+      setInputRole("");
+      setInputUsername("");
+      setInputEmail("");
+      setInputNation("");
+      setInputBirthday(Date.now());
+      setInputPassword("");
+      setInputConfirmPassword("");
       setCurrentEditUser(null);
     }
   }, [showAddUser, setCurrentEditUser]);
-
-  // TODO: add validation for input
-  const validateInput = () => {
-    return (
-      inputFullname !== "" &&
-      inputRole !== "" &&
-      inputUsername !== "" &&
-      inputEmail !== "" &&
-      inputNation !== "" &&
-      inputPassword !== "" &&
-      inputConfirmPassword !== ""
-    );
-  };
 
   return (
     <>
@@ -248,7 +235,16 @@ export const AddUserPopup = ({
                     return;
                   }
 
-                  if (!validateInput()) {
+                  const user = {
+                    full_name: inputFullname,
+                    role: inputRole,
+                    user_name: inputUsername,
+                    user_mail: inputEmail,
+                    user_nation: inputNation,
+                    user_bday: inputBirthday,
+                  } as User;
+
+                  if (!validateUser(user)) {
                     toast.error("Please check your input");
                     setShowAddUser(false);
                     return;

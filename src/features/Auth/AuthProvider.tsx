@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { getUserInfo } from "apis/users";
 import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
+import { USER_ROUTES } from "constants/Paths";
 
 // TODO: fix when JWT token is expired
 
@@ -100,7 +101,7 @@ export const AuthenticatedComponent = ({ children }) => {
   const { token, expiredDate } = useAuth();
 
   if (!token || new Date() > new Date(expiredDate)) {
-    return <Navigate to="/login" />;
+    return <Navigate to={USER_ROUTES.SIGN_IN} />;
   }
 
   return children;

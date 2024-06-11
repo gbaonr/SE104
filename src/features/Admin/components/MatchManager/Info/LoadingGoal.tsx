@@ -26,6 +26,8 @@ import { Match, MatchEvent } from "../apis/types";
 import { updateEventMatchApi } from "../apis/update-event";
 import { validateEventMatch } from "../utils/validator";
 import { TimeItem } from "components/Items/TimeItem";
+import { GoalType } from "../../PolicyAdj/apis/types";
+import { getGoalTypesApi } from "../../PolicyAdj/apis/get-goal-types";
 
 type LoadingGoalMatchProps = {
   match: Match;
@@ -55,19 +57,30 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
   const [eventToEdit, setEventToEdit] = useState<MatchEvent>(null);
   const [typeToEdit, setTypeToEdit] = useState<"add" | "edit">("add");
 
+  const [goalTypes, setGoalTypes] = useState<GoalType[]>([]);
   const [events, setEvents] = useState<MatchEvent[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
+
+  const fetchGoalTypes = async () => {
+    const response = await getGoalTypesApi();
+
+    if (response?.status === "success") {
+      setGoalTypes(response.data);
+    }
+  };
 
   useEffect(() => {
     (async () => {
       const response = await getEventsMatchApi(match);
 
-      if (response?.status === "success" && response.data) {
+      if (response?.status === "success") {
         setEvents(response.data);
-      } else {
-        toast.error(response.message);
       }
     })();
+
+    if (match) {
+      setEventToEdit(match);
+    }
   }, [match]);
 
   useEffect(() => {
@@ -77,8 +90,15 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
 
       if (!team1 || !team2) return;
 
-      const playerTeam1 = await getPlayersApi(team1);
-      const playerTeam2 = await getPlayersApi(team2);
+      const playerTeam1 = await getPlayersApi({
+        club_name: team1.club_name,
+      });
+
+      const playerTeam2 = await getPlayersApi({
+        club_name: team2.club_name,
+      });
+
+      console.log(playerTeam1, playerTeam2);
 
       if (playerTeam1.status === "success" && playerTeam2.status === "success") {
         setPlayers([...playerTeam1.data, ...playerTeam2.data]);
@@ -90,24 +110,65 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
   }, [match, clubs]);
 
   useEffect(() => {
-    const data = {};
+    fetchGoalTypes();
+  }, []);
 
-    if (eventToEdit?.team_id === undefined) data["team_id"] = match.team1;
+  useEffect(() => {
+    if (!players || !players.length) return;
 
-    if (eventToEdit?.player_id === undefined && players.length > 0)
-      data["player_id"] = players.filter((e) => e.player_club === match.team1)[0].player_id;
+    if (!eventToEdit) {
+      const data = {
+        team_id: match.team1,
+        player_id: players.filter((e) => e.player_club === match.team1)[0].player_id,
+        seconds: 0,
+        events: "A",
+      };
 
-    if (eventToEdit?.seconds === undefined) data["seconds"] = 0;
-    if (eventToEdit?.events === undefined) data["events"] = "A";
+      setEventToEdit(data);
+    } else {
+      const data = {};
 
-    console.log("update", eventToEdit, data);
+      // if eventToEdit is defined
+      if (eventToEdit.team_id === undefined) {
+        data["team_id"] = match.team1;
+      }
 
-    if (Object.keys(data).length > 0) {
-      setEventToEdit({
-        ...eventToEdit,
-        ...data,
-      });
+      if (eventToEdit.player_id === undefined && players.length > 0) {
+        data["player_id"] = players.filter((e) => e.player_club === match.team1)[0].player_id;
+      }
+
+      if (eventToEdit.seconds === undefined) {
+        data["seconds"] = 0;
+      }
+
+      if (eventToEdit.events === undefined) {
+        data["events"] = "A";
+      }
+
+      if (Object.keys(data).length > 0) {
+        setEventToEdit({
+          ...eventToEdit,
+          ...data,
+        });
+      }
     }
+
+    // if (!eventToEdit || eventToEdit?.team_id === undefined) data["team_id"] = match.team1;
+
+    // if ((eventToEdit === undefined || eventToEdit?.player_id === undefined) && players.length > 0)
+    //   data["player_id"] = players.filter((e) => e.player_club === match.team1)[0].player_id;
+
+    // if (eventToEdit?.seconds === undefined) data["seconds"] = 0;
+    // if (eventToEdit?.events === undefined) data["events"] = "A";
+
+    // console.log("update", eventToEdit, data);
+
+    // if (Object.keys(data).length > 0) {
+    //   setEventToEdit({
+    //     ...eventToEdit,
+    //     ...data,
+    //   });
+    // }
   }, [eventToEdit, players]);
 
   useEffect(() => {
@@ -244,10 +305,11 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                         });
                       }}
                     >
-                      {/* TODO: fix this when events is customizable */}
-                      <MenuItem value="A">A</MenuItem>
-                      <MenuItem value="B">B</MenuItem>
-                      <MenuItem value="C">C</MenuItem>
+                      {goalTypes.map((goalType) => (
+                        <MenuItem key={goalType.type_id} value={goalType.type_name}>
+                          {goalType.type_name}
+                        </MenuItem>
+                      ))}
                     </Select>
                   );
                 }
@@ -331,8 +393,6 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                     if (response?.status === "success") {
                       setForceUpdate(Date.now());
                       toast.success("Event added successfully");
-                    } else {
-                      toast.error(response.message);
                     }
                   })();
                 }
@@ -344,8 +404,6 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                     if (response?.status === "success") {
                       setForceUpdate(Date.now());
                       toast.success("Event updated successfully");
-                    } else {
-                      toast.error(response.message);
                     }
                   })();
                 }
@@ -498,8 +556,6 @@ export const LoadingGoalMatch = ({ match, clubs, setForceUpdate }: LoadingGoalMa
                                 if (response?.status === "success") {
                                   setForceUpdate(Date.now());
                                   toast.success("Event deleted successfully");
-                                } else {
-                                  toast.error(response.message);
                                 }
                               })();
                             }}

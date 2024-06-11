@@ -37,6 +37,8 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { MatchInfoUserPage } from "features/User/components/MatchInfo";
 import { ClubInfoPage } from "features/User/components/ClubInfo";
+import { Box, CircularProgress } from "@mui/material";
+import { ListClubUserPage } from "features/User/components/ClubInfo/ListClubs";
 
 const theme = createTheme({
   typography: {
@@ -53,27 +55,31 @@ const App = () => {
   const [clubs, setClubs] = useState<Club[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
   const [forceUpdate, setForceUpdate] = useState<number>(Date.now());
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const updateInfo = () => {
-    (async () => {
-      const response = await getClubsApi();
-
-      if (response?.status === "success") {
-        setClubs(response.data);
+  const updateInfo = async () => {
+    try {
+      const clubsResponse = await getClubsApi();
+      if (clubsResponse?.status === "success") {
+        setClubs(clubsResponse.data);
       } else {
         toast.error("Failed to load clubs");
       }
-    })();
 
-    (async () => {
-      const response = await getMatchesApi();
+      const matchesResponse = await getMatchesApi();
+      console.log(matchesResponse);
 
-      if (response?.status === "success") {
-        setMatches(response.data);
+      if (matchesResponse?.status === "success") {
+        setMatches(matchesResponse.data);
       } else {
         toast.error("Failed to load matches");
       }
-    })();
+
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to load data");
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -81,6 +87,22 @@ const App = () => {
   }, [forceUpdate]);
 
   const memoizedValue = useMemo(() => ({ clubs, matches }), [clubs, matches]);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        <CircularProgress disableShrink />;
+      </Box>
+    );
+  }
 
   const router = createBrowserRouter([
     {
@@ -107,6 +129,8 @@ const App = () => {
           path: `${USER_ROUTES.CLUB_INFO}/${club.club_id}`,
           element: <ClubInfoPage club={club} />,
         })),
+
+        { path: USER_ROUTES.CLUB_LIST, element: <ListClubUserPage /> },
       ],
     },
     {
@@ -125,7 +149,7 @@ const App = () => {
         { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
 
         ...memoizedValue.clubs.map((club) => ({
-          path: `${ADMIN_ROUTES.CLUB}/${club.club_shortname}`,
+          path: `${ADMIN_ROUTES.CLUB}/${club.club_id}`,
           element: <TeamDetailInfo club={club} />,
         })),
 
@@ -134,10 +158,7 @@ const App = () => {
           element: <MatchDetailInfo setForceUpdate={setForceUpdate} clubs={clubs} match={match} />,
         })),
 
-        // { path: ADMIN_ROUTES.MATCH_REGISTRATION, element: <MatchRegistrationPage /> },
         { path: ADMIN_ROUTES.POLICY, element: <PolicyAdj /> },
-
-        // loading users manager
         { path: ADMIN_ROUTES.USER_MANAGER, element: <UserManagement /> },
       ],
     },

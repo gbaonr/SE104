@@ -1,25 +1,13 @@
 import axios from "axios";
+import { handleApiResponse } from "libs/api-client";
 import { Player } from "./types";
 
 export const deletePlayerApi = async (filterPlayer: Player) => {
-  const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/players/delete_player";
+  const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/players/delete-player";
 
-  try {
-    const playerId = filterPlayer.player_id;
-    const response = await axios.put(`${endpoint}`, {
-      playerID: playerId,
-    });
-
-    return {
-      status: "success",
-      data: response.data,
-      code:  response?.status,
-    };
-  } catch (error) {
-    return {
-      status: "error",
-      message: "An error occurred while trying to delete player",
-      code: error.request?.status,
-    };
-  }
+  return handleApiResponse(
+    axios.put(`${endpoint}`, {
+      playerID: filterPlayer.player_id,
+    }),
+  );
 };

@@ -1,40 +1,27 @@
-import React, { useState, DragEventHandler, useEffect } from "react";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import {
   Box,
   Button,
-  Typography,
-  TextField,
+  Container,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  TextField,
+  Typography,
 } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import axios from "axios";
-import { getParamsApi } from "./apis/get-params";
-import { updateParamsApi } from "./apis/update-params";
+import { DragEventHandler, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Params } from "./apis/types";
-
-type PolicyAdjustmentProps = {
-  initialAgeRange?: [number, number];
-  initialTimeGoal?: number;
-  initialGoalTypes?: string[];
-  initialPoints?: {
-    win: number;
-    draw: number;
-    lose: number;
-  };
-  initialPlayerCount?: {
-    min: number;
-    max: number;
-  };
-  initialForeignPlayers?: number;
-};
+import { getParamsApi } from "./apis/get-params";
+import { GoalType, Params } from "./apis/types";
+import { updateParamsApi } from "./apis/update-params";
+import { getGoalTypesApi } from "./apis/get-goal-types";
+import { deleteGoalTypesApi } from "./apis/detele-goal-types";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { addGoalTypesApi } from "./apis/add-goal-types";
 
 type Points = {
   win: number;
@@ -50,7 +37,8 @@ type initialPlayerCount = {
 export const PolicyAdj = () => {
   const [ageRange, setAgeRange] = useState<[number, number]>([0, 0]);
   const [timeGoal, setTimeGoal] = useState<number>(0);
-  const [goalTypes, setGoalTypes] = useState<string[]>([]);
+  const [goalTypes, setGoalTypes] = useState<GoalType[]>([]);
+  const [originalGoalTypes, setOriginalGoalTypes] = useState<GoalType[]>([]);
   const [points, setPoints] = useState<Points>({
     win: 0,
     draw: 0,
@@ -68,64 +56,65 @@ export const PolicyAdj = () => {
     "Goals Conceded",
   ]);
 
+  const fetchGoalTypes = async () => {
+    const response = await getGoalTypesApi();
+
+    if (response?.status === "success") {
+      setGoalTypes(response.data);
+      setOriginalGoalTypes(response.data);
+    } else {
+      toast.error("Failed to load goal types");
+    }
+  };
+
+  const fetchParams = async () => {
+    const response = await getParamsApi();
+    console.log(response);
+
+    if (response?.status === "success") {
+      const responseData = response.data;
+
+      setPlayerCount({
+        min: responseData.min_club_player,
+        max: responseData.max_club_player,
+      });
+
+      setForeignPlayers(responseData.max_foreign_player);
+      setAgeRange([responseData.min_player_age, responseData.max_player_age]);
+
+      setTimeGoal(responseData.max_goal_time);
+
+      setPoints({
+        win: responseData.points_win,
+        draw: responseData.points_draw,
+        lose: responseData.points_lose,
+      });
+
+      const criteriaPriority = responseData.priority.split(";");
+
+      const criteriaList = criteriaPriority.map((criteria) => {
+        if (criteria === "p") return "Points";
+        if (criteria === "d") return "Goal Difference";
+        if (criteria === "g") return "Goals Scored";
+        if (criteria === "h") return "Goals Conceded";
+
+        return "";
+      });
+
+      setCriteriaList(criteriaList);
+    } else {
+      toast.error("Failed to load params");
+    }
+  };
+
   useEffect(() => {
-    const fetchParams = async () => {
-      const response = await getParamsApi();
-      console.log(response);
-
-      if (response?.status === "success") {
-        const responseData = response.data;
-
-        setPlayerCount({
-          min: responseData.min_club_player,
-          max: responseData.max_club_player,
-        });
-
-        setForeignPlayers(responseData.max_foreign_player);
-        setAgeRange([responseData.min_player_age, responseData.max_player_age]);
-
-        // TODO: wait for response fix format --> update this
-        setTimeGoal(Number(responseData.max_goal_time));
-
-        // TODO: fix goal types
-        setGoalTypes(new Array(responseData.max_goal_types).fill(""));
-
-        setPoints({
-          win: responseData.points_win,
-          draw: responseData.points_draw,
-          lose: responseData.points_lose,
-        });
-
-        const criteriaPriority = responseData.priority.split(";");
-
-        const criteriaList = criteriaPriority.map((criteria) => {
-          if (criteria === "p") return "Points";
-          if (criteria === "d") return "Goal Difference";
-          if (criteria === "g") return "Goals Scored";
-          if (criteria === "h") return "Goals Conceded";
-        });
-        
-        setCriteriaList(criteriaList);
-      } else {
-        toast.error("Failed to load params");
-      }
-    };
     fetchParams();
+    fetchGoalTypes();
   }, []);
 
-  const handleAddGoalType = () => {
-    setGoalTypes([...goalTypes, ""]);
-  };
-
-  const handleRemoveGoalType = (index: number) => {
-    setGoalTypes(goalTypes.filter((_, i) => i !== index));
-  };
-
-  const handleGoalTypeChange = (index: number, value: string) => {
-    const newGoalTypes = [...goalTypes];
-    newGoalTypes[index] = value;
-    setGoalTypes(newGoalTypes);
-  };
+  useEffect(() => {
+    console.log(goalTypes);
+  }, [goalTypes]);
 
   const handlePointsChange = (type: "win" | "draw" | "lose", value: number) => {
     setPoints({ ...points, [type]: value });
@@ -161,10 +150,6 @@ export const PolicyAdj = () => {
     }
   };
 
-  // const handleOnSaveChanges =
-  // above function input a dictionary of the updated values and send it to the backend
-  // the backend will update the values in the database
-
   const handleOnSaveChanges = (params: Params) => {
     updateParamsApi(params).then((response) => {
       if (response?.status === "success") {
@@ -198,10 +183,10 @@ export const PolicyAdj = () => {
   };
 
   return (
-    <Box
+    <Container
+      maxWidth={false}
       sx={{
         backgroundColor: "#f5f5f5",
-        p: 2,
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
@@ -211,7 +196,7 @@ export const PolicyAdj = () => {
       <Box
         sx={{
           width: "100%",
-          maxWidth: "800px",
+          // maxWidth: "800px",
         }}
       >
         <Box
@@ -333,7 +318,7 @@ export const PolicyAdj = () => {
           </Typography>
           <Box sx={{ mb: 4 }}>
             <Typography variant="h6" gutterBottom>
-              Time Goal (minutes)
+              Time Goal (seconds)
             </Typography>
             <TextField
               type="number"
@@ -348,23 +333,95 @@ export const PolicyAdj = () => {
             <Typography variant="h6" gutterBottom>
               Goal Types
             </Typography>
-            {goalTypes.map((type, index) => (
-              <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                <TextField
-                  value={type}
-                  onChange={(e) => handleGoalTypeChange(index, e.target.value)}
-                  label={`Goal Type ${index + 1}`}
-                  variant="outlined"
-                  sx={{ flexGrow: 1, mr: 1 }}
-                />
-                <IconButton onClick={() => handleRemoveGoalType(index)}>
-                  <RemoveCircleIcon color="error" />
-                </IconButton>
-              </Box>
-            ))}
-            <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddGoalType}>
-              Add Goal Type
-            </Button>
+
+            {goalTypes &&
+              goalTypes.map((type, index) => (
+                <Box key={index} sx={{ display: "flex", alignItems: "center", my: 2 }}>
+                  <TextField
+                    value={type.type_name}
+                    key={type.type_id}
+                    onChange={(e) => {
+                      const updatedList = [...goalTypes];
+                      const updatedItem = { ...type, type_name: e.target.value };
+                      updatedList[index] = updatedItem;
+                      setGoalTypes(updatedList);
+                    }}
+                    label={`Goal Type ${index + 1}`}
+                    variant="outlined"
+                    sx={{ flexGrow: 1, mr: 1 }}
+                  />
+
+                  <IconButton
+                    onClick={() => {
+                      const updatedList = goalTypes.filter(
+                        (goalType) => goalType.type_id !== type.type_id,
+                      );
+
+                      setGoalTypes(updatedList);
+                    }}
+                  >
+                    <RemoveCircleIcon color="error" />
+                  </IconButton>
+                </Box>
+              ))}
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                variant="contained"
+                startIcon={<AddCircleIcon />}
+                onClick={(e) => {
+                  setGoalTypes([...goalTypes, { type_id: Date.now(), type_name: "" }]);
+                }}
+              >
+                Add Goal Type
+              </Button>
+
+              <Button
+                variant="contained"
+                onClick={(e) => {
+                  // get ids of goal types that are not in the original goal types
+                  const goalTypeIds = goalTypes.map((goalType) => goalType.type_id);
+                  const originalGoalTypeIds = originalGoalTypes.map((goalType) => goalType.type_id);
+
+                  const goalTypeToDelete = originalGoalTypes.filter(
+                    (goalType) => !goalTypeIds.includes(goalType.type_id),
+                  );
+
+                  const goalTypeToAdd = goalTypes.filter(
+                    (goalType) => !originalGoalTypeIds.includes(goalType.type_id),
+                  );
+
+                  goalTypeToAdd.forEach((goalType) => {
+                    addGoalTypesApi(goalType).then((response) => {
+                      if (response?.status === "success") {
+                        toast.success(`Goal Type ${goalType.type_name} added successfully`);
+                      } else {
+                        toast.error("An error occurred while trying to add goal type");
+                      }
+                    });
+                  });
+
+                  goalTypeToDelete.forEach((goalType) => {
+                    deleteGoalTypesApi(goalType).then((response) => {
+                      if (response?.status === "success") {
+                        toast.success(`Goal Type ${goalType.type_name} deleted successfully`);
+                      } else {
+                        toast.error("An error occurred while trying to delete goal type");
+                      }
+                    });
+                  });
+
+                  fetchGoalTypes();
+                }}
+              >
+                Save Changes
+              </Button>
+            </Box>
           </Box>
         </Box>
         <Box
@@ -455,6 +512,8 @@ export const PolicyAdj = () => {
                     if (criteria === "Goal Difference") return "d";
                     if (criteria === "Goals Scored") return "g";
                     if (criteria === "Goals Conceded") return "h";
+
+                    return "";
                   })
                   .join(";");
 
@@ -471,7 +530,7 @@ export const PolicyAdj = () => {
           </Box>
         </Box>
       </Box>
-    </Box>
+    </Container>
   );
 };
 

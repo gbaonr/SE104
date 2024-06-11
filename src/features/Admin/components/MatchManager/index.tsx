@@ -24,9 +24,7 @@ export const MatchManger = ({ setForceUpdate, forceUpdate }: MatchManagerProps) 
 
       if (response?.status === "success") {
         setMatches(response.data);
-      } else {
-        toast.error(response.message);
-      }
+      } 
     })();
 
     (async () => {
@@ -34,9 +32,7 @@ export const MatchManger = ({ setForceUpdate, forceUpdate }: MatchManagerProps) 
 
       if (response?.status === "success") {
         setClubs(response.data);
-      } else {
-        toast.error(response.message);
-      }
+      } 
     })();
   };
 

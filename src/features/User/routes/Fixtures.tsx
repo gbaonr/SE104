@@ -21,9 +21,7 @@ export const FixturesPage = () => {
         );
 
         setMatches(data);
-      } else {
-        toast.error(response.message);
-      }
+      } 
     })();
   }, []);
 

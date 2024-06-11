@@ -46,8 +46,6 @@ export const LeaderBoard = () => {
 
     if (response?.status === "success") {
       setClubs(response.data);
-    } else {
-      toast.error("Failed to load clubs");
     }
   };
 
@@ -56,8 +54,7 @@ export const LeaderBoard = () => {
 
     if (response?.status === "success") {
       setRankingResult(response.data);
-    } else {
-      toast.error("Failed to load ranking");
+      console.log("Ranking list", response.data);
     }
   };
 
@@ -103,54 +100,57 @@ export const LeaderBoard = () => {
             </Grid>
           ))}
 
-          {rankingResult.map((club, index) =>
-            columns.map((column, index) => (
-              <Grid
-                item
-                key={index}
-                xs={column.width}
-                sx={{
-                  textAlign: column.field === "team" ? "left" : "center",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: (column.leftAlign && "flex-start") || "center",
-                  borderBottom: "2px solid #f0f0f0",
-                  py: "1rem !important",
-                  px: "0 !important",
-                }}
-              >
-                {column.field === "club_id" ? (
-                  <Link to={`${USER_ROUTES.CLUB_INFO}/${club[column.field]}`}>
-                    <TeamItem
-                      leftLogo={true}
-                      club={clubs.find((c) => c.club_id === club[column.field]) as Team}
-                    />
-                  </Link>
-                ) : column.field === "recentMatches" ? (
-                  <RecentMatches matches={club[column.field]} />
-                ) : column.field === "nextMatch" ? (
-                  <NextMatch match={club[column.field]} />
-                ) : column.field === "club_points" ? (
-                  <Typography
-                    sx={{
-                      fontWeight: 900,
-                      color: "#37003c",
-                    }}
-                  >
-                    {club.club_goals.toString()}
-                  </Typography>
-                ) : column.field === "currentPosition" ? (
-                  <Typography>{index + 1}</Typography>
-                ) : column.field === "club_played" ? (
-                  <Typography>{club.club_win + club.club_draw + club.club_lost}</Typography>
-                ) : (
-                  <Typography>
-                    {typeof club[column.field] === "number" ? club[column.field].toString() : "--"}
-                  </Typography>
-                )}
-              </Grid>
-            )),
-          )}
+          {rankingResult &&
+            rankingResult.map((club, index) =>
+              columns.map((column) => (
+                <Grid
+                  item
+                  key={index}
+                  xs={column.width}
+                  sx={{
+                    textAlign: column.field === "team" ? "left" : "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: (column.leftAlign && "flex-start") || "center",
+                    borderBottom: "2px solid #f0f0f0",
+                    py: "1rem !important",
+                    px: "0 !important",
+                  }}
+                >
+                  {column.field === "club_id" ? (
+                    <Link to={`${USER_ROUTES.CLUB_INFO}/${club[column.field]}`}>
+                      <TeamItem
+                        leftLogo={true}
+                        club={clubs.find((c) => c.club_id === club[column.field]) as Team}
+                      />
+                    </Link>
+                  ) : column.field === "recentMatches" ? (
+                    <RecentMatches matches={club[column.field]} />
+                  ) : column.field === "nextMatch" ? (
+                    <NextMatch match={club[column.field]} />
+                  ) : column.field === "club_points" ? (
+                    <Typography
+                      sx={{
+                        fontWeight: 900,
+                        color: "#37003c",
+                      }}
+                    >
+                      {club.club_goals.toString()}
+                    </Typography>
+                  ) : column.field === "currentPosition" ? (
+                    <Typography>{index + 1}</Typography>
+                  ) : column.field === "club_played" ? (
+                    <Typography>{club.club_win + club.club_draw + club.club_lost}</Typography>
+                  ) : (
+                    <Typography>
+                      {typeof club[column.field] === "number"
+                        ? club[column.field].toString()
+                        : "--"}
+                    </Typography>
+                  )}
+                </Grid>
+              )),
+            )}
         </Grid>
       </Container>
     </>

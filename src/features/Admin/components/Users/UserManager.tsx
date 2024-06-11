@@ -1,12 +1,12 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { getUsersApi } from "./apis/get-users";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { AddUserPopup } from "./AddUser";
 import { deleteUserApi } from "./apis/delete-users";
-import { toast } from "react-toastify";
+import { getUsersApi } from "./apis/get-users";
 
 // TODO: add team for manager
 const usersColumns = [
@@ -48,7 +48,7 @@ export const LoadingUsers = () => {
         p: 2,
         boxShadow: "0 0 10px 0 rgba(100, 100, 100, 0.1)",
         borderRadius: 2,
-        my: 2,
+        mb: 2,
       }}
     >
       <AddUserPopup

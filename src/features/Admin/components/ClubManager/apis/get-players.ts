@@ -1,28 +1,20 @@
 import axios from "axios";
-import { Club, Player } from "./types";
+import { handleApiResponse, updateClientApi } from "libs/api-client";
+import { Player } from "./types";
 
-export const getPlayersApi = async (filterClub: Club) => {
-  const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/clubs/get-players-of-clubs";
+type GetPlayersApiParams = {
+  club_name?: string;
+};
 
-  if (!filterClub || !filterClub.club_name || !filterClub.club_name.length)
-    return { status: "error", message: "No club provided" };
-
-  try {
-    const clubName = filterClub.club_name;
-    const response = await axios.get<Player[]>(`${endpoint}/${clubName}`);
-
-    return {
-      status: "success",
-      data: response.data,
-      code: response?.status,
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      status: "error",
-      message: "An error occurred while trying to get players",
-      code: error.request?.status,
-    };
+export const getPlayersApi = async (params: GetPlayersApiParams) => {
+  let endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/players/get-players";
+  if (Object.keys(params).length > 0) {
+    endpoint += "?";
+    for (const key in params) {
+      endpoint += `${key}=${params[key]}&`;
+    }
+    endpoint = endpoint.slice(0, -1);
   }
+
+  return handleApiResponse<Player[]>(axios.get(endpoint));
 };

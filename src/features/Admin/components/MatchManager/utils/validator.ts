@@ -89,3 +89,31 @@ export const validateMatch = (match: Match, clubs: Club[], referees: Referee[]) 
 
   return "";
 };
+
+export const validateUser = (user: User) => {
+  if (!user.full_name) {
+    return "Full name must not be empty";
+  }
+
+  if (!user.role) {
+    return "Role must not be empty";
+  }
+
+  if (!user.user_name) {
+    return "User name must not be empty";
+  }
+
+  if (!user.user_mail) {
+    return "User mail must not be empty";
+  }
+
+  if (!user.user_nation) {
+    return "User nation must not be empty";
+  }
+
+  if (!user.user_bday) {
+    return "User birthday must not be empty";
+  }
+
+  return "";
+};

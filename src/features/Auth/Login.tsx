@@ -28,7 +28,7 @@ export default function SignIn() {
     if (typeof username === "string" && typeof password === "string") {
       const response = await loginApi(username, password);
 
-      if ( response?.status === "error") {
+      if (response?.status === "error") {
         toast.error(response.message);
         return;
       }

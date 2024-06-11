@@ -16,4 +16,5 @@ export const USER_ROUTES = {
   SIGN_OUT: "/sign-out",
   MATCH_INFO: "/match",
   CLUB_INFO: "/club",
+  CLUB_LIST: "/club",
 };

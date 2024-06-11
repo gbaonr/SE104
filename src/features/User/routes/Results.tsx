@@ -1,10 +1,9 @@
 import { Container } from "@mui/material";
-import HeaderPage from "features/User/components/Layouts/PageHeader";
-import { TableMatches } from "../components/TableResults/TableMatches";
-import { useEffect, useState } from "react";
-import { Match } from "features/Admin/components/MatchManager/apis/types";
 import { getMatchesApi } from "features/Admin/components/MatchManager/apis/get-matches";
-import { toast } from "react-toastify";
+import { Match } from "features/Admin/components/MatchManager/apis/types";
+import HeaderPage from "features/User/components/Layouts/PageHeader";
+import { useEffect, useState } from "react";
+import { TableMatches } from "../components/TableResults/TableMatches";
 
 export const ResultsPage = () => {
   const [matches, setMatches] = useState<Match[]>();
@@ -13,11 +12,9 @@ export const ResultsPage = () => {
     (async () => {
       const response = await getMatchesApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         const data = response.data.filter((match) => match.finish <= Date.now() / 1000);
         setMatches(data);
-      } else {
-        toast.error(response.message);
       }
     })();
   }, []);
