@@ -42,17 +42,48 @@ const LoadingGoalPerTeam = ({ goalsTeam, playersRender }: LoadingGoalPerTeamProp
             my: 1,
           }}
         >
-          <Typography
-            sx={{
-              // fontWeight: "bold",
-              fontSize: "1.2rem",
-              color: "#37003c",
-            }}
-          >
-            {playersRender.find((player) => player.player_id === goal.player_id)?.player_name}
-          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Typography
+                sx={{
+                  // fontWeight: "bold",
+                  fontSize: "1.2rem",
+                  color: "#37003c",
+                }}
+              >
+                {playersRender.find((player) => player.player_id === goal.player_id)?.player_name}
+              </Typography>
+            </Grid>
 
-          <TimeItem event={goal} />
+            <Grid
+              item
+              xs={3}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <TimeItem event={goal} />
+            </Grid>
+
+            <Grid
+              item
+              xs={3}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  color: "#37003c",
+                }}
+              >
+                {goal.events}
+              </Typography>
+            </Grid>
+          </Grid>
         </Box>
       ))}
     </Box>

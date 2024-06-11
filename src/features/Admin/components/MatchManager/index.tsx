@@ -5,8 +5,9 @@ import { toast } from "react-toastify";
 import { getClubsApi } from "../ClubManager/apis/get-clubs";
 import { AddMatch } from "./AddMatch";
 import { getMatchesApi } from "./apis/get-matches";
-import { Match } from "./apis/types";
+import { Match, Stadium } from "./apis/types";
 import { LoadingMatches } from "./LoadingMatches";
+import { getStadiumsApi } from "./apis/get-stadiums";
 
 type MatchManagerProps = {
   setForceUpdate: (value: number) => void;
@@ -24,7 +25,7 @@ export const MatchManger = ({ setForceUpdate, forceUpdate }: MatchManagerProps) 
 
       if (response?.status === "success") {
         setMatches(response.data);
-      } 
+      }
     })();
 
     (async () => {
@@ -32,8 +33,10 @@ export const MatchManger = ({ setForceUpdate, forceUpdate }: MatchManagerProps) 
 
       if (response?.status === "success") {
         setClubs(response.data);
-      } 
+      }
     })();
+
+    // fetchStadiums();
   };
 
   useEffect(() => {

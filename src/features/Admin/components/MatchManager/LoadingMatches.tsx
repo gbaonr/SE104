@@ -1,3 +1,4 @@
+import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import { Box, Checkbox, Grid, MenuItem, Skeleton, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,8 +11,9 @@ import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Club } from "../ClubManager/apis/types";
-import { Match } from "./apis/types";
-import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
+import { Match, Stadium } from "./apis/types";
+import { toast } from "react-toastify";
+import { getStadiumsApi } from "./apis/get-stadiums";
 
 const upCommingMatchesColumns = [
   { id: "match_id", header: "#", width: 1, needDone: false },
@@ -20,6 +22,7 @@ const upCommingMatchesColumns = [
   { id: "team2", header: "Team 2", width: 3, needDone: false },
   { id: "start", header: "Start", width: 2, needDone: false },
   { id: "finish", header: "Finish", width: 2, needDone: true },
+  { id: "stadium", header: "Stadium", width: 2, needDone: false },
   { id: "running", header: "Running", width: 2, needDone: false },
 ];
 
@@ -30,7 +33,12 @@ type LoadingMatchesProps = {
   isDone?: boolean;
 };
 
-export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingMatchesProps) => {
+export const LoadingMatches = ({
+  data,
+  clubs,
+  header,
+  isDone = false,
+}: LoadingMatchesProps) => {
   const [selectedTeamOne, setSelectedTeamOne] = useState<number>(-1);
   const [selectedTeamTwo, setSelectedTeamTwo] = useState<number>(-1);
 
@@ -41,8 +49,20 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
   const [loading, setLoading] = useState(true); // State to track loading
   const [currentDateTime, setCurrentDateTime] = useState(Date.now());
 
+  const [stadiums, setStadiums] = useState<Stadium[]>([]);
+
+  const fetchStadiums = async () => {
+    const response = await getStadiumsApi();
+
+    if (response?.status === "success") {
+      console.log(response.data);
+      setStadiums(response.data);
+    }
+  };
   // update current time every second
   useEffect(() => {
+    fetchStadiums();
+
     const interval = setInterval(() => {
       setCurrentDateTime(Date.now());
     }, 1000);
@@ -250,6 +270,10 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
                 .map((match, index) => (
                   <>
                     {upCommingMatchesColumns.map((column) => {
+                      if (stadiums) {
+                        console.log(stadiums.find((stadium) => stadium.std_id === match.stadium));
+                      }
+
                       if (column.id === "finish" && !isDone) return null;
                       if (column.id === "running" && isDone) return null;
                       if (column.id === "team1" || column.id === "team2") {
@@ -327,6 +351,12 @@ export const LoadingMatches = ({ data, clubs, header, isDone = false }: LoadingM
                               dayjs.unix(match[column.id]).format("DD/MM/YYYY - HH:mm")
                             ) : column.id === "match_id" ? (
                               index + 1
+                            ) : column.id === "stadium" ? (
+                              <Typography>
+                                {stadiums &&
+                                  stadiums.find((stadium) => stadium.std_id === match.stadium)
+                                    ?.std_name}
+                              </Typography>
                             ) : column.id === "running" &&
                               Date.now() / 1000 < match.finish &&
                               Date.now() / 1000 > match.start ? (

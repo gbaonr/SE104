@@ -22,6 +22,7 @@ import { getGoalTypesApi } from "./apis/get-goal-types";
 import { deleteGoalTypesApi } from "./apis/detele-goal-types";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { addGoalTypesApi } from "./apis/add-goal-types";
+import { renameGoalTypesApi } from "./apis/rename-goal-type";
 
 type Points = {
   win: number;
@@ -396,12 +397,24 @@ export const PolicyAdj = () => {
                     (goalType) => !originalGoalTypeIds.includes(goalType.type_id),
                   );
 
+                  const goalTypeNoAddDelete = originalGoalTypes.filter((goalType) =>
+                    originalGoalTypeIds.includes(goalType.type_id),
+                  );
+
+                  console.log("goalTypeNoAddDelete", goalTypeNoAddDelete);
+
+                  const goalTypeChanged = goalTypeNoAddDelete.filter((goalType) => {
+                    const updatedGoalType = goalTypes.find(
+                      (cur) => cur.type_id === goalType.type_id,
+                    );
+
+                    return updatedGoalType?.type_name !== goalType.type_name;
+                  });
+
                   goalTypeToAdd.forEach((goalType) => {
                     addGoalTypesApi(goalType).then((response) => {
                       if (response?.status === "success") {
                         toast.success(`Goal Type ${goalType.type_name} added successfully`);
-                      } else {
-                        toast.error("An error occurred while trying to add goal type");
                       }
                     });
                   });
@@ -410,11 +423,33 @@ export const PolicyAdj = () => {
                     deleteGoalTypesApi(goalType).then((response) => {
                       if (response?.status === "success") {
                         toast.success(`Goal Type ${goalType.type_name} deleted successfully`);
-                      } else {
-                        toast.error("An error occurred while trying to delete goal type");
                       }
                     });
                   });
+
+                  goalTypeChanged.forEach((goalType) => {
+                    const updatedGoalTypeID = goalType.type_id;
+
+                    const currentGoalType = originalGoalTypes.find(
+                      (cur) => cur.type_id === updatedGoalTypeID,
+                    ).type_name;
+
+                    const newGoalType = goalTypes.find(
+                      (cur) => cur.type_id === updatedGoalTypeID,
+                    ).type_name;
+
+                    renameGoalTypesApi(currentGoalType, newGoalType).then((response) => {
+                      if (response?.status === "success") {
+                        toast.success(
+                          `Goal Type ${currentGoalType} renamed to ${newGoalType} successfully`,
+                        );
+                      }
+                    });
+                  });
+
+                  if (goalTypeChanged.length || goalTypeToDelete.length || goalTypeToAdd.length) {
+                    fetchGoalTypes();
+                  }
 
                   fetchGoalTypes();
                 }}

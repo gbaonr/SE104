@@ -11,6 +11,7 @@ const AuthContext = createContext({
   token: null,
   setToken: (newToken) => {},
   hasAdminAccess: false,
+  hasManagerAccess: false,
   setExpiredDate: (newExpiredDate) => {},
   expiredDate: null,
   isAuthLoading: true,
@@ -20,13 +21,16 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
   const [expiredDate, setExpiredDate_] = useState(localStorage.getItem("expiredDate"));
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
+  const [hasManagerAccess, setHasManagerAccess] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const updateAdminAccess = async () => {
     const response = await getUserInfo();
 
     if (response?.status === "success") {
+      console.log("Welcome back, ", response.data);
       setHasAdminAccess(response.data.role === "admin");
+      setHasManagerAccess(response.data.role === "manager");
     }
 
     setIsAuthLoading(false);
@@ -82,11 +86,12 @@ export const AuthProvider = ({ children }) => {
       token,
       setToken,
       hasAdminAccess,
+      hasManagerAccess,
       setExpiredDate,
       expiredDate,
       isAuthLoading,
     }),
-    [token, hasAdminAccess, expiredDate, isAuthLoading],
+    [token, hasAdminAccess, hasManagerAccess, expiredDate, isAuthLoading],
   );
 
   // Provide the authentication context to the children components

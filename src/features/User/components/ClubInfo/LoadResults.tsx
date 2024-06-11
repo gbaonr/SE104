@@ -59,17 +59,6 @@ export const LoadResultsClubPage = ({ club }: LoadResultsClubPageProps) => {
         my: 3,
       }}
     >
-      {/* <Typography
-        sx={{
-          fontSize: "2rem",
-          fontWeight: 500,
-          color: "#37003c",
-          my: 2,
-        }}
-      >
-        Recent Matches
-      </Typography> */}
-
       {matches &&
         matches.slice(0, 5).map((match, index) => (
           <Link to={`${USER_ROUTES.MATCH_INFO}/${match.match_id}`} key={`match-${index}`}>

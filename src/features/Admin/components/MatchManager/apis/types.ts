@@ -9,6 +9,7 @@ export type Match = {
   goal2?: number;
   start?: number;
   finish?: number;
+  stadium?: number; // std_id
 };
 
 export type MatchEvent = {
@@ -26,4 +27,10 @@ export type Referee = {
   ref_nation?: string;
   ref_mail?: string;
   ref_bday?: number;
+};
+
+export type Stadium = {
+  std_name?: string;
+  std_id?: number;
+  std_cap: number;
 };

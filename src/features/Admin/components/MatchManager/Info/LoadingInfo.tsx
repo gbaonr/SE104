@@ -27,9 +27,10 @@ import { toast } from "react-toastify";
 import { Club } from "../../ClubManager/apis/types";
 import { deleteMatchApi } from "../apis/delete-match";
 import { getRefereesApi } from "../apis/get-referees";
-import { Match, Referee } from "../apis/types";
+import { Match, Referee, Stadium } from "../apis/types";
 import { updateMatchApi } from "../apis/update-match";
 import { validateMatch } from "../utils/validator";
+import { getStadiumsApi } from "../apis/get-stadiums";
 
 type LoadingInfoMatchProps = {
   match: Match;
@@ -46,6 +47,7 @@ const optionInput = [
   { id: "ref", name: "Referee" },
   { id: "var", name: "VAR" },
   { id: "lineman", name: "Line" },
+  { id: "stadium", name: "Stadium" },
 ];
 
 export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMatchProps) => {
@@ -55,6 +57,21 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
   const [isMatchFinished, setIsMatchFinished] = useState<boolean>(false);
   const [currentDateTime, setCurrentDateTime] = useState<number>(Date.now() / 1000);
   const navigate = useNavigate();
+
+  const [stadiums, setStadiums] = useState<Stadium[]>([]);
+
+  const fetchStadiums = async () => {
+    const response = await getStadiumsApi();
+
+    if (response?.status === "success") {
+      console.log(response.data);
+      setStadiums(response.data);
+    }
+  };
+  // update current time every second
+  useEffect(() => {
+    fetchStadiums();
+  }, []);
 
   useEffect(() => {
     if (!showEditMatch) {
@@ -204,6 +221,26 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
                       ))}
                     </Select>
                   );
+                } else if (column.id === "stadium") {
+                  value = (
+                    <Select
+                      fullWidth
+                      label={column.name}
+                      name={column.name}
+                      id={column.id}
+                      value={matchToEdit[column.id]}
+                      onChange={(e) => {
+                        setMatchToEdit({
+                          ...matchToEdit,
+                          [column.id]: parseInt(e.target.value.toString()),
+                        });
+                      }}
+                    >
+                      {stadiums.map((stadium, index) => (
+                        <MenuItem value={stadium.std_id}>{stadium.std_name}</MenuItem>
+                      ))}
+                    </Select>
+                  );
                 }
 
                 return (
@@ -327,7 +364,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
               <Typography
                 sx={{
                   fontWeight: 500,
-                  fontSize: "1.2rem",
+                  fontSize: "1.5rem",
                   my: 2,
                 }}
               >
@@ -351,7 +388,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
             <Typography
               sx={{
                 fontWeight: 500,
-                fontSize: "1.2rem",
+                fontSize: "1.5rem",
                 // color: "#37003c",
               }}
             >
@@ -419,6 +456,35 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
                 Results
               </Typography>
               <ScoreItem match={match} />
+            </Box>
+
+            <Box
+              sx={{
+                my: 2,
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                textAlign: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "1.5rem",
+                  textAlign: "center",
+                }}
+              >
+                Stadium
+              </Typography>
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "1rem",
+                  textAlign: "center",
+                }}
+              >
+                {stadiums && stadiums.find((stadium) => stadium.std_id === match.stadium)?.std_name}
+              </Typography>
             </Box>
 
             <Divider
@@ -492,7 +558,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
               <Typography
                 sx={{
                   fontWeight: 500,
-                  fontSize: "1.2rem",
+                  fontSize: "1.5rem",
                   my: 2,
                 }}
               >

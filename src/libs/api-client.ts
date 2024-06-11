@@ -8,14 +8,14 @@ export const updateClientApi = () => {
   }
 };
 
-export async function handleApiResponse<T>(promise) {
+export async function handleApiResponse<T>(promise, alertOnError = true) {
   updateClientApi();
 
   try {
     const response = await promise;
 
     if (response.status !== 200 || response.data?.status === "error") {
-      toast.error(response.data?.message.toString() || "An error occurred");
+      if (alertOnError) toast.error(response.data?.message.toString() || "An error occurred");
 
       return {
         status: "error",
@@ -29,7 +29,7 @@ export async function handleApiResponse<T>(promise) {
       data: response.data.data,
     };
   } catch (error) {
-    toast.error(error.response?.data.message?.toString() || "An error occurred");
+    if (alertOnError) toast.error(error.response?.data.message?.toString() || "An error occurred");
 
     return {
       status: "error",
