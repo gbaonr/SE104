@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { getClubsApi } from "./apis/get-clubs";
 import { Club } from "./apis/types";
 import { BlockComponent } from "components/Items/BlockComponent";
+import { useAuth } from "features/Auth/AuthProvider";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,12 +63,30 @@ export const ClubManager = () => {
   const [filteredClubs, setFilteredClubs] = useState<Club[]>([]);
   const [clubs, setClubs] = useState<Club[]>([]);
   const [loading, setLoading] = useState(true); // State to track loading
+  const { hasManagerAccess, hasAdminAccess, currentUser } = useAuth();
+  const [onlyHasManagerAccess, setOnlyHasManagerAccess] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      const response = await getClubsApi();
+    if (hasManagerAccess && !hasAdminAccess) {
+      setOnlyHasManagerAccess(true);
+    } else {
+      setOnlyHasManagerAccess(false);
+    }
+  }, [hasManagerAccess, hasAdminAccess]);
 
-      if ( response?.status === "success") {
+  useEffect(() => {
+    if (!hasManagerAccess && !hasAdminAccess && !currentUser) {
+      return;
+    }
+
+    (async () => {
+      let idToFilter = -1;
+
+      if (hasManagerAccess) idToFilter = currentUser?.user_id;
+
+      const response = await getClubsApi(idToFilter);
+
+      if (response?.status === "success") {
         setClubs(response.data);
         setFilteredClubs(response.data);
       } else {
@@ -76,7 +95,7 @@ export const ClubManager = () => {
 
       setLoading(false);
     })();
-  }, []);
+  }, [hasAdminAccess, hasManagerAccess, currentUser]);
 
   useEffect(() => {
     setFilteredClubs(clubs);
