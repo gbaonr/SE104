@@ -8,7 +8,7 @@ import {
   MenuItem,
   Select,
   Switch,
-  Typography
+  Typography,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -21,8 +21,9 @@ import { toast } from "react-toastify";
 import { Club } from "../ClubManager/apis/types";
 import { addMatchApi } from "./apis/add-match";
 import { getRefereesApi } from "./apis/get-referees";
-import { Referee } from "./apis/types";
+import { Referee, Stadium } from "./apis/types";
 import { validateMatch } from "./utils/validator";
+import { getStadiumsApi } from "./apis/get-stadiums";
 
 const optionInput = [
   { id: "team1", name: "Home" },
@@ -31,6 +32,7 @@ const optionInput = [
   { id: "ref", name: "Referee" },
   { id: "var", name: "VAR" },
   { id: "lineman", name: "Lineman" },
+  { id: "stadium", name: "Stadium" },
 
   { id: "start", name: "Start" },
   { id: "check_finish", name: "Finished?" },
@@ -54,13 +56,28 @@ export const AddMatch = ({
   const [referees, setReferees] = useState<Referee[]>([]);
   const [isMatchFinished, setIsMatchFinished] = useState(false);
 
+  const [stadiums, setStadiums] = useState<Stadium[]>([]);
+
+  const fetchStadiums = async () => {
+    const response = await getStadiumsApi();
+
+    if (response?.status === "success") {
+      console.log(response.data);
+      setStadiums(response.data);
+    }
+  };
+  // update current time every second
+  useEffect(() => {
+    fetchStadiums();
+  }, []);
+
   useEffect(() => {
     (async () => {
       const response = await getRefereesApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setReferees(response.data);
-      } 
+      }
     })();
   }, []);
 
@@ -71,7 +88,7 @@ export const AddMatch = ({
   }, [showAddMatch]);
 
   useEffect(() => {
-    if (!matchToAdd && clubs.length && referees.length) {
+    if (!matchToAdd && clubs.length && referees.length && stadiums.length) {
       setMatchToAdd({
         team1: clubs[0].club_id,
         team2: clubs[1].club_id,
@@ -80,9 +97,10 @@ export const AddMatch = ({
         lineman: referees[2].ref_id,
         start: Date.now() / 1000,
         finish: Date.now() / 1000,
+        stadium: stadiums[0].std_id,
       });
     }
-  }, [matchToAdd, clubs, referees]);
+  }, [matchToAdd, clubs, referees, stadiums]);
 
   return (
     <>
@@ -103,6 +121,12 @@ export const AddMatch = ({
                       name={column.name}
                       id={column.id}
                       value={matchToAdd[column.id]}
+                      onChange={(e) => {
+                        setMatchToAdd({
+                          ...matchToAdd,
+                          [column.id]: e.target.value,
+                        });
+                      }}
                     >
                       {clubs.map((club) => (
                         <MenuItem key={club.club_id} value={club.club_id}>
@@ -176,10 +200,38 @@ export const AddMatch = ({
                       name={column.name}
                       id={column.id}
                       value={matchToAdd[column.id]}
+                      onChange={(e) => {
+                        setMatchToAdd({
+                          ...matchToAdd,
+                          [column.id]: e.target.value,
+                        });
+                      }}
                     >
                       {referees.map((referee) => (
                         <MenuItem key={referee.ref_id} value={referee.ref_id}>
                           {referee.ref_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  );
+                } else if (column.id === "stadium") {
+                  value = (
+                    <Select
+                      fullWidth
+                      label={column.name}
+                      name={column.name}
+                      id={column.id}
+                      value={matchToAdd[column.id]}
+                      onChange={(e) => {
+                        setMatchToAdd({
+                          ...matchToAdd,
+                          [column.id]: e.target.value,
+                        });
+                      }}
+                    >
+                      {stadiums.map((stadium) => (
+                        <MenuItem key={stadium.std_id} value={stadium.std_id}>
+                          {stadium.std_name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -273,7 +325,7 @@ export const AddMatch = ({
                 (async () => {
                   const response = await addMatchApi(match);
 
-                  if ( response?.status === "success") {
+                  if (response?.status === "success") {
                     toast.success("Match added successfully");
                   }
 

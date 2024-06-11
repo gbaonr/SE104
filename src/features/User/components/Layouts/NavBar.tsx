@@ -47,6 +47,13 @@ const rightFeatures = [
     needLogin: true,
   },
   {
+    name: "Manager",
+    link: "/admin",
+    needAdmin: false,
+    needLogin: true,
+    needManager: true,
+  },
+  {
     name: "Sign In",
     link: USER_ROUTES.SIGN_IN,
     hideLogin: true,
@@ -94,7 +101,7 @@ const ClubImage = ({ club }) => {
 
 const NavBar = ({ clubs }: NavBarProps) => {
   const [isOpenMenu, setIsOpenMenu] = useState<null | HTMLElement>(null);
-  const { token, hasAdminAccess } = useAuth();
+  const { token, hasAdminAccess, hasManagerAccess } = useAuth();
   const location = useLocation(); // Hook to get current location
 
   const handleOpenMenuIcon = (event: React.MouseEvent<HTMLElement>) => {
@@ -225,6 +232,10 @@ const NavBar = ({ clubs }: NavBarProps) => {
 
           <Box sx={{ flexGrow: 0, display: "flex" }}>
             {rightFeatures.map((page) => {
+              if (page.needManager && !hasManagerAccess) {
+                return <></>;
+              }
+
               if (page.needLogin && !token) {
                 return <></>;
               }
@@ -234,6 +245,10 @@ const NavBar = ({ clubs }: NavBarProps) => {
               }
 
               if (page.hideLogin && token) {
+                return <></>;
+              }
+
+              if (page.needAdmin && hasManagerAccess) {
                 return <></>;
               }
 

@@ -1,3 +1,4 @@
+import StadiumIcon from "@mui/icons-material/Stadium";
 import { Box, Divider, Grid, MenuItem, Switch, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -9,10 +10,10 @@ import { USER_ROUTES } from "constants/Paths";
 import dayjs, { Dayjs } from "dayjs";
 import { getClubsApi } from "features/Admin/components/ClubManager/apis/get-clubs";
 import { Club } from "features/Admin/components/ClubManager/apis/types";
-import { Match } from "features/Admin/components/MatchManager/apis/types";
+import { getStadiumsApi } from "features/Admin/components/MatchManager/apis/get-stadiums";
+import { Match, Stadium } from "features/Admin/components/MatchManager/apis/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 
 export type TableResultsProps = {
   mini?: boolean;
@@ -38,6 +39,20 @@ export const TableMatches = ({
   const [startDate, setStartDate] = useState<Dayjs>(dayjs("1970-01-01"));
   const [endDate, setEndDate] = useState<Dayjs>(dayjs());
   const [matchesByDate, setMatchesByDate] = useState<{ date: string; matches: Match[] }[]>();
+
+  const [stadiums, setStadiums] = useState<Stadium[]>([]);
+
+  const fetchStadiums = async () => {
+    const response = await getStadiumsApi();
+
+    if (response?.status === "success") {
+      setStadiums(response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchStadiums();
+  }, []);
 
   useEffect(() => {
     if (!matches) return;
@@ -69,7 +84,7 @@ export const TableMatches = ({
 
       if (response?.status === "success") {
         setClubs(response.data);
-      } 
+      }
     })();
   }, []);
 
@@ -254,27 +269,30 @@ export const TableMatches = ({
                         />
                       </Grid>
 
-                      {/* {!props.mini && (
-                <Grid item xs={2}>
-                  {" "}
-                </Grid>
-              )} */}
+                      {!mini && (
+                        <Grid
+                          item
+                          xs={4}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              color: "#37003c",
+                              fontSize: "0.8rem",
+                              mx: 2,
+                            }}
+                          >
+                            {stadiums &&
+                              stadiums.find((stadium) => stadium.std_id === match.stadium)
+                                ?.std_name}
+                          </Typography>
 
-                      {/* {!props.mini && (
-                <Grid item xs={5} className="flex items-center">
-                  <StadiumIcon />
-
-                  <Typography
-                    sx={{
-                      color: "#37003c",
-                      fontSize: "0.8rem",
-                      mx: 2,
-                    }}
-                  >
-                    {match.location}
-                  </Typography>
-                </Grid>
-              )} */}
+                          <StadiumIcon />
+                        </Grid>
+                      )}
                     </Grid>
                   </Link>
                 ))}

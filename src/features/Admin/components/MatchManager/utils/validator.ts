@@ -115,5 +115,39 @@ export const validateUser = (user: User) => {
     return "User birthday must not be empty";
   }
 
+  // validate email using regex
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+  if (!emailRegex.test(user.user_mail)) {
+    return "Invalid email, please enter a valid email";
+  }
+
+  return "";
+};
+
+export const validateReferee = (referee: Referee) => {
+  if (!referee.ref_name) {
+    return "Full name must not be empty";
+  }
+
+  if (!referee.ref_nation) {
+    return "Nation must not be empty";
+  }
+
+  if (!referee.ref_mail) {
+    return "Email must not be empty";
+  }
+
+  if (!referee.ref_bday) {
+    return "Date of birth must not be empty";
+  }
+
+  // validate email using regex
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+  if (!emailRegex.test(referee.ref_mail)) {
+    return "Invalid email, please enter a valid email";
+  }
+
   return "";
 };

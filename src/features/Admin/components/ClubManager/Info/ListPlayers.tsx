@@ -8,6 +8,7 @@ import { deletePlayerApi } from "../apis/delete-players";
 import { getPlayersApi } from "../apis/get-players";
 import { Club, Player } from "../apis/types";
 import { AddPlayer } from "./ManagePlayer";
+import dayjs from "dayjs";
 
 type ListPlayerTeamProps = {
   club: Club;
@@ -15,7 +16,9 @@ type ListPlayerTeamProps = {
 
 const columns = [
   { id: "player_id", label: "#", width: 1, center: true },
+  { id: "avatar", label: "Avatar", width: 2, center: true },
   { id: "player_name", label: "Full Name", width: 2, center: true },
+  { id: "player_bday", label: "Date of Birth", width: 2, center: true },
   { id: "player_nation", label: "Nationality", width: 2, center: true },
   { id: "js_number", label: "Jersey Number", width: 2, center: true },
   { id: "player_pos", label: "Position", width: 2, center: true },
@@ -185,7 +188,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
                       margin: "0 auto",
                       cursor: "pointer",
                     }}
-                    src={player[column.id]}
+                    src={player.ava_url}
                     alt=""
                     height="36px"
                     width="36px"
@@ -198,7 +201,11 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
                       margin: "0",
                     }}
                   >
-                    {column.id === "player_id" ? index + 1 : player[column.id]}
+                    {column.id === "player_id"
+                      ? index + 1
+                      : column.id === "player_bday"
+                        ? dayjs.unix(player[column.id]).format("DD/MM/YYYY")
+                        : player[column.id]}
                   </Typography>
                 )}
               </Grid>

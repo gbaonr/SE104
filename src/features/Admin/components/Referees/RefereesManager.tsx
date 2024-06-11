@@ -2,45 +2,42 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Typography } from "@mui/material";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { AddUserPopup } from "./AddUser";
-import { deleteUserApi } from "./apis/delete-users";
-import { getUsersApi } from "./apis/get-users";
+import { getRefereesApi } from "../MatchManager/apis/get-referees";
+import { Referee } from "../MatchManager/apis/types";
+import { AddRefereePopup } from "./AddReferee";
+import { deleteRefereeApi } from "./apis/delete-referee";
+// import { deleteUserApi } from "./apis/delete-users";
 
 // TODO: add team for manager
 const usersColumns = [
   { id: "id", header: "#", width: 1, prop: "user_id" },
-  { id: "role", header: "Role", width: 1, prop: "role" },
-  { id: "username", header: "Username", width: 2, prop: "user_name" },
-  { id: "name", header: "Full name", width: 2, prop: "full_name" },
-  { id: "email", header: "Email", width: 2, prop: "user_mail" },
-  { id: "nation", header: "Nation", width: 1, prop: "user_nation" },
+  { id: "ref_name", header: "Full Name", width: 2, prop: "ref_name" },
+  { id: "ref_nation", header: "Nation", width: 1, prop: "ref_nation" },
+  { id: "ref_mail", header: "Email", width: 2, prop: "ref_mail" },
+  { id: "ref_bday", header: "Date of Birth", width: 2, prop: "ref_bday" },
   { id: "edit", header: "Edit", width: 1, prop: "edit" },
   { id: "delete", header: "Delete", width: 1, prop: "delete" },
 ];
 
-const fetchUsers = async () => {
-  const response = await getUsersApi({});
-
-  if (response?.status === "success") {
-    return response.data;
-  }
-
-  return [];
-};
-
-export const LoadingUsers = () => {
-  const [users, setUsers] = useState([]);
+export const LoadingReferees = () => {
   const [showAddUser, setShowAddUser] = useState(false);
-  const [currentEditUser, setCurrentEditUser] = useState(null);
+  const [currentEditUser, setCurrentEditUser] = useState<Referee>(null);
   const [typeEdit, setTypeEdit] = useState("add");
+  const [referees, setReferees] = useState<Referee[]>([]);
+
+  const fetchReferees = async () => {
+    const response = await getRefereesApi();
+
+    if (response?.status === "success") {
+      setReferees(response.data);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      const users = await fetchUsers();
-      setUsers(users);
-    })();
+    fetchReferees();
   }, []);
 
   return (
@@ -53,12 +50,15 @@ export const LoadingUsers = () => {
         mb: 2,
       }}
     >
-      <AddUserPopup
-        users={users}
-        setUsers={setUsers}
+      <AddRefereePopup
+        // users={users}
+        // setUsers={setUsers}
         showAddUser={showAddUser}
         setShowAddUser={setShowAddUser}
-        fetchUsers={fetchUsers}
+        // fetchUsers={fetchUsers}
+        referees={referees}
+        setReferees={setReferees}
+        fetchReferees={fetchReferees}
         currentEditUser={currentEditUser}
         setCurrentEditUser={setCurrentEditUser}
         typeEdit={typeEdit}
@@ -81,7 +81,7 @@ export const LoadingUsers = () => {
             mb: 4,
           }}
         >
-          User Management
+          Referees Management
         </Typography>
 
         <Button
@@ -103,74 +103,6 @@ export const LoadingUsers = () => {
         >
           <AddBoxIcon />
         </Button>
-      </Box>
-
-      {/* loading filter */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "flex-end",
-          alignContent: "center",
-        }}
-      >
-        {/* Team 1 */}
-        {/* <TextField
-          value={selectedTeamOne}
-          sx={{ mr: 2 }}
-          select
-          label="Team 1"
-          onChange={(e) => setSelectedTeamOne(e.target.value as string)}
-        >
-          {Object.keys(teamsInfo).map((team) => (
-            <MenuItem key={team} value={team}>
-              {team}
-            </MenuItem>
-          ))}
-          <MenuItem value="All">All</MenuItem>
-        </TextField> */}
-
-        {/* Team 2 */}
-        {/* <TextField
-          value={selectedTeamTwo}
-          sx={{ mr: 2 }}
-          select
-          label="Team 2"
-          onChange={(e) => setSelectedTeamTwo(e.target.value as string)}
-        >
-          {Object.keys(teamsInfo).map((team) => (
-            <MenuItem key={team} value={team}>
-              {team}
-            </MenuItem>
-          ))}
-          <MenuItem value="All">All</MenuItem>
-        </TextField> */}
-
-        {/* date filtering */}
-        {/* <Box sx={{ mr: 2 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                label="Start Date"
-                value={startDate}
-                onChange={(date) => setStartDate(date as Dayjs)}
-                views={["day", "month", "year"]}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Box>
-
-        <Box sx={{ mr: 2 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                label="End Date"
-                value={endDate}
-                onChange={(date) => setEndDate(date as Dayjs)}
-                views={["day", "month", "year"]}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Box> */}
       </Box>
 
       {/* loading users */}
@@ -196,10 +128,10 @@ export const LoadingUsers = () => {
           ))}
 
           {/* load users */}
-          {users.map((user, index) => (
+          {referees.map((referee, index) => (
             <Grid
               container
-              key={user.id}
+              key={referee.ref_id}
               columns={{ xs: usersColumns.reduce((acc, column) => acc + column.width, 0) }}
             >
               {usersColumns.map((column) => {
@@ -222,19 +154,19 @@ export const LoadingUsers = () => {
                         }}
                         onClick={(e) => {
                           (async () => {
-                            const userId = user.user_id;
+                            const userId = referee.ref_id;
                             // const userId = 189414;
 
                             if (column.id === "edit") {
-                              setCurrentEditUser(user);
+                              setCurrentEditUser(referee);
                               setShowAddUser(true);
                               setTypeEdit("edit");
                             } else {
-                              const response = await deleteUserApi({ user_id: userId });
+                              const response = await deleteRefereeApi(referee);
 
                               if (response?.status === "success") {
                                 toast.success("User deleted successfully");
-                                setUsers(users.filter((user) => user.user_id !== userId));
+                                fetchReferees();
                               }
                             }
                           })();
@@ -261,7 +193,11 @@ export const LoadingUsers = () => {
                       alignItems: "center",
                     }}
                   >
-                    {user[column.prop]}
+                    {column.id === "id"
+                      ? index + 1
+                      : column.id === "ref_bday"
+                        ? dayjs.unix(referee[column.prop]).format("DD/MM/YYYY")
+                        : referee[column.prop]}
                   </Grid>
                 );
               })}

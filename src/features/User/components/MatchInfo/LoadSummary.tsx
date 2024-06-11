@@ -5,9 +5,11 @@ import dayjs from "dayjs";
 import { getPlayersApi } from "features/Admin/components/ClubManager/apis/get-players";
 import { Club, Player } from "features/Admin/components/ClubManager/apis/types";
 import { getEventsMatchApi } from "features/Admin/components/MatchManager/apis/get-events";
-import { Match, MatchEvent } from "features/Admin/components/MatchManager/apis/types";
+import { getStadiumsApi } from "features/Admin/components/MatchManager/apis/get-stadiums";
+import { Match, MatchEvent, Stadium } from "features/Admin/components/MatchManager/apis/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import StadiumIcon from "@mui/icons-material/Stadium";
 
 type SummaryMatchProps = {
   match: Match;
@@ -128,6 +130,20 @@ export const SummaryMatch = ({ match, clubs }: SummaryMatchProps) => {
   const [playersTeam1, setPlayersTeam1] = useState<Player[]>([]);
   const [playersTeam2, setPlayersTeam2] = useState<Player[]>([]);
 
+  const [stadiums, setStadiums] = useState<Stadium[]>([]);
+
+  const fetchStadiums = async () => {
+    const response = await getStadiumsApi();
+
+    if (response && response?.status === "success") {
+      setStadiums(response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchStadiums();
+  }, []);
+
   const fetchEvents = async () => {
     const response = await getEventsMatchApi(match);
 
@@ -231,6 +247,21 @@ export const SummaryMatch = ({ match, clubs }: SummaryMatchProps) => {
                 Live
               </Typography>
             )}
+
+            <Typography
+              sx={{
+                fontSize: "1rem",
+                fontWeight: "bold",
+                color: "#37003c",
+              }}
+            >
+              {dayjs.unix(match.start).format("DD/MM/YYYY - HH:mm")}
+            </Typography>
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <StadiumIcon />
+              {stadiums && stadiums.find((stadium) => stadium.std_id === match.stadium)?.std_name}
+            </Box>
           </Box>
         </Grid>
 

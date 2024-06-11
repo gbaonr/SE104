@@ -1,16 +1,16 @@
-import React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
+import HomeIcon from "@mui/icons-material/Home";
 import JoinInnerIcon from "@mui/icons-material/JoinInner";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { default as PolicyIcon } from "@mui/icons-material/Menu";
+import SportsIcon from "@mui/icons-material/Sports";
 import { Divider, Grid, useMediaQuery, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { BlockComponent } from "components/Items/BlockComponent";
 import { ADMIN_ROUTES, USER_ROUTES } from "constants/Paths";
-import { Link, Outlet, useLocation } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import LogoutIcon from "@mui/icons-material/Logout";
-import HomeIcon from "@mui/icons-material/Home";
 import { useAuth } from "features/Auth/AuthProvider";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 const features = [
   {
@@ -38,6 +38,13 @@ const features = [
     name: "Policy",
     icon: <PolicyIcon />,
     path: ADMIN_ROUTES.POLICY,
+    manager: false,
+    admin: true,
+  },
+  {
+    name: "Referees",
+    icon: <SportsIcon />,
+    path: ADMIN_ROUTES.REFEREE_MANAGER,
     manager: false,
     admin: true,
   },

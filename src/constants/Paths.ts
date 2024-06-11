@@ -5,6 +5,7 @@ export const ADMIN_ROUTES = {
   MATCH_REGISTRATION: "/admin/match-registration",
   POLICY: "/admin/policy-manager",
   USER_MANAGER: "/admin/user-manager",
+  REFEREE_MANAGER: "/admin/referee-manager",
 };
 
 export const USER_ROUTES = {

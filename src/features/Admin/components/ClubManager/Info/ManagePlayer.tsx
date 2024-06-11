@@ -55,7 +55,7 @@ const optionPositions = [
 
 const optionInput = [
   { id: "player_name", name: "Full Name" },
-  { id: "player_bday", name: "Age" },
+  { id: "player_bday", name: "Date of Birth" },
   { id: "player_pos", name: "Position" },
   { id: "player_nation", name: "Nation" },
   { id: "js_number", name: "Jersey Number" },

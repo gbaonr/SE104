@@ -39,6 +39,7 @@ import { MatchInfoUserPage } from "features/User/components/MatchInfo";
 import { ClubInfoPage } from "features/User/components/ClubInfo";
 import { Box, CircularProgress } from "@mui/material";
 import { ListClubUserPage } from "features/User/components/ClubInfo/ListClubs";
+import { RefereesManagementPage } from "features/Admin/components/Referees";
 
 const theme = createTheme({
   typography: {
@@ -160,6 +161,7 @@ const App = () => {
 
         { path: ADMIN_ROUTES.POLICY, element: <PolicyAdj /> },
         { path: ADMIN_ROUTES.USER_MANAGER, element: <UserManagement /> },
+        { path: ADMIN_ROUTES.REFEREE_MANAGER, element: <RefereesManagementPage /> },
       ],
     },
   ]);
