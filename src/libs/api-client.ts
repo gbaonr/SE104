@@ -1,5 +1,8 @@
-import Axios from "axios";
+import axios from "axios";
 
-// export const api = Axios.create({
-//   baseURL: process.env.REACT_APP_BACKEND_URL,
-// });
+export const updateClientApi = () => {
+  if (!axios.defaults.headers.common["Authorization"]) {
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  }
+};

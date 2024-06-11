@@ -8,17 +8,21 @@ import { getMatchesApi } from "./apis/get-matches";
 import { Match } from "./apis/types";
 import { LoadingMatches } from "./LoadingMatches";
 
-export const MatchManger = () => {
+type MatchManagerProps = {
+  setForceUpdate: (value: number) => void;
+  forceUpdate: number;
+};
+
+export const MatchManger = ({ setForceUpdate, forceUpdate }: MatchManagerProps) => {
   const [showAddMatch, setShowAddMatch] = useState(false);
   const [clubs, setClubs] = useState<any[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
-  const [forceUpdate, setForceUpdate] = useState(0);
 
   const update = () => {
     (async () => {
       const response = await getMatchesApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setMatches(response.data);
       } else {
         toast.error(response.message);
@@ -28,17 +32,13 @@ export const MatchManger = () => {
     (async () => {
       const response = await getClubsApi();
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         setClubs(response.data);
       } else {
         toast.error(response.message);
       }
     })();
   };
-
-  useEffect(() => {
-    update();
-  }, []);
 
   useEffect(() => {
     update();
@@ -58,9 +58,6 @@ export const MatchManger = () => {
     () => matches.filter((match) => match.finish < Date.now() / 1000),
     [matches],
   );
-
-  console.log("upcomingMatches", upcomingMatches);
-  console.log("doneMatches", doneMatches);
 
   return (
     <Container
@@ -103,7 +100,12 @@ export const MatchManger = () => {
 
       <LoadingMatches isDone={true} data={doneMatches} clubs={clubs} header="Done Matches" />
 
-      <AddMatch showAddMatch={showAddMatch} setShowAddMatch={setShowAddMatch} clubs={clubs} setForceUpdate={setForceUpdate} />
+      <AddMatch
+        showAddMatch={showAddMatch}
+        setShowAddMatch={setShowAddMatch}
+        clubs={clubs}
+        setForceUpdate={setForceUpdate}
+      />
     </Container>
   );
 };

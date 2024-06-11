@@ -28,11 +28,11 @@ export const TeamItem = (props: TeamItemProps) => {
           {!props.hideName && (
             <Typography
               sx={{
-                textAlign: "center",
+                // textAlign: "left",
                 fontWeight: 500,
                 mx: 1,
                 color: "#37003c",
-                fontSize: "1.2rem",
+                fontSize: "1rem",
               }}
             >
               {(props.useShortName && props.club.club_shortname) || props.club.club_name}

@@ -18,7 +18,7 @@ export const deletePlayerApi = async (filterPlayer: Player) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to delete player",
       code: error.request?.status,
     };
   }

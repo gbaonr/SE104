@@ -6,10 +6,9 @@ import {
   DialogTitle,
   Grid,
   MenuItem,
-  Radio,
   Select,
   Switch,
-  Typography,
+  Typography
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -20,10 +19,10 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Club } from "../ClubManager/apis/types";
+import { addMatchApi } from "./apis/add-match";
 import { getRefereesApi } from "./apis/get-referees";
 import { Referee } from "./apis/types";
 import { validateMatch } from "./utils/validator";
-import { addMatchApi } from "./apis/add-match";
 
 const optionInput = [
   { id: "team1", name: "Home" },

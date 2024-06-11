@@ -20,7 +20,6 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { TeamItem } from "components/Items/ClubItem";
 import { ScoreItem } from "components/Items/ScoreItem";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -31,6 +30,8 @@ import { getRefereesApi } from "../apis/get-referees";
 import { Match, Referee } from "../apis/types";
 import { updateMatchApi } from "../apis/update-match";
 import { validateMatch } from "../utils/validator";
+import { useNavigate } from "react-router-dom";
+import { ADMIN_ROUTES } from "constants/Paths";
 
 type LoadingInfoMatchProps = {
   match: Match;
@@ -39,8 +40,8 @@ type LoadingInfoMatchProps = {
 };
 
 const optionInput = [
-  { id: "team1", name: "Team" },
-  { id: "team2", name: "Opponent" },
+  // { id: "team1", name: "Team" },
+  // { id: "team2", name: "Opponent" },
   { id: "start", name: "Start" },
   { id: "check_finish", name: "Finished?" },
   { id: "finish", name: "Finish" },
@@ -55,6 +56,7 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
   const [referees, setReferees] = useState<Referee[]>([]);
   const [isMatchFinished, setIsMatchFinished] = useState<boolean>(false);
   const [currentDateTime, setCurrentDateTime] = useState<number>(Date.now() / 1000);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!showEditMatch) {
@@ -70,6 +72,15 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
       setIsMatchFinished(match.finish <= Date.now() / 1000);
     }
   }, [match]);
+
+  useEffect(() => {
+    if (isMatchFinished) {
+      setMatchToEdit({
+        ...matchToEdit,
+        finish: Date.now() / 1000,
+      });
+    }
+  }, [isMatchFinished]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -264,6 +275,9 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
                   match.finish = 2 * 10 ** 9;
                 }
 
+                match.start = Math.round(match.start);
+                match.finish = Math.round(match.finish);
+
                 if (validateMatch(match, clubs, referees) !== "") {
                   toast.error(validateMatch(match, clubs, referees));
                   return;
@@ -298,205 +312,202 @@ export const LoadingInfoMatch = ({ match, clubs, setForceUpdate }: LoadingInfoMa
           mb: 2,
         }}
       >
-        <Box
+        <Grid
+          container
+          spacing={2}
           sx={{
             display: "flex",
             alignItems: "center",
             alignContent: "center",
             justifyContent: "center",
+            flexDirection: "row",
           }}
         >
-          <Typography
-            sx={{
-              fontWeight: 700,
-              fontSize: "1.2rem",
-              color: "#37003c",
-              mb: 2,
-            }}
-          >
-            <TeamItem club={clubs.find((club) => club.club_id === match.team1)} />
-          </Typography>
-
-          <Typography
-            sx={{
-              fontWeight: 700,
-              fontSize: "1.2rem",
-              color: "#37003c",
-              mb: 2,
-              mx: 2,
-            }}
-          >
-            vs
-          </Typography>
-
-          <Typography
-            sx={{
-              fontWeight: 700,
-              fontSize: "1.2rem",
-              color: "#37003c",
-              mb: 2,
-            }}
-          >
-            <TeamItem leftLogo={true} club={clubs.find((club) => club.club_id === match.team2)} />
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            alignContent: "center",
-            justifyContent: "center",
-          }}
-        >
-          {/* TODO: fix stadium */}
-          {/* <StadiumIcon /> */}
-          {/* <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: "1.2rem",
-              // color: "#37003c",
-              mb: 2,
-            }}
-          >
-            {match.location}
-          </Typography> */}
-
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: "1.2rem",
-              // color: "#37003c",
-            }}
-          >
-            Date & Time
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: "1rem",
-            }}
-          >
-            {dayjs.unix(match.start).format("DD/MM/YYYY")}
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: "1rem",
-            }}
-          >
-            {dayjs.unix(match.start).format("HH:mm")}
-          </Typography>
-
-          {!isMatchFinished && (
-            <Box
-              sx={{
-                my: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                alignContent: "center",
-                justifyContent: "center",
-              }}
-            >
+          <Grid item xs={4}>
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <img
+                src={clubs.find((club) => club.club_id === match.team1)?.logo_high}
+                alt="team1"
+              />
               <Typography
                 sx={{
                   fontWeight: 500,
                   fontSize: "1.2rem",
-                  color: "#4caf50",
+                  my: 2,
                 }}
               >
-                Live
-              </Typography>
-
-              <Typography
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "1rem",
-                }}
-              >
-                {dayjs
-                  .unix(currentDateTime - match.start)
-                  .subtract(8, "hour")
-                  .format("HH:mm:ss")}
+                {clubs.find((club) => club.club_id === match.team1)?.club_name}
               </Typography>
             </Box>
-          )}
+          </Grid>
 
-          <Box sx={{ my: 2 }}>
+          <Grid
+            item
+            xs={4}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            {/* TODO: fix stadium */}
             <Typography
               sx={{
                 fontWeight: 500,
                 fontSize: "1.2rem",
+                // color: "#37003c",
               }}
             >
-              Results
+              Date & Time
             </Typography>
-            <ScoreItem match={match} />
-          </Box>
-        </Box>
+            <Typography
+              sx={{
+                fontWeight: 500,
+                fontSize: "1rem",
+              }}
+            >
+              {dayjs.unix(match.start).format("DD/MM/YYYY")}
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: 500,
+                fontSize: "1rem",
+              }}
+            >
+              {dayjs.unix(match.start).format("HH:mm")}
+            </Typography>
 
-        <Divider
-          sx={{
-            my: 3,
-          }}
-        />
+            {!isMatchFinished && (
+              <Box
+                sx={{
+                  my: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  alignContent: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "1.2rem",
+                    color: "#4caf50",
+                  }}
+                >
+                  Live
+                </Typography>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            variant="outlined"
-            sx={{
-              color: "white",
-              backgroundColor: "#4caf50",
-              p: 1,
-              m: 1,
-              "&:hover": {
-                color: "#4caf50",
-                backgroundColor: "white",
-              },
-            }}
-            onClick={() => {
-              setMatchToEdit(match);
-              setShowEditMatch(true);
-            }}
-          >
-            <EditIcon />
-          </Button>
+                <Typography
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "1rem",
+                  }}
+                >
+                  {dayjs
+                    .unix(currentDateTime - match.start)
+                    .subtract(8, "hour")
+                    .format("HH:mm:ss")}
+                </Typography>
+              </Box>
+            )}
 
-          {/* delete */}
-          <Button
-            variant="outlined"
-            sx={{
-              color: "white",
-              backgroundColor: "#f44336",
-              p: 1,
-              m: 1,
-              "&:hover": {
-                color: "white",
-                backgroundColor: "#f44336",
-              },
-            }}
-            onClick={() => {
-              (async () => {
-                const response = await deleteMatchApi(match);
+            <Box sx={{ my: 2 }}>
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "1.2rem",
+                }}
+              >
+                Results
+              </Typography>
+              <ScoreItem match={match} />
+            </Box>
 
-                if (response?.status === "success") {
-                  toast.success("Match deleted successfully");
-                } else {
-                  toast.error(response.message);
-                }
-              })();
-            }}
-          >
-            <DeleteIcon />
-          </Button>
-        </Box>
+            <Divider
+              sx={{
+                my: 3,
+              }}
+            />
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="outlined"
+                sx={{
+                  color: "white",
+                  backgroundColor: "#4caf50",
+                  p: 1,
+                  m: 1,
+                  "&:hover": {
+                    color: "#4caf50",
+                    backgroundColor: "white",
+                  },
+                }}
+                onClick={() => {
+                  setMatchToEdit(match);
+                  setShowEditMatch(true);
+                }}
+              >
+                <EditIcon />
+              </Button>
+
+              {/* delete */}
+              <Button
+                variant="outlined"
+                sx={{
+                  color: "white",
+                  backgroundColor: "#f44336",
+                  p: 1,
+                  m: 1,
+                  "&:hover": {
+                    color: "white",
+                    backgroundColor: "#f44336",
+                  },
+                }}
+                onClick={() => {
+                  (async () => {
+                    const response = await deleteMatchApi(match);
+
+                    if (response?.status === "success") {
+                      toast.success("Match deleted successfully");
+                    } else {
+                      toast.error(response.message);
+                    }
+
+                    navigate(ADMIN_ROUTES.MATCH);
+                  })();
+                }}
+              >
+                <DeleteIcon />
+              </Button>
+            </Box>
+          </Grid>
+
+          <Grid item xs={4}>
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <img
+                src={clubs.find((club) => club.club_id === match.team2)?.logo_high}
+                alt="team2"
+              />
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "1.2rem",
+                  my: 2,
+                }}
+              >
+                {clubs.find((club) => club.club_id === match.team2)?.club_name}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

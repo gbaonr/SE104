@@ -19,7 +19,7 @@ export const getClubsApi = async () => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to get clubs",
       code: error.request?.status,
     };
   }

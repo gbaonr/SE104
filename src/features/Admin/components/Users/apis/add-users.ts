@@ -14,7 +14,7 @@ export const addUsersApi = async (data: User) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to add users",
       code: error.request?.status,
     };
   }

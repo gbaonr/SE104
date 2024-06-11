@@ -32,7 +32,7 @@ export const getMatchesApi = async (club?: Club) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to get matches",
       code: error.request?.status,
     };
   }

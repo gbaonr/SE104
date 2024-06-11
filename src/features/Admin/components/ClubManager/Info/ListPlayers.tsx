@@ -31,6 +31,8 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
   const [playerToEdit, setPlayerToEdit] = useState(null);
 
   useEffect(() => {
+    if (!club) return;
+
     (async () => {
       const response = await getPlayersApi({
         club_name: club.club_name,

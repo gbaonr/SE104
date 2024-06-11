@@ -141,6 +141,8 @@ export const LeaderBoard = () => {
                   </Typography>
                 ) : column.field === "currentPosition" ? (
                   <Typography>{index + 1}</Typography>
+                ) : column.field === "club_played" ? (
+                  <Typography>{club.club_win + club.club_draw + club.club_lost}</Typography>
                 ) : (
                   <Typography>
                     {typeof club[column.field] === "number" ? club[column.field].toString() : "--"}

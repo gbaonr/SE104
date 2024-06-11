@@ -3,6 +3,6 @@ export type User = {
   role?: string;
   user_name?: string;
   user_nation?: string;
-  user_bday?: string;
+  user_bday?: number;
   user_mail?: string;
 };

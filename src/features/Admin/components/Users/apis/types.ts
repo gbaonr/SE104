@@ -5,6 +5,6 @@ type User = {
   user_name?: string;
   user_mail?: string;
   user_nation?: string;
-  user_bday?: string;
+  user_bday?: number;
   show?: boolean;
 };

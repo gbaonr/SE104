@@ -28,7 +28,7 @@ export const getUsersApi = async (filter: User) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to get users ",
       code: error.request?.status,
     };
   }

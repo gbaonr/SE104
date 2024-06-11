@@ -1,19 +1,7 @@
 import axios from "axios";
+import { Params } from "./types";
 
-export type updateParamsQuery = {
-  max_club_player?: number;
-  max_foreign_player?: number;
-  max_goal_time?: string;
-  max_goal_types?: number;
-  max_player_age?: number;
-  min_club_player?: number;
-  min_player_age?: number;
-  points_draw?: number;
-  points_lose?: number;
-  points_win?: number;
-};
-
-export const updateParamsApi = async (params: updateParamsQuery) => {
+export const updateParamsApi = async (params: Params) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   try {
@@ -22,7 +10,7 @@ export const updateParamsApi = async (params: updateParamsQuery) => {
     return {
       status: "success",
       data: response.data,
-      code:  response?.status,
+      code: response?.status,
     };
   } catch (error) {
     return {

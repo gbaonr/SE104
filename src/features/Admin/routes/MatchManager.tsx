@@ -1,9 +1,14 @@
 import { MatchManger } from "../components/MatchManager";
 
-export const MatchManagerRoute = () => {
+type MatchManagerRouteProps = {
+  setForceUpdate: (value: number) => void;
+  forceUpdate: number;
+};
+
+export const MatchManagerRoute = ({ setForceUpdate, forceUpdate }: MatchManagerRouteProps) => {
   return (
     <>
-      <MatchManger />
+      <MatchManger forceUpdate={forceUpdate} setForceUpdate={setForceUpdate} />
     </>
   );
 };

@@ -13,7 +13,7 @@ export const deleteEventApi = async (event: MatchEvent) => {
     if ( response?.status !== 200) {
       return {
         status: "error",
-        message: "An error occurred while trying to get matches",
+        message: "An error occurred while trying to delete event",
         code:  response?.status,
       };
     }
@@ -26,7 +26,7 @@ export const deleteEventApi = async (event: MatchEvent) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to delete event",
       code: error.request?.status,
     };
   }

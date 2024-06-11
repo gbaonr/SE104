@@ -15,9 +15,9 @@ import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 
 const upCommingMatchesColumns = [
   { id: "match_id", header: "#", width: 1, needDone: false },
-  { id: "team1", header: "Team 1", width: 2, needDone: false },
+  { id: "team1", header: "Team 1", width: 3, needDone: false },
   { id: "goal", header: "Goal", width: 1, needDone: false },
-  { id: "team2", header: "Team 2", width: 2, needDone: false },
+  { id: "team2", header: "Team 2", width: 3, needDone: false },
   { id: "start", header: "Start", width: 2, needDone: false },
   { id: "finish", header: "Finish", width: 2, needDone: true },
   { id: "running", header: "Running", width: 2, needDone: false },

@@ -23,7 +23,7 @@ export const addPlayerApi = async (player: Player) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to add player",
       code: error.request?.status,
     };
   }

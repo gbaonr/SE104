@@ -24,7 +24,7 @@ export const getEventsMatchApi = async (match: Match) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to get events",
       code: error.request?.status,
     };
   }

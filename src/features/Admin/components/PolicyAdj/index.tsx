@@ -16,8 +16,9 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import axios from "axios";
 import { getParamsApi } from "./apis/get-params";
-import { updateParamsApi, updateParamsQuery } from "./apis/update-params";
+import { updateParamsApi } from "./apis/update-params";
 import { toast } from "react-toastify";
+import { Params } from "./apis/types";
 
 type PolicyAdjustmentProps = {
   initialAgeRange?: [number, number];
@@ -46,22 +47,6 @@ type initialPlayerCount = {
   max: number;
 };
 
-// const defaultPolicySettings = {
-//   ageRange: [15, 60] as [number, number],
-//   timeGoal: 90,
-//   goalTypes: ["A", "B", "C"],
-//   points: {
-//     win: 3,
-//     draw: 1,
-//     lose: 0,
-//   },
-//   playerCount: {
-//     min: 11,
-//     max: 18,
-//   },
-//   foreignPlayers: 3,
-// };
-
 export const PolicyAdj = () => {
   const [ageRange, setAgeRange] = useState<[number, number]>([0, 0]);
   const [timeGoal, setTimeGoal] = useState<number>(0);
@@ -76,12 +61,19 @@ export const PolicyAdj = () => {
     max: 0,
   });
   const [foreignPlayers, setForeignPlayers] = useState<number>(0);
+  const [criteriaList, setCriteriaList] = useState<string[]>([
+    "Points",
+    "Goal Difference",
+    "Goals Scored",
+    "Goals Conceded",
+  ]);
 
   useEffect(() => {
     const fetchParams = async () => {
       const response = await getParamsApi();
+      console.log(response);
 
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         const responseData = response.data;
 
         setPlayerCount({
@@ -104,7 +96,18 @@ export const PolicyAdj = () => {
           lose: responseData.points_lose,
         });
 
-        console.log("Params fetched successfully");
+        const criteriaPriority = responseData.priority.split(";");
+
+        const criteriaList = criteriaPriority.map((criteria) => {
+          if (criteria === "p") return "Points";
+          if (criteria === "d") return "Goal Difference";
+          if (criteria === "g") return "Goals Scored";
+          if (criteria === "h") return "Goals Conceded";
+        });
+        
+        setCriteriaList(criteriaList);
+      } else {
+        toast.error("Failed to load params");
       }
     };
     fetchParams();
@@ -146,24 +149,15 @@ export const PolicyAdj = () => {
     setForeignPlayers(value);
   };
 
-  const [criteriaList, setCriteriaList] = useState<string[]>([
-    "Points",
-    "Wins",
-    "Losses",
-    "Draws",
-    "Goal Difference",
-    "Goals Scored",
-    "Goals Conceded",
-  ]);
-
   const handleMoveUp = (index: number) => {
     if (index > 0) {
       const updatedList = [...criteriaList];
       const temp = updatedList[index];
+
       updatedList[index] = updatedList[index - 1];
       updatedList[index - 1] = temp;
+
       setCriteriaList(updatedList);
-      sendCriteriaListToBackend(updatedList);
     }
   };
 
@@ -171,9 +165,9 @@ export const PolicyAdj = () => {
   // above function input a dictionary of the updated values and send it to the backend
   // the backend will update the values in the database
 
-  const handleOnSaveChanges = (params: updateParamsQuery) => {
+  const handleOnSaveChanges = (params: Params) => {
     updateParamsApi(params).then((response) => {
-      if ( response?.status === "success") {
+      if (response?.status === "success") {
         toast.success("Params updated successfully");
       } else {
         toast.error("An error occurred while trying to update params");
@@ -188,7 +182,6 @@ export const PolicyAdj = () => {
       updatedList[index] = updatedList[index + 1];
       updatedList[index + 1] = temp;
       setCriteriaList(updatedList);
-      sendCriteriaListToBackend(updatedList);
     }
   };
 
@@ -201,16 +194,6 @@ export const PolicyAdj = () => {
       const [dragItem] = updatedList.splice(dragIndex, 1);
       updatedList.splice(index, 0, dragItem);
       setCriteriaList(updatedList);
-      sendCriteriaListToBackend(updatedList);
-    }
-  };
-
-  const sendCriteriaListToBackend = async (updatedList: string[]) => {
-    try {
-      await axios.post("/api/update-criteria", { criteriaList: updatedList });
-      console.log("Criteria list updated successfully");
-    } catch (error) {
-      console.error("Error updating criteria list:", error);
     }
   };
 
@@ -407,7 +390,7 @@ export const PolicyAdj = () => {
             <Typography variant="h6" gutterBottom>
               Points System
             </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+            <Box sx={{ my: 2, display: "flex", alignItems: "center" }}>
               <TextField
                 type="number"
                 value={points.win}
@@ -417,7 +400,7 @@ export const PolicyAdj = () => {
                 sx={{ flexGrow: 1, mr: 1 }}
               />
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+            <Box sx={{ my: 2, display: "flex", alignItems: "center" }}>
               <TextField
                 type="number"
                 value={points.draw}
@@ -427,7 +410,8 @@ export const PolicyAdj = () => {
                 sx={{ flexGrow: 1, mr: 1 }}
               />
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+
+            <Box sx={{ my: 2, display: "flex", alignItems: "center" }}>
               <TextField
                 type="number"
                 value={points.lose}
@@ -464,13 +448,23 @@ export const PolicyAdj = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() =>
+              onClick={() => {
+                const criteriaPriority = criteriaList
+                  .map((criteria) => {
+                    if (criteria === "Points") return "p";
+                    if (criteria === "Goal Difference") return "d";
+                    if (criteria === "Goals Scored") return "g";
+                    if (criteria === "Goals Conceded") return "h";
+                  })
+                  .join(";");
+
                 handleOnSaveChanges({
                   points_win: points.win,
                   points_draw: points.draw,
                   points_lose: points.lose,
-                })
-              }
+                  priority: criteriaPriority,
+                });
+              }}
             >
               Save Changes
             </Button>

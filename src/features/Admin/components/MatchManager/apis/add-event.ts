@@ -18,7 +18,7 @@ export const addEventMatchApi = async (event: MatchEvent) => {
     if ( response?.status !== 200) {
       return {
         status: "error",
-        message: "An error occurred while trying to get matches",
+        message: "An error occurred while trying to add event",
         code:  response?.status,
       };
     }
@@ -31,7 +31,7 @@ export const addEventMatchApi = async (event: MatchEvent) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to add event",
       code: error.request?.status,
     };
   }

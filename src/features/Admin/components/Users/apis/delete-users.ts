@@ -24,7 +24,7 @@ export const deleteUserApi = async (userToFilter: User) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to delete users",
       code: error.request?.status,
     };
   }

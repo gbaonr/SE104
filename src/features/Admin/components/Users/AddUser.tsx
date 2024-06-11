@@ -57,7 +57,7 @@ export const AddUserPopup = ({
   const [inputUsername, setInputUsername] = useState<string>("");
   const [inputEmail, setInputEmail] = useState<string>("");
   const [inputNation, setInputNation] = useState<string>("");
-  const [inputBirthday, setInputBirthday] = useState<string>("");
+  const [inputBirthday, setInputBirthday] = useState<number>(Date.now() / 1000);
   const [inputPassword, setInputPassword] = useState<string>("");
   const [inputConfirmPassword, setInputConfirmPassword] = useState<string>("");
 
@@ -95,7 +95,6 @@ export const AddUserPopup = ({
       inputUsername !== "" &&
       inputEmail !== "" &&
       inputNation !== "" &&
-      inputBirthday !== "" &&
       inputPassword !== "" &&
       inputConfirmPassword !== ""
     );
@@ -118,10 +117,9 @@ export const AddUserPopup = ({
                       <DemoContainer components={["DatePicker"]}>
                         <DatePicker
                           label="Date"
-                          value={dayjs.unix(Number(inputBirthday))}
+                          value={dayjs.unix(inputBirthday)}
                           onChange={(e) => {
-                            setInputBirthday(String(e.unix()));
-                            console.log(e.unix());
+                            setInputBirthday(e.unix());
                           }}
                           views={["day", "month", "year"]}
                         />

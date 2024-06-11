@@ -15,6 +15,8 @@ export const LoadPlayersClubPage = ({ club }: LoadPlayersClubPageProps) => {
   const [players, setPlayers] = useState<Player[]>([]);
 
   const fetchPlayers = async () => {
+    if (!club) return;
+    
     const response = await getPlayersApi(club);
 
     if (response?.status === "success") {

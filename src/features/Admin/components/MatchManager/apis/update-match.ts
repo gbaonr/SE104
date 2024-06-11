@@ -22,7 +22,7 @@ export const updateMatchApi = async (match: Match) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to update match",
       code: error.request?.status,
     };
   }

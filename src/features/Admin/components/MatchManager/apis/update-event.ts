@@ -32,7 +32,7 @@ export const updateEventMatchApi = async (event: MatchEvent) => {
   } catch (error) {
     return {
       status: "error",
-      message: "An error occurred while trying to get users",
+      message: "An error occurred while trying to update event",
       code: error.request?.status,
     };
   }

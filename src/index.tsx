@@ -78,10 +78,6 @@ const App = () => {
 
   useEffect(() => {
     updateInfo();
-  }, []);
-
-  useEffect(() => {
-    updateInfo();
   }, [forceUpdate]);
 
   const memoizedValue = useMemo(() => ({ clubs, matches }), [clubs, matches]);
@@ -122,7 +118,10 @@ const App = () => {
       ),
       children: [
         { index: true, element: <HomePageAdminRoute /> },
-        { path: ADMIN_ROUTES.MATCH, element: <MatchManagerRoute /> },
+        {
+          path: ADMIN_ROUTES.MATCH,
+          element: <MatchManagerRoute forceUpdate={forceUpdate} setForceUpdate={setForceUpdate} />,
+        },
         { path: ADMIN_ROUTES.CLUB, element: <ClubManagerRoute /> },
 
         ...memoizedValue.clubs.map((club) => ({
