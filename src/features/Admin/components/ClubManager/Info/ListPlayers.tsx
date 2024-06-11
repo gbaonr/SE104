@@ -30,21 +30,25 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [playerToEdit, setPlayerToEdit] = useState(null);
 
-  useEffect(() => {
+  const [forceUpdate, setForceUpdate] = useState<number>(Date.now());
+
+  const fetchPlayers = async () => {
     if (!club) return;
 
-    (async () => {
-      const response = await getPlayersApi({
-        club_name: club.club_name,
-      });
+    const response = await getPlayersApi({
+      club_name: club.club_name,
+    });
 
-      if (response?.status === "success") {
-        setPlayers(response.data);
-      } else {
-        toast.error("An error occurred while trying to get players");
-      }
-    })();
-  }, [club]);
+    if (response?.status === "success") {
+      setPlayers(response.data);
+    } else {
+      toast.error("An error occurred while trying to get players");
+    }
+  };
+
+  useEffect(() => {
+    fetchPlayers();
+  }, [club, forceUpdate]);
 
   return (
     <Box
@@ -127,77 +131,79 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
           </Grid>
         ))}
 
-        {players.map((player, index) =>
-          columns.map((column) => (
-            <Grid
-              item
-              xs={column.width}
-              sx={{
-                border: "1px solid #f0f0f0",
-                display: ((column.id === "edit" || column.id === "delete") && "flex") || "block",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                padding: "0.5rem !important",
-              }}
-            >
-              {column.id === "edit" || column.id === "delete" ? (
-                <Box>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: column.id === "edit" ? "gray" : "red",
-                      color: "white",
-                    }}
-                    onClick={(e) => {
-                      if (column.id === "edit") {
-                        setTypeToEdit("edit");
-                        setPlayerToEdit(player);
-                        setShowAddPlayerPopup(true);
-                      } else if (column.id === "delete") {
-                        (async () => {
-                          const response = await deletePlayerApi(player);
+        {players
+          .sort((a, b) => a.player_id - b.player_id)
+          .map((player, index) =>
+            columns.map((column) => (
+              <Grid
+                item
+                xs={column.width}
+                sx={{
+                  border: "1px solid #f0f0f0",
+                  display: ((column.id === "edit" || column.id === "delete") && "flex") || "block",
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                  padding: "0.5rem !important",
+                }}
+              >
+                {column.id === "edit" || column.id === "delete" ? (
+                  <Box>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: column.id === "edit" ? "gray" : "red",
+                        color: "white",
+                      }}
+                      onClick={(e) => {
+                        if (column.id === "edit") {
+                          setTypeToEdit("edit");
+                          setPlayerToEdit(player);
+                          setShowAddPlayerPopup(true);
+                        } else if (column.id === "delete") {
+                          (async () => {
+                            const response = await deletePlayerApi(player);
 
-                          if (response?.status === "success") {
-                            setPlayers(players.filter((p) => p.player_id !== player.player_id));
-                            toast.success("Player deleted successfully");
-                          } else {
-                            toast.error("An error occurred while trying to delete player");
-                          }
-                        })();
-                      }
+                            if (response?.status === "success") {
+                              setPlayers(players.filter((p) => p.player_id !== player.player_id));
+                              toast.success("Player deleted successfully");
+                            } else {
+                              toast.error("An error occurred while trying to delete player");
+                            }
+                          })();
+                        }
+                      }}
+                    >
+                      {column.id === "edit" && <EditIcon />}
+                      {column.id === "delete" && <DeleteIcon />}
+                    </Button>
+                  </Box>
+                ) : column.id === "avatar" ? (
+                  <img
+                    style={{
+                      textAlign: column.center ? "center" : "left",
+                      margin: "0 auto",
+                      cursor: "pointer",
+                    }}
+                    src={player[column.id]}
+                    alt=""
+                    height="36px"
+                    width="36px"
+                  />
+                ) : (
+                  <Typography
+                    gutterBottom
+                    sx={{
+                      textAlign: column.center ? "center" : "left",
+                      margin: "0",
                     }}
                   >
-                    {column.id === "edit" && <EditIcon />}
-                    {column.id === "delete" && <DeleteIcon />}
-                  </Button>
-                </Box>
-              ) : column.id === "avatar" ? (
-                <img
-                  style={{
-                    textAlign: column.center ? "center" : "left",
-                    margin: "0 auto",
-                    cursor: "pointer",
-                  }}
-                  src={player[column.id]}
-                  alt=""
-                  height="36px"
-                  width="36px"
-                />
-              ) : (
-                <Typography
-                  gutterBottom
-                  sx={{
-                    textAlign: column.center ? "center" : "left",
-                    margin: "0",
-                  }}
-                >
-                  {column.id === "player_id" ? index + 1 : player[column.id]}
-                </Typography>
-              )}
-            </Grid>
-          )),
-        )}
+                    {column.id === "player_id" ? index + 1 : player[column.id]}
+                  </Typography>
+                )}
+              </Grid>
+            )),
+          )}
       </Grid>
 
       <AddPlayer
@@ -206,6 +212,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
         typeToEdit={typeToEdit}
         playerToEdit={playerToEdit}
         setPlayerToEdit={setPlayerToEdit}
+        setForceUpdate={setForceUpdate}
       />
     </Box>
   );

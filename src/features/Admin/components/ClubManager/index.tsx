@@ -195,6 +195,7 @@ export const ClubManager = () => {
                             fontSize: "1.2rem",
                             fontWeight: 700,
                             mt: 1.5,
+                            textAlign: "center",
                           }}
                         >
                           {club.club_name}
@@ -205,6 +206,7 @@ export const ClubManager = () => {
                             color: "#37003c",
                             fontSize: "1rem",
                             fontWeight: 400,
+                            textAlign: "center",
                             mt: 0.5,
                           }}
                         >

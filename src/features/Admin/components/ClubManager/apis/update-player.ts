@@ -5,7 +5,7 @@ import { updateClientApi } from "libs/api-client";
 export const updatePlayerApi = async (player: Player) => {
   updateClientApi();
 
-  const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/players/update_player";
+  const endpoint = process.env.REACT_APP_BACKEND_URL + "/api/v1/players/update-player";
 
   try {
     const playerID = player.player_id;

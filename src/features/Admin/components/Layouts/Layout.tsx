@@ -23,11 +23,6 @@ const features = [
     path: ADMIN_ROUTES.CLUB,
   },
   {
-    name: "Club",
-    icon: <GroupsIcon />,
-    path: ADMIN_ROUTES.CLUB,
-  },
-  {
     name: "Match",
     icon: <JoinInnerIcon />,
     path: ADMIN_ROUTES.MATCH,

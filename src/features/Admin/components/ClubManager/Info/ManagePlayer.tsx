@@ -31,6 +31,7 @@ type AddPlayerProps = {
   playerToEdit: Player;
   setPlayerToEdit: (value: Player) => void;
   typeToEdit: string;
+  setForceUpdate: (value: number) => void;
 };
 
 const VisuallyHiddenInput = styled("input")({
@@ -66,6 +67,7 @@ export const AddPlayer = ({
   playerToEdit,
   setPlayerToEdit,
   typeToEdit,
+  setForceUpdate,
 }: AddPlayerProps) => {
   useEffect(() => {
     if (!showAddPlayerPopup) {
@@ -243,18 +245,15 @@ export const AddPlayer = ({
                       setShowAddPlayerPopup(false);
                       return;
                     }
-
-                    toast.error("An error occurred while trying to add player");
                   } else {
                     const response = await updatePlayerApi(playerToEdit);
 
                     if (response?.status === "success") {
                       toast.success("Player updated successfully");
                       setShowAddPlayerPopup(false);
+                      setForceUpdate(Date.now());
                       return;
                     }
-                    
-                    toast.error("An error occurred while trying to update player");
                   }
                 })();
               }}
