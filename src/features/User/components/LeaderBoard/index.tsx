@@ -135,7 +135,7 @@ export const LeaderBoard = () => {
                         color: "#37003c",
                       }}
                     >
-                      {club.club_goals.toString()}
+                      {club.club_points.toString()}
                     </Typography>
                   ) : column.field === "currentPosition" ? (
                     <Typography>{index + 1}</Typography>

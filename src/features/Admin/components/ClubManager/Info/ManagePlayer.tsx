@@ -32,6 +32,7 @@ type AddPlayerProps = {
   setPlayerToEdit: (value: Player) => void;
   typeToEdit: string;
   setForceUpdate: (value: number) => void;
+  fetchPlayers: () => void;
 };
 
 const VisuallyHiddenInput = styled("input")({
@@ -68,6 +69,7 @@ export const AddPlayer = ({
   setPlayerToEdit,
   typeToEdit,
   setForceUpdate,
+  fetchPlayers,
 }: AddPlayerProps) => {
   useEffect(() => {
     if (!showAddPlayerPopup) {
@@ -235,6 +237,8 @@ export const AddPlayer = ({
                   toast.error(responseValidate);
                   return;
                 }
+                
+                console.log(playerToEdit);
 
                 (async () => {
                   if (typeToEdit === "add") {
@@ -243,10 +247,13 @@ export const AddPlayer = ({
                     if (response?.status === "success") {
                       toast.success("Player added successfully");
                       setShowAddPlayerPopup(false);
+                      setForceUpdate(Date.now());
                       return;
                     }
                   } else {
                     const response = await updatePlayerApi(playerToEdit);
+                    
+                    console.log(response);
 
                     if (response?.status === "success") {
                       toast.success("Player updated successfully");

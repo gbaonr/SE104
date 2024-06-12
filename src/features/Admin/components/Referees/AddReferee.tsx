@@ -203,7 +203,7 @@ export const AddRefereePopup = ({
                     ref_name: inputFullname,
                     ref_nation: inputNation,
                     ref_mail: inputEmail,
-                    ref_bday: inputBirthday,
+                    ref_bday: Math.round(inputBirthday),
                   };
 
                   if (validateReferee(data) !== "") {

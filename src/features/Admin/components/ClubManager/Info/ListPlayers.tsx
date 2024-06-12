@@ -87,6 +87,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
         <Button
           variant="outlined"
           onClick={(e) => {
+            setTypeToEdit("add");
             setPlayerToEdit({
               player_club: club.club_id,
             });
@@ -135,7 +136,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
         ))}
 
         {players
-          .sort((a, b) => a.player_id - b.player_id)
+          .sort((a, b) => (a.player_pos > b.player_pos ? 1 : -1))
           .map((player, index) =>
             columns.map((column) => (
               <Grid
@@ -170,8 +171,6 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
                             if (response?.status === "success") {
                               setPlayers(players.filter((p) => p.player_id !== player.player_id));
                               toast.success("Player deleted successfully");
-                            } else {
-                              toast.error("An error occurred while trying to delete player");
                             }
                           })();
                         }
@@ -187,6 +186,10 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
                       textAlign: column.center ? "center" : "left",
                       margin: "0 auto",
                       cursor: "pointer",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://resources.premierleague.com/premierleague/photos/players/110x140/Photo-Missing.png";
                     }}
                     src={player.ava_url}
                     alt=""
@@ -220,6 +223,7 @@ export const ListPlayerTeam = ({ club }: ListPlayerTeamProps) => {
         playerToEdit={playerToEdit}
         setPlayerToEdit={setPlayerToEdit}
         setForceUpdate={setForceUpdate}
+        fetchPlayers={fetchPlayers}
       />
     </Box>
   );

@@ -23,6 +23,13 @@ export async function handleApiResponse<T>(promise, alertOnError = true) {
       };
     }
 
+    if (response.status === 401) {
+      return {
+        status: "error",
+        message: "Your session has expired. Please log in again.",
+      };
+    }
+
     return {
       status: "success",
       message: response.data.message?.toString() || "",
